@@ -1,6 +1,6 @@
 # 🧠 WebWiz Quiz – Plataforma de Cuestionarios Interactivos
 
-https://test-frontend-b6721.web.app/
+**Repositorio:** https://github.com/Orpira/test_interactivo-supabase.git
 
 Este proyecto es una plataforma interactiva de retos y quizzes de programación orientada a HTML, CSS y JavaScript. Permite a los usuarios practicar, validar y compartir soluciones en tiempo real, así como realizar quizzes para medir su progreso. El enfoque es educativo y está pensado para bootcamps y autoaprendizaje.
 
@@ -10,7 +10,7 @@ Desarrollada con tecnologías: React, Vite, Tailwind, Zustand, Supabase y más.
 
 ## 🚀 Funcionalidades principales
 
-- ✅ Realización de cuestionarios por categoría (HTML, CSS, JS, API externa)
+- ✅ Realización de cuestionarios por categoría (HTML, CSS, JavaScript, Formularios, Responsive, Linux)
 - ✅ Acceso con o sin autenticación (Supabase Auth)
 - ✅ Resultados con puntuación y ranking en tiempo real
 - ✅ Editor de código con soporte para HTML, CSS y JS
@@ -89,8 +89,8 @@ Desarrollada con tecnologías: React, Vite, Tailwind, Zustand, Supabase y más.
 ## 📦 Instalación y ejecución
 
 ```bash
-git clone https://github.com/tu-usuario/testInteractivos.git
-cd testInteractivos
+git clone https://github.com/Orpira/test_interactivo-supabase.git
+cd test_interactivo-supabase
 npm install
 npm run dev
 ```
@@ -124,6 +124,19 @@ npx playwright test
 
 ## 🚀 Despliegue
 
+### Opción 1: Vercel (recomendado)
+
+1. Importa el repositorio en [Vercel](https://vercel.com)
+2. Configura las variables de entorno en **Settings → Environment Variables**:
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+3. En Supabase Dashboard → **Authentication → URL Configuration**:
+   - Cambia **Site URL** a la URL de tu proyecto en Vercel (ej: `https://tu-proyecto.vercel.app`)
+   - Agrega la URL de Vercel en **Redirect URLs**: `https://tu-proyecto.vercel.app/**`
+4. Vercel despliega automáticamente con cada push a `main`
+
+### Opción 2: Manual
+
 1. Configura tu proyecto en [Supabase](https://supabase.com)
 2. Ejecuta el schema SQL en el SQL Editor de Supabase
 3. Configura las variables de entorno
@@ -132,6 +145,10 @@ npx playwright test
 ```bash
 npm run build
 ```
+
+> **Importante:** Si al desplegar ves el error `supabaseUrl is required`, significa que las variables de entorno `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` no están configuradas en el entorno de hosting. Agrégalas en el panel de tu proveedor.
+
+> **Importante:** Si al iniciar sesión redirige a `localhost`, ve a Supabase Dashboard → Authentication → URL Configuration y actualiza la **Site URL** y las **Redirect URLs** con la URL de producción.
 
 ---
 

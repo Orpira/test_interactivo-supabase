@@ -128,6 +128,20 @@ public/
 
 ---
 
+## Repositorio y Despliegue
+
+- **Repositorio:** https://github.com/Orpira/test_interactivo-supabase.git
+- **Despliegue:** Vercel (despliegue automático con cada push a `main`)
+- **Variables de entorno en Vercel:** `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`
+- **Configuración de Supabase Auth:** En Supabase Dashboard → Authentication → URL Configuration, configurar Site URL y Redirect URLs con la URL de producción en Vercel.
+
+### Errores comunes en despliegue
+
+- **`supabaseUrl is required`**: Las variables de entorno no están configuradas en el hosting. Agregar en Vercel → Settings → Environment Variables.
+- **Login redirige a `localhost`**: La Site URL en Supabase Auth sigue apuntando a `http://localhost:5173`. Actualizarla a la URL de producción y agregar la URL en Redirect URLs.
+
+---
+
 ## Conclusión
 
 Este proyecto es un ejemplo profesional de una plataforma educativa moderna, escalable y mantenible. Aplica los principios de desarrollo frontend actuales y es ideal para aprender buenas prácticas en un bootcamp. Explora el código, experimenta con los retos y ¡adapta la plataforma a tus necesidades!

@@ -46,7 +46,19 @@
 
 ## 9. Despliegue
 
-- El proyecto se puede desplegar en cualquier servicio de hosting estático (Vercel, Netlify, etc.).
+- El proyecto está alojado en GitHub: https://github.com/Orpira/test_interactivo-supabase.git
+- Se despliega en **Vercel** con despliegue automático en cada push a `main`.
+- Las variables de entorno (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`) deben configurarse en Vercel → Settings → Environment Variables.
+- En Supabase Dashboard → Authentication → URL Configuration se debe configurar:
+  - **Site URL**: la URL del sitio en Vercel (ej: `https://tu-proyecto.vercel.app`)
+  - **Redirect URLs**: agregar `https://tu-proyecto.vercel.app/**` para que el login OAuth redirija correctamente.
+
+### Errores comunes en despliegue
+
+| Error                        | Causa                                           | Solución                                                         |
+| ---------------------------- | ----------------------------------------------- | ---------------------------------------------------------------- |
+| `supabaseUrl is required`    | Variables de entorno no configuradas en hosting | Agregar `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` en Vercel |
+| Login redirige a `localhost` | Site URL de Supabase apunta a localhost         | Actualizar Site URL y Redirect URLs en Supabase Auth config      |
 
 ---
 
