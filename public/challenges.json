@@ -1,0 +1,1352 @@
+[
+  {
+    "title": "HTML - Reto 1 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel principiante.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "principiante",
+    "category": "html",
+    "id": "html-01"
+  },
+  {
+    "title": "HTML - Reto 2 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel principiante.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "principiante",
+    "category": "html",
+    "id": "html-02"
+  },
+  {
+    "title": "HTML - Reto 3 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel principiante.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "principiante",
+    "category": "html",
+    "id": "html-03"
+  },
+  {
+    "title": "HTML - Reto 4 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel principiante.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "principiante",
+    "category": "html",
+    "id": "html-04"
+  },
+  {
+    "title": "HTML - Reto 5 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel principiante.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "principiante",
+    "category": "html",
+    "id": "html-05"
+  },
+  {
+    "title": "HTML - Reto 6 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel principiante.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "principiante",
+    "category": "html",
+    "id": "html-06"
+  },
+  {
+    "title": "HTML - Reto 7 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel principiante.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "principiante",
+    "category": "html",
+    "id": "html-07"
+  },
+  {
+    "title": "HTML - Reto 8 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel principiante.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "principiante",
+    "category": "html",
+    "id": "html-08"
+  },
+  {
+    "title": "HTML - Reto 9 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel principiante.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "principiante",
+    "category": "html",
+    "id": "html-09"
+  },
+  {
+    "title": "HTML - Reto 10 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel principiante.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "principiante",
+    "category": "html",
+    "id": "html-10"
+  },
+  {
+    "title": "HTML - Reto 11 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel principiante.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "principiante",
+    "category": "html",
+    "id": "html-11"
+  },
+  {
+    "title": "HTML - Reto 12 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel principiante.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "principiante",
+    "category": "html",
+    "id": "html-12"
+  },
+  {
+    "title": "HTML - Reto 13 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel principiante.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "principiante",
+    "category": "html",
+    "id": "html-13"
+  },
+  {
+    "title": "HTML - Reto 14 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel principiante.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "principiante",
+    "category": "html",
+    "id": "html-14"
+  },
+  {
+    "title": "HTML - Reto 15 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel principiante.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "principiante",
+    "category": "html",
+    "id": "html-15"
+  },
+  {
+    "title": "HTML - Reto 1 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel intermedio.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "intermedio",
+    "category": "html",
+    "id": "html-16"
+  },
+  {
+    "title": "HTML - Reto 2 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel intermedio.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "intermedio",
+    "category": "html",
+    "id": "html-17"
+  },
+  {
+    "title": "HTML - Reto 3 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel intermedio.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "intermedio",
+    "category": "html",
+    "id": "html-18"
+  },
+  {
+    "title": "HTML - Reto 4 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel intermedio.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "intermedio",
+    "category": "html",
+    "id": "html-19"
+  },
+  {
+    "title": "HTML - Reto 5 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel intermedio.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "intermedio",
+    "category": "html",
+    "id": "html-20"
+  },
+  {
+    "title": "HTML - Reto 6 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel intermedio.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "intermedio",
+    "category": "html",
+    "id": "html-21"
+  },
+  {
+    "title": "HTML - Reto 7 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel intermedio.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "intermedio",
+    "category": "html",
+    "id": "html-22"
+  },
+  {
+    "title": "HTML - Reto 8 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel intermedio.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "intermedio",
+    "category": "html",
+    "id": "html-23"
+  },
+  {
+    "title": "HTML - Reto 9 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel intermedio.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "intermedio",
+    "category": "html",
+    "id": "html-24"
+  },
+  {
+    "title": "HTML - Reto 10 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel intermedio.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "intermedio",
+    "category": "html",
+    "id": "html-25"
+  },
+  {
+    "title": "HTML - Reto 11 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel intermedio.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "intermedio",
+    "category": "html",
+    "id": "html-26"
+  },
+  {
+    "title": "HTML - Reto 12 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel intermedio.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "intermedio",
+    "category": "html",
+    "id": "html-27"
+  },
+  {
+    "title": "HTML - Reto 13 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel intermedio.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "intermedio",
+    "category": "html",
+    "id": "html-28"
+  },
+  {
+    "title": "HTML - Reto 14 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel intermedio.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "intermedio",
+    "category": "html",
+    "id": "html-29"
+  },
+  {
+    "title": "HTML - Reto 15 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel intermedio.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "intermedio",
+    "category": "html",
+    "id": "html-30"
+  },
+  {
+    "title": "HTML - Reto 1 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel avanzado.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "avanzado",
+    "category": "html",
+    "id": "html-31"
+  },
+  {
+    "title": "HTML - Reto 2 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel avanzado.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "avanzado",
+    "category": "html",
+    "id": "html-32"
+  },
+  {
+    "title": "HTML - Reto 3 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel avanzado.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "avanzado",
+    "category": "html",
+    "id": "html-33"
+  },
+  {
+    "title": "HTML - Reto 4 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel avanzado.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "avanzado",
+    "category": "html",
+    "id": "html-34"
+  },
+  {
+    "title": "HTML - Reto 5 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel avanzado.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "avanzado",
+    "category": "html",
+    "id": "html-35"
+  },
+  {
+    "title": "HTML - Reto 6 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel avanzado.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "avanzado",
+    "category": "html",
+    "id": "html-36"
+  },
+  {
+    "title": "HTML - Reto 7 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel avanzado.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "avanzado",
+    "category": "html",
+    "id": "html-37"
+  },
+  {
+    "title": "HTML - Reto 8 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel avanzado.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "avanzado",
+    "category": "html",
+    "id": "html-38"
+  },
+  {
+    "title": "HTML - Reto 9 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel avanzado.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "avanzado",
+    "category": "html",
+    "id": "html-39"
+  },
+  {
+    "title": "HTML - Reto 10 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel avanzado.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "avanzado",
+    "category": "html",
+    "id": "html-40"
+  },
+  {
+    "title": "HTML - Reto 11 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel avanzado.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "avanzado",
+    "category": "html",
+    "id": "html-41"
+  },
+  {
+    "title": "HTML - Reto 12 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel avanzado.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "avanzado",
+    "category": "html",
+    "id": "html-42"
+  },
+  {
+    "title": "HTML - Reto 13 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel avanzado.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "avanzado",
+    "category": "html",
+    "id": "html-43"
+  },
+  {
+    "title": "HTML - Reto 14 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel avanzado.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "avanzado",
+    "category": "html",
+    "id": "html-44"
+  },
+  {
+    "title": "HTML - Reto 15 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel avanzado.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "avanzado",
+    "category": "html",
+    "id": "html-45"
+  },
+  {
+    "title": "HTML - Reto 16 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel avanzado.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "avanzado",
+    "category": "html",
+    "id": "html-46"
+  },
+  {
+    "title": "HTML - Reto 17 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel avanzado.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "avanzado",
+    "category": "html",
+    "id": "html-47"
+  },
+  {
+    "title": "HTML - Reto 18 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel avanzado.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "avanzado",
+    "category": "html",
+    "id": "html-48"
+  },
+  {
+    "title": "HTML - Reto 19 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel avanzado.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "avanzado",
+    "category": "html",
+    "id": "html-49"
+  },
+  {
+    "title": "HTML - Reto 20 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de HTML de nivel avanzado.\nCrea una estructura básica de una página HTML que incluya una cabecera, una sección principal y un pie de página.",
+    "initialCode": "<!-- Escribe tu código aquí -->",
+    "expectedOutput": "<header>...</header><main>...</main><footer>...</footer>",
+    "difficulty": "avanzado",
+    "category": "html",
+    "id": "html-50"
+  },
+  {
+    "title": "CSS - Reto 1 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel principiante.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "principiante",
+    "category": "css",
+    "id": "css-01"
+  },
+  {
+    "title": "CSS - Reto 2 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel principiante.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "principiante",
+    "category": "css",
+    "id": "css-02"
+  },
+  {
+    "title": "CSS - Reto 3 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel principiante.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "principiante",
+    "category": "css",
+    "id": "css-03"
+  },
+  {
+    "title": "CSS - Reto 4 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel principiante.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "principiante",
+    "category": "css",
+    "id": "css-04"
+  },
+  {
+    "title": "CSS - Reto 5 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel principiante.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "principiante",
+    "category": "css",
+    "id": "css-05"
+  },
+  {
+    "title": "CSS - Reto 6 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel principiante.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "principiante",
+    "category": "css",
+    "id": "css-06"
+  },
+  {
+    "title": "CSS - Reto 7 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel principiante.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "principiante",
+    "category": "css",
+    "id": "css-07"
+  },
+  {
+    "title": "CSS - Reto 8 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel principiante.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "principiante",
+    "category": "css",
+    "id": "css-08"
+  },
+  {
+    "title": "CSS - Reto 9 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel principiante.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "principiante",
+    "category": "css",
+    "id": "css-09"
+  },
+  {
+    "title": "CSS - Reto 10 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel principiante.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "principiante",
+    "category": "css",
+    "id": "css-10"
+  },
+  {
+    "title": "CSS - Reto 11 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel principiante.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "principiante",
+    "category": "css",
+    "id": "css-11"
+  },
+  {
+    "title": "CSS - Reto 12 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel principiante.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "principiante",
+    "category": "css",
+    "id": "css-12"
+  },
+  {
+    "title": "CSS - Reto 13 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel principiante.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "principiante",
+    "category": "css",
+    "id": "css-13"
+  },
+  {
+    "title": "CSS - Reto 14 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel principiante.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "principiante",
+    "category": "css",
+    "id": "css-14"
+  },
+  {
+    "title": "CSS - Reto 15 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel principiante.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "principiante",
+    "category": "css",
+    "id": "css-15"
+  },
+  {
+    "title": "CSS - Reto 1 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel intermedio.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "intermedio",
+    "category": "css",
+    "id": "css-16"
+  },
+  {
+    "title": "CSS - Reto 2 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel intermedio.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "intermedio",
+    "category": "css",
+    "id": "css-17"
+  },
+  {
+    "title": "CSS - Reto 3 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel intermedio.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "intermedio",
+    "category": "css",
+    "id": "css-18"
+  },
+  {
+    "title": "CSS - Reto 4 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel intermedio.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "intermedio",
+    "category": "css",
+    "id": "css-19"
+  },
+  {
+    "title": "CSS - Reto 5 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel intermedio.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "intermedio",
+    "category": "css",
+    "id": "css-20"
+  },
+  {
+    "title": "CSS - Reto 6 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel intermedio.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "intermedio",
+    "category": "css",
+    "id": "css-21"
+  },
+  {
+    "title": "CSS - Reto 7 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel intermedio.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "intermedio",
+    "category": "css",
+    "id": "css-22"
+  },
+  {
+    "title": "CSS - Reto 8 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel intermedio.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "intermedio",
+    "category": "css",
+    "id": "css-23"
+  },
+  {
+    "title": "CSS - Reto 9 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel intermedio.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "intermedio",
+    "category": "css",
+    "id": "css-24"
+  },
+  {
+    "title": "CSS - Reto 10 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel intermedio.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "intermedio",
+    "category": "css",
+    "id": "css-25"
+  },
+  {
+    "title": "CSS - Reto 11 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel intermedio.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "intermedio",
+    "category": "css",
+    "id": "css-26"
+  },
+  {
+    "title": "CSS - Reto 12 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel intermedio.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "intermedio",
+    "category": "css",
+    "id": "css-27"
+  },
+  {
+    "title": "CSS - Reto 13 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel intermedio.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "intermedio",
+    "category": "css",
+    "id": "css-28"
+  },
+  {
+    "title": "CSS - Reto 14 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel intermedio.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "intermedio",
+    "category": "css",
+    "id": "css-29"
+  },
+  {
+    "title": "CSS - Reto 15 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel intermedio.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "intermedio",
+    "category": "css",
+    "id": "css-30"
+  },
+  {
+    "title": "CSS - Reto 1 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel avanzado.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "avanzado",
+    "category": "css",
+    "id": "css-31"
+  },
+  {
+    "title": "CSS - Reto 2 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel avanzado.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "avanzado",
+    "category": "css",
+    "id": "css-32"
+  },
+  {
+    "title": "CSS - Reto 3 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel avanzado.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "avanzado",
+    "category": "css",
+    "id": "css-33"
+  },
+  {
+    "title": "CSS - Reto 4 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel avanzado.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "avanzado",
+    "category": "css",
+    "id": "css-34"
+  },
+  {
+    "title": "CSS - Reto 5 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel avanzado.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "avanzado",
+    "category": "css",
+    "id": "css-35"
+  },
+  {
+    "title": "CSS - Reto 6 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel avanzado.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "avanzado",
+    "category": "css",
+    "id": "css-36"
+  },
+  {
+    "title": "CSS - Reto 7 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel avanzado.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "avanzado",
+    "category": "css",
+    "id": "css-37"
+  },
+  {
+    "title": "CSS - Reto 8 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel avanzado.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "avanzado",
+    "category": "css",
+    "id": "css-38"
+  },
+  {
+    "title": "CSS - Reto 9 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel avanzado.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "avanzado",
+    "category": "css",
+    "id": "css-39"
+  },
+  {
+    "title": "CSS - Reto 10 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel avanzado.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "avanzado",
+    "category": "css",
+    "id": "css-40"
+  },
+  {
+    "title": "CSS - Reto 11 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel avanzado.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "avanzado",
+    "category": "css",
+    "id": "css-41"
+  },
+  {
+    "title": "CSS - Reto 12 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel avanzado.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "avanzado",
+    "category": "css",
+    "id": "css-42"
+  },
+  {
+    "title": "CSS - Reto 13 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel avanzado.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "avanzado",
+    "category": "css",
+    "id": "css-43"
+  },
+  {
+    "title": "CSS - Reto 14 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel avanzado.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "avanzado",
+    "category": "css",
+    "id": "css-44"
+  },
+  {
+    "title": "CSS - Reto 15 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel avanzado.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "avanzado",
+    "category": "css",
+    "id": "css-45"
+  },
+  {
+    "title": "CSS - Reto 16 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel avanzado.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "avanzado",
+    "category": "css",
+    "id": "css-46"
+  },
+  {
+    "title": "CSS - Reto 17 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel avanzado.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "avanzado",
+    "category": "css",
+    "id": "css-47"
+  },
+  {
+    "title": "CSS - Reto 18 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel avanzado.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "avanzado",
+    "category": "css",
+    "id": "css-48"
+  },
+  {
+    "title": "CSS - Reto 19 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel avanzado.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "avanzado",
+    "category": "css",
+    "id": "css-49"
+  },
+  {
+    "title": "CSS - Reto 20 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de CSS de nivel avanzado.\nAplica estilos para centrar un contenedor en la pantalla y darle un fondo azul.",
+    "initialCode": "/* Escribe tu CSS aquí */\n.container {}",
+    "expectedOutput": ".container { display: flex; justify-content: center; align-items: center; background-color: blue; }",
+    "difficulty": "avanzado",
+    "category": "css",
+    "id": "css-50"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 1 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel principiante.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "principiante",
+    "category": "javascript",
+    "id": "javascript-01"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 2 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel principiante.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "principiante",
+    "category": "javascript",
+    "id": "javascript-02"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 3 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel principiante.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "principiante",
+    "category": "javascript",
+    "id": "javascript-03"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 4 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel principiante.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "principiante",
+    "category": "javascript",
+    "id": "javascript-04"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 5 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel principiante.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "principiante",
+    "category": "javascript",
+    "id": "javascript-05"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 6 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel principiante.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "principiante",
+    "category": "javascript",
+    "id": "javascript-06"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 7 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel principiante.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "principiante",
+    "category": "javascript",
+    "id": "javascript-07"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 8 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel principiante.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "principiante",
+    "category": "javascript",
+    "id": "javascript-08"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 9 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel principiante.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "principiante",
+    "category": "javascript",
+    "id": "javascript-09"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 10 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel principiante.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "principiante",
+    "category": "javascript",
+    "id": "javascript-10"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 11 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel principiante.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "principiante",
+    "category": "javascript",
+    "id": "javascript-11"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 12 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel principiante.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "principiante",
+    "category": "javascript",
+    "id": "javascript-12"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 13 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel principiante.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "principiante",
+    "category": "javascript",
+    "id": "javascript-13"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 14 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel principiante.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "principiante",
+    "category": "javascript",
+    "id": "javascript-14"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 15 (Principiante)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel principiante.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "principiante",
+    "category": "javascript",
+    "id": "javascript-15"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 1 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel intermedio.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "intermedio",
+    "category": "javascript",
+    "id": "javascript-16"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 2 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel intermedio.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "intermedio",
+    "category": "javascript",
+    "id": "javascript-17"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 3 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel intermedio.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "intermedio",
+    "category": "javascript",
+    "id": "javascript-18"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 4 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel intermedio.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "intermedio",
+    "category": "javascript",
+    "id": "javascript-19"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 5 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel intermedio.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "intermedio",
+    "category": "javascript",
+    "id": "javascript-20"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 6 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel intermedio.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "intermedio",
+    "category": "javascript",
+    "id": "javascript-21"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 7 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel intermedio.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "intermedio",
+    "category": "javascript",
+    "id": "javascript-22"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 8 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel intermedio.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "intermedio",
+    "category": "javascript",
+    "id": "javascript-23"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 9 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel intermedio.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "intermedio",
+    "category": "javascript",
+    "id": "javascript-24"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 10 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel intermedio.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "intermedio",
+    "category": "javascript",
+    "id": "javascript-25"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 11 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel intermedio.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "intermedio",
+    "category": "javascript",
+    "id": "javascript-26"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 12 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel intermedio.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "intermedio",
+    "category": "javascript",
+    "id": "javascript-27"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 13 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel intermedio.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "intermedio",
+    "category": "javascript",
+    "id": "javascript-28"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 14 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel intermedio.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "intermedio",
+    "category": "javascript",
+    "id": "javascript-29"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 15 (Intermedio)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel intermedio.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "intermedio",
+    "category": "javascript",
+    "id": "javascript-30"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 1 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel avanzado.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "avanzado",
+    "category": "javascript",
+    "id": "javascript-31"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 2 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel avanzado.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "avanzado",
+    "category": "javascript",
+    "id": "javascript-32"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 3 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel avanzado.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "avanzado",
+    "category": "javascript",
+    "id": "javascript-33"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 4 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel avanzado.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "avanzado",
+    "category": "javascript",
+    "id": "javascript-34"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 5 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel avanzado.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "avanzado",
+    "category": "javascript",
+    "id": "javascript-35"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 6 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel avanzado.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "avanzado",
+    "category": "javascript",
+    "id": "javascript-36"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 7 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel avanzado.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "avanzado",
+    "category": "javascript",
+    "id": "javascript-37"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 8 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel avanzado.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "avanzado",
+    "category": "javascript",
+    "id": "javascript-38"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 9 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel avanzado.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "avanzado",
+    "category": "javascript",
+    "id": "javascript-39"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 10 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel avanzado.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "avanzado",
+    "category": "javascript",
+    "id": "javascript-40"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 11 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel avanzado.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "avanzado",
+    "category": "javascript",
+    "id": "javascript-41"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 12 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel avanzado.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "avanzado",
+    "category": "javascript",
+    "id": "javascript-42"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 13 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel avanzado.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "avanzado",
+    "category": "javascript",
+    "id": "javascript-43"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 14 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel avanzado.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "avanzado",
+    "category": "javascript",
+    "id": "javascript-44"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 15 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel avanzado.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "avanzado",
+    "category": "javascript",
+    "id": "javascript-45"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 16 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel avanzado.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "avanzado",
+    "category": "javascript",
+    "id": "javascript-46"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 17 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel avanzado.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "avanzado",
+    "category": "javascript",
+    "id": "javascript-47"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 18 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel avanzado.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "avanzado",
+    "category": "javascript",
+    "id": "javascript-48"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 19 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel avanzado.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "avanzado",
+    "category": "javascript",
+    "id": "javascript-49"
+  },
+  {
+    "title": "JAVASCRIPT - Reto 20 (Avanzado)",
+    "instructions": "Resuelve el siguiente reto de JAVASCRIPT de nivel avanzado.\nEscribe una función que reciba un arreglo de números y retorne la suma de todos sus elementos.",
+    "initialCode": "function sumarElementos(arr) {\n  // tu código aquí\n}",
+    "expectedOutput": "sumarElementos([1, 2, 3]) => 6",
+    "difficulty": "avanzado",
+    "category": "javascript",
+    "id": "javascript-50"
+  }
+]

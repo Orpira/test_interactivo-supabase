@@ -1,0 +1,22 @@
+@layer utilities {
+  @keyframes glide {
+    0% {
+      transform: translateX(0);
+      opacity: 0;
+      box-shadow: 0 0 0px #3b82f6;
+    }
+    50% {
+      opacity: 1;
+      box-shadow: 0 0 20px #3b82f6;
+    }
+    100% {
+      transform: translateX(100vw);
+      opacity: 0;
+      box-shadow: 0 0 0px #3b82f6;
+    }
+  }
+
+  .animate-glide {
+    animation: glide 3s linear infinite;
+  }
+}
