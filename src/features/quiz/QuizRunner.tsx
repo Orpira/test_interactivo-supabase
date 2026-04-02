@@ -18,6 +18,7 @@ type AnswerSummary = {
 	options: string[];
 	correctAnswer: string;
 	selectedAnswer: string;
+	subcategory?: string;
 	shortExplanation?: string;
 	sourceUrl?: string;
 	sourceName?: string;
@@ -39,6 +40,7 @@ export default function QuizRunner() {
 	const { questions: initialQuestions, loading: initialLoading } = useQuestions(
 		category,
 		count,
+		subcategory,
 	);
 
 	const [questions, setQuestions] = useState<Question[]>(
@@ -72,7 +74,7 @@ export default function QuizRunner() {
 					.select("*")
 					.eq("category", category);
 				if (subcategory) {
-					query = query.eq("subcategory", subcategory);
+					query = query.eq("subcategory", decodeURIComponent(subcategory));
 				}
 				const { data, error } = await query;
 				if (error) throw error;
@@ -89,7 +91,7 @@ export default function QuizRunner() {
 		return () => {
 			isMounted = false;
 		};
-	}, [category, count, setQuestions]);
+	}, [category, subcategory, count]);
 
 	const currentQuestion = questions[currentIndex];
 
@@ -118,6 +120,7 @@ export default function QuizRunner() {
 			options: currentQuestion.options,
 			correctAnswer: currentQuestion.correctAnswer,
 			selectedAnswer: option,
+			subcategory: subcategory ? decodeURIComponent(subcategory) : undefined,
 			shortExplanation: currentQuestion.shortExplanation,
 			sourceUrl: currentQuestion.sourceUrl,
 			sourceName: currentQuestion.sourceName,
@@ -137,6 +140,9 @@ export default function QuizRunner() {
 						total: questions.length,
 						category,
 						summary: summaryCopy,
+						subcategory: subcategory
+							? decodeURIComponent(subcategory)
+							: undefined,
 					},
 				});
 				// No limpiar el estado aquí, para que el usuario pueda ver el resultado y navegar correctamente

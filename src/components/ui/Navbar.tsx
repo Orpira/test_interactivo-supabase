@@ -1,10 +1,21 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../services/auth";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { supabase } from "@/services/supabase";
+import QuizCategoryModal from "./QuizCategoryModal";
+
+type SubcategoryOption = {
+	name: string;
+	slug: string;
+	questionCount: number;
+};
 
 export default function Navbar() {
 	const { isAuthenticated, loginWithRedirect, loginWithGoogle, user, logout } =
 		useAuth();
+	const location = useLocation();
+	const navigate = useNavigate();
+	const autoOpenedCategoryRef = useRef("");
 	const [showLoginModal, setShowLoginModal] = useState(false);
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -12,6 +23,9 @@ export default function Navbar() {
 	const [loading, setLoading] = useState(false);
 	const [showSubcategoryModal, setShowSubcategoryModal] = useState(false);
 	const [selectedCategory, setSelectedCategory] = useState("");
+	const [subcategories, setSubcategories] = useState<SubcategoryOption[]>([]);
+	const [subcategoriesLoading, setSubcategoriesLoading] = useState(false);
+	const [subcategoriesError, setSubcategoriesError] = useState("");
 
 	const MAIN_CATEGORIES = [
 		{ key: "frontend", label: "Frontend" },
@@ -19,31 +33,6 @@ export default function Navbar() {
 		{ key: "devops", label: "DevOps" },
 		{ key: "testing", label: "Testing" },
 	];
-
-	const SUBCATEGORIES: Record<string, { name: string; count: number }[]> = {
-		frontend: [
-			{ name: "HTML", count: 12 },
-			{ name: "CSS", count: 10 },
-			{ name: "JavaScript", count: 18 },
-			{ name: "React", count: 8 },
-		],
-		backend: [
-			{ name: "Node.js", count: 9 },
-			{ name: "Express", count: 7 },
-			{ name: "Bases de Datos", count: 15 },
-			{ name: "Autenticación", count: 6 },
-		],
-		devops: [
-			{ name: "Docker", count: 5 },
-			{ name: "CI/CD", count: 4 },
-			{ name: "Kubernetes", count: 3 },
-		],
-		testing: [
-			{ name: "Unitario", count: 6 },
-			{ name: "Integración", count: 4 },
-			{ name: "E2E", count: 2 },
-		],
-	};
 
 	async function handleEmailLogin(e: React.FormEvent) {
 		e.preventDefault();
@@ -62,30 +51,73 @@ export default function Navbar() {
 		}
 	}
 
-	function handleCategoryClick(categoryKey: string) {
+	async function handleCategoryClick(categoryKey: string) {
 		setSelectedCategory(categoryKey);
 		setShowSubcategoryModal(true);
-	}
+		setSubcategories([]);
+		setSubcategoriesError("");
+		setSubcategoriesLoading(true);
 
-	function handleSubcategorySelect(subcat: string) {
-		setShowSubcategoryModal(false);
-		// Aquí puedes navegar o filtrar quizzes por subcategoría
-	}
+		try {
+			const { data, error } = await supabase
+				.from("questions")
+				.select("subcategory")
+				.eq("category", categoryKey);
 
-	function getSubcategories(category: string): string[] {
-		switch (category) {
-			case "HTML":
-				return ["Etiquetas", "Formularios", "Semántica", "Accesibilidad"];
-			case "CSS":
-				return ["Selectores", "Flexbox", "Grid", "Animaciones"];
-			case "JavaScript":
-				return ["Sintaxis", "Funciones", "DOM", "ES6+"];
-			case "React":
-				return ["Componentes", "Hooks", "Estado", "Context"];
-			default:
-				return [];
+			if (error) throw error;
+
+			const counts = (data ?? []).reduce<Record<string, number>>((acc, row) => {
+				const value = (row as { subcategory?: string }).subcategory;
+				if (!value) return acc;
+				acc[value] = (acc[value] || 0) + 1;
+				return acc;
+			}, {});
+
+			const mapped = Object.entries(counts)
+				.map(([name, questionCount]) => ({
+					name,
+					slug: encodeURIComponent(name),
+					questionCount,
+				}))
+				.sort((a, b) => b.questionCount - a.questionCount);
+
+			setSubcategories(mapped);
+			if (mapped.length === 0) {
+				setSubcategoriesError(
+					"No hay subcategorias disponibles en esta categoria.",
+				);
+			}
+		} catch (err: any) {
+			setSubcategoriesError(
+				err?.message || "No se pudieron cargar las subcategorias.",
+			);
+		} finally {
+			setSubcategoriesLoading(false);
 		}
 	}
+
+	function handleStartQuiz(subcat: string, count: number) {
+		setShowSubcategoryModal(false);
+		navigate(
+			`/quiz/${selectedCategory}/${encodeURIComponent(subcat)}?count=${count}`,
+		);
+	}
+
+	useEffect(() => {
+		const params = new URLSearchParams(location.search);
+		const categoryFromQuery = params.get("quizCategory");
+		if (!categoryFromQuery) {
+			autoOpenedCategoryRef.current = "";
+			return;
+		}
+
+		const decodedCategory = decodeURIComponent(categoryFromQuery);
+		if (autoOpenedCategoryRef.current === decodedCategory) return;
+		if (!MAIN_CATEGORIES.some((cat) => cat.key === decodedCategory)) return;
+
+		autoOpenedCategoryRef.current = decodedCategory;
+		void handleCategoryClick(decodedCategory);
+	}, [location.search]);
 
 	return (
 		<>
@@ -141,13 +173,13 @@ export default function Navbar() {
 					{isAuthenticated ? (
 						<>
 							<span className="font-semibold text-indigo-200">
-								{user?.name || user?.email}
+								{user?.email}
 							</span>
 							<button
-								onClick={logout}
+								onClick={() => void logout()}
 								className="bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded transition"
 							>
-								Cerrar sesión
+								Cerrar sesion
 							</button>
 						</>
 					) : (
@@ -155,7 +187,7 @@ export default function Navbar() {
 							onClick={() => setShowLoginModal(true)}
 							className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded transition"
 						>
-							Iniciar sesión
+							Iniciar sesion
 						</button>
 					)}
 				</div>
@@ -168,10 +200,10 @@ export default function Navbar() {
 							onClick={() => setShowLoginModal(false)}
 							aria-label="Cerrar"
 						>
-							×
+							x
 						</button>
 						<h2 className="text-xl font-bold mb-4 text-center text-slate-900">
-							Iniciar sesión
+							Iniciar sesion
 						</h2>
 						<button
 							onClick={async () => {
@@ -215,13 +247,13 @@ export default function Navbar() {
 							className="w-full bg-gray-700 hover:bg-gray-800 text-white py-2 rounded mb-4 flex items-center justify-center gap-2"
 							disabled={loading}
 						>
-							Iniciar con Email/Contraseña
+							Iniciar con Email/Contrasena
 						</button>
 						<form onSubmit={handleEmailLogin} className="space-y-3">
 							<input
 								type="email"
 								className="w-full border px-3 py-2 rounded"
-								placeholder="Correo electrónico"
+								placeholder="Correo electronico"
 								value={email}
 								onChange={(e) => setEmail(e.target.value)}
 								required
@@ -230,7 +262,7 @@ export default function Navbar() {
 							<input
 								type="password"
 								className="w-full border px-3 py-2 rounded"
-								placeholder="Contraseña"
+								placeholder="Contrasena"
 								value={password}
 								onChange={(e) => setPassword(e.target.value)}
 								required
@@ -249,38 +281,18 @@ export default function Navbar() {
 					</div>
 				</div>
 			)}
-			{showSubcategoryModal && (
-				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-					<div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-xs relative">
-						<button
-							className="absolute top-2 right-3 text-gray-500 hover:text-red-500 text-2xl font-bold"
-							onClick={() => setShowSubcategoryModal(false)}
-							aria-label="Cerrar"
-						>
-							×
-						</button>
-						<h2 className="text-xl font-bold mb-4 text-center text-slate-900">
-							Subcategorías de{" "}
-							{MAIN_CATEGORIES.find((c) => c.key === selectedCategory)?.label}
-						</h2>
-						<ul className="space-y-2">
-							{(SUBCATEGORIES[selectedCategory] || []).map((subcat) => (
-								<li key={subcat.name}>
-									<button
-										className="w-full text-left px-4 py-2 rounded hover:bg-indigo-100 flex justify-between"
-										onClick={() => handleSubcategorySelect(subcat.name)}
-									>
-										<span>{subcat.name}</span>
-										<span className="text-xs text-slate-500">
-											{subcat.count} preguntas
-										</span>
-									</button>
-								</li>
-							))}
-						</ul>
-					</div>
-				</div>
-			)}
+			<QuizCategoryModal
+				open={showSubcategoryModal}
+				onClose={() => setShowSubcategoryModal(false)}
+				category={
+					MAIN_CATEGORIES.find((c) => c.key === selectedCategory)?.label ||
+					selectedCategory
+				}
+				subcategories={subcategories}
+				loading={subcategoriesLoading}
+				error={subcategoriesError}
+				onStartQuiz={handleStartQuiz}
+			/>
 		</>
 	);
 }

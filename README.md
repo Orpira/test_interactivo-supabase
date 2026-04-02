@@ -10,9 +10,11 @@ Desarrollada con tecnologías: React, Vite, Tailwind, Zustand, Supabase y más.
 
 ## 🚀 Funcionalidades principales
 
-- ✅ Realización de cuestionarios por categoría (HTML, CSS, JavaScript, Formularios, Responsive, Linux)
+- ✅ Realización de cuestionarios por categoría principal y subcategoría
+- ✅ Selección de subcategoría y número de preguntas desde modal dinámica en el navbar
 - ✅ Acceso con o sin autenticación (Supabase Auth)
 - ✅ Resultados con puntuación y ranking en tiempo real
+- ✅ Dashboard y ranking con métricas por categoría y subcategoría
 - ✅ Editor de código con soporte para HTML, CSS y JS
 - ✅ Guardado de código y visualización de historial
 - ✅ Formulario de contacto usando `formsubmit.co`
@@ -118,6 +120,26 @@ npm run test
 
 ```bash
 npx playwright test
+```
+
+---
+
+## 🧩 Flujo actual de quizzes
+
+1. Desde el navbar, el usuario abre `Quizzes` y elige una categoría principal.
+2. La aplicación consulta Supabase en la tabla `questions` filtrando primero por `category`.
+3. Con ese resultado se construye una modal dinámica con las subcategorías disponibles y el total de preguntas por cada una.
+4. El usuario selecciona la subcategoría y la cantidad de preguntas a responder.
+5. El runner del quiz consulta `questions` filtrando por `category` y `subcategory`.
+6. Al finalizar, el resultado guarda categoría, subcategoría y resumen de respuestas para alimentar dashboard, historial y ranking.
+
+### Nota de esquema en Supabase
+
+La tabla `resultados` debe incluir la columna `subcategory` para registrar correctamente los quizzes realizados por subcategoría:
+
+```sql
+ALTER TABLE resultados
+ADD COLUMN IF NOT EXISTS subcategory TEXT;
 ```
 
 ---

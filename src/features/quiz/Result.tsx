@@ -17,6 +17,7 @@ export default function Result({ answers: answersProp }: Props) {
 	const [dbScore, setDbScore] = useState<number | undefined>();
 	const [dbTotal, setDbTotal] = useState<number | undefined>();
 	const [dbCategory, setDbCategory] = useState<string | undefined>();
+	const [dbSubcategory, setDbSubcategory] = useState<string | undefined>();
 
 	// Leer id desde query params (?id=xxx)
 	const searchParams = new URLSearchParams(location.search);
@@ -26,11 +27,13 @@ export default function Result({ answers: answersProp }: Props) {
 		score?: number;
 		total?: number;
 		category?: string;
+		subcategory?: string;
 		summary?: {
 			question: string;
 			options: string[];
 			correctAnswer: string;
 			selectedAnswer: string;
+			subcategory?: string;
 			shortExplanation?: string;
 			sourceUrl?: string;
 			sourceName?: string;
@@ -52,6 +55,7 @@ export default function Result({ answers: answersProp }: Props) {
 						setDbScore(data.score);
 						setDbTotal(data.total);
 						setDbCategory(data.category);
+						setDbSubcategory(data.subcategory ?? data.subcategoria);
 					}
 					setLoadingFromDB(false);
 				});
@@ -78,6 +82,11 @@ export default function Result({ answers: answersProp }: Props) {
 	const finalScore = state?.score ?? dbScore;
 	const finalTotal = state?.total ?? dbTotal;
 	const finalCategory = state?.category ?? dbCategory;
+	const finalSubcategory =
+		state?.subcategory ??
+		state?.summary?.[0]?.subcategory ??
+		dbSubcategory ??
+		dbSummary?.[0]?.subcategory;
 
 	// Guardar resultado en Supabase (solo cuando viene del quiz, no desde ?id=)
 	useEffect(() => {
@@ -99,6 +108,7 @@ export default function Result({ answers: answersProp }: Props) {
 				score: finalScore,
 				total: finalTotal,
 				category: String(finalCategory),
+				subcategory: finalSubcategory ?? null,
 				summary: state?.summary ?? null,
 				timestamp: new Date().toISOString(),
 			};
@@ -112,7 +122,14 @@ export default function Result({ answers: answersProp }: Props) {
 				});
 			updateUserStats(user, finalCategory, finalScore, finalTotal);
 		}
-	}, [isAuthenticated, user, finalScore, finalTotal, finalCategory]);
+	}, [
+		isAuthenticated,
+		user,
+		finalScore,
+		finalTotal,
+		finalCategory,
+		finalSubcategory,
+	]);
 
 	if (loadingFromDB) {
 		return <p className="p-6 text-center">Cargando resultado...</p>;
@@ -163,6 +180,9 @@ export default function Result({ answers: answersProp }: Props) {
 	};
 
 	const message = getMessage(percentage);
+	const retryQuizLink = finalCategory
+		? `/?quizCategory=${encodeURIComponent(finalCategory)}`
+		: "/";
 
 	return (
 		<section className="max-w-2xl mx-auto px-4 py-8 space-y-6">
@@ -187,7 +207,7 @@ export default function Result({ answers: answersProp }: Props) {
 				</p>
 				<div className="flex justify-center gap-3 pt-2">
 					<Link
-						to="/quiz"
+						to={retryQuizLink}
 						className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-sm"
 					>
 						Intentar otro quiz

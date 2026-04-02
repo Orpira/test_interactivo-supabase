@@ -91,8 +91,12 @@ public/
    - Si el usuario no está autenticado, se muestra un modal informativo y no se permite el acceso.
 
 3. **Tests y Resultados**
-   - El usuario puede acceder a `/quiz` para realizar tests interactivos.
-   - Los resultados se almacenan y pueden consultarse en el historial.
+
+- El usuario inicia el flujo de quiz desde el `Navbar`, seleccionando primero una categoría principal.
+- La aplicación consulta Supabase por `category` y abre una modal con subcategorías disponibles y cantidad de preguntas.
+- El usuario elige subcategoría y número de preguntas antes de comenzar.
+- El runner del quiz filtra preguntas por `category` y `subcategory`.
+- Los resultados se almacenan con categoría, subcategoría y resumen, y pueden consultarse en el historial, dashboard y ranking.
 
 4. **Gestión de Estado y Datos**
    - Zustand gestiona el estado global de retos, tests y resultados.
@@ -106,12 +110,13 @@ public/
 
 ## Componentes y Funcionalidades Destacadas
 
-- **Navbar**: Responsive, con menú hamburguesa en móvil, fondo degradado y opciones protegidas por autenticación.
+- **Navbar**: Responsive, con entrada al flujo de quizzes por categoría principal y apertura de modal de subcategorías dinámica.
 - **Home**: Animaciones con Framer Motion, imagen giratoria, cards de categorías con sombra y botón destacado.
-- **Modales**: Mensajes claros para acceso restringido y acciones de login.
+- **Modales**: Mensajes claros para acceso restringido, login y selección de subcategoría con imágenes y número de preguntas.
 - **Editor**: Integración con Monaco Editor para retos de código.
-- **Dashboard**: Estadísticas y logros del usuario.
+- **Dashboard**: Estadísticas, logros y visualización de rendimiento por categoría y subcategoría.
 - **Historial**: Visualización de tests y envíos de código previos.
+- **Ranking**: Tabla general y recientes con columna de subcategoría y filtros por categoría/subcategoría.
 - **Footer**: Fondo degradado, iconos de redes sociales y enlaces externos.
 
 ---
@@ -139,6 +144,16 @@ public/
 
 - **`supabaseUrl is required`**: Las variables de entorno no están configuradas en el hosting. Agregar en Vercel → Settings → Environment Variables.
 - **Login redirige a `localhost`**: La Site URL en Supabase Auth sigue apuntando a `http://localhost:5173`. Actualizarla a la URL de producción y agregar la URL en Redirect URLs.
+
+### Ajuste requerido de esquema para resultados por subcategoría
+
+- La tabla `resultados` debe incorporar la columna `subcategory` para persistir correctamente los quizzes realizados por subcategoría.
+- SQL recomendado:
+
+```sql
+ALTER TABLE resultados
+ADD COLUMN IF NOT EXISTS subcategory TEXT;
+```
 
 ---
 

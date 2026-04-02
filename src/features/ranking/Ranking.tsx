@@ -10,6 +10,9 @@ type Resultado = {
 	score: number;
 	total: number;
 	category: string;
+	subcategory?: string;
+	subcategoria?: string;
+	summary?: Array<{ subcategory?: string; subcategoria?: string }>;
 	timestamp?: string;
 };
 
@@ -47,6 +50,35 @@ export default function Ranking() {
 
 		cargarResultados();
 	}, []);
+
+	const getSubcategory = (resultado: Resultado) => {
+		const raw =
+			resultado.subcategory ??
+			resultado.subcategoria ??
+			resultado.summary?.[0]?.subcategory ??
+			resultado.summary?.[0]?.subcategoria;
+
+		if (!raw) return "Sin subcategoria";
+
+		try {
+			return decodeURIComponent(raw);
+		} catch {
+			return raw;
+		}
+	};
+
+	const matchesRankingFilter = (resultado: Resultado, filter: string) => {
+		const normalizedFilter = filter.toLowerCase();
+		if (!normalizedFilter) return true;
+
+		return (
+			(resultado.name || resultado.email)
+				.toLowerCase()
+				.includes(normalizedFilter) ||
+			resultado.category.toLowerCase().includes(normalizedFilter) ||
+			getSubcategory(resultado).toLowerCase().includes(normalizedFilter)
+		);
+	};
 
 	if (!isAuthenticated) {
 		return (
@@ -91,7 +123,7 @@ export default function Ranking() {
 					<input
 						type="text"
 						className="border px-3 py-2 rounded w-full md:w-64"
-						placeholder="Filtrar por nombre, categoría o email..."
+						placeholder="Filtrar por nombre, categoria, subcategoria o email..."
 						value={rankingFilter}
 						onChange={(e) => setRankingFilter(e.target.value)}
 					/>
@@ -105,21 +137,14 @@ export default function Ranking() {
 								<th className="p-2">#</th>
 								<th className="p-2">Nombre</th>
 								<th className="p-2">Categoría</th>
+								<th className="p-2">Subcategoría</th>
 								<th className="p-2">Puntuación</th>
 								<th className="p-2">Porcentaje</th>
 							</tr>
 						</thead>
 						<tbody>
 							{resultados
-								.filter(
-									(res) =>
-										(res.name || res.email)
-											.toLowerCase()
-											.includes(rankingFilter.toLowerCase()) ||
-										res.category
-											.toLowerCase()
-											.includes(rankingFilter.toLowerCase()),
-								)
+								.filter((res) => matchesRankingFilter(res, rankingFilter))
 								.slice(0, topCount)
 								.map((res, i) => (
 									<tr
@@ -142,6 +167,7 @@ export default function Ranking() {
 										</td>
 										<td className="p-2">{res.name || res.email}</td>
 										<td className="p-2">{res.category.toUpperCase()}</td>
+										<td className="p-2">{getSubcategory(res)}</td>
 										<td className="p-2">
 											{res.score} / {res.total}
 										</td>
@@ -160,7 +186,7 @@ export default function Ranking() {
 					<input
 						type="text"
 						className="border px-3 py-2 rounded w-full md:w-64"
-						placeholder="Filtrar por nombre, categoría o email..."
+						placeholder="Filtrar por nombre, categoria, subcategoria o email..."
 						value={recientesFilter}
 						onChange={(e) => setRecientesFilter(e.target.value)}
 					/>
@@ -175,21 +201,14 @@ export default function Ranking() {
 									<th className="p-2">Fecha</th>
 									<th className="p-2">Nombre</th>
 									<th className="p-2">Categoría</th>
+									<th className="p-2">Subcategoría</th>
 									<th className="p-2">Puntuación</th>
 									<th className="p-2">Porcentaje</th>
 								</tr>
 							</thead>
 							<tbody>
 								{recientes
-									.filter(
-										(res) =>
-											(res.name || res.email)
-												.toLowerCase()
-												.includes(recientesFilter.toLowerCase()) ||
-											res.category
-												.toLowerCase()
-												.includes(recientesFilter.toLowerCase()),
-									)
+									.filter((res) => matchesRankingFilter(res, recientesFilter))
 									.slice(
 										(recientesPage - 1) * recientesPerPage,
 										recientesPage * recientesPerPage,
@@ -203,6 +222,7 @@ export default function Ranking() {
 											</td>
 											<td className="p-2">{res.name || res.email}</td>
 											<td className="p-2">{res.category.toUpperCase()}</td>
+											<td className="p-2">{getSubcategory(res)}</td>
 											<td className="p-2">
 												{res.score} / {res.total}
 											</td>

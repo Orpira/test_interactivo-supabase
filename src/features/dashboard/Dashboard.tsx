@@ -10,6 +10,7 @@ export default function Dashboard() {
 	const { user } = useAuth();
 	const { history, loading } = useUserHistory();
 	const navigate = useNavigate();
+	const [historyFilter, setHistoryFilter] = useState("");
 
 	const totalTests = history.length;
 	const averageScore = history.length
@@ -38,7 +39,54 @@ export default function Dashboard() {
 		}),
 	);
 
+	const normalizeSubcategory = (value: string) => {
+		try {
+			return decodeURIComponent(value);
+		} catch {
+			return value;
+		}
+	};
+
+	const getEntrySubcategory = (entry: any) => {
+		const raw =
+			entry.subcategory ??
+			entry.subcategoria ??
+			entry.summary?.[0]?.subcategory ??
+			entry.summary?.[0]?.subcategoria;
+		if (!raw) return "Sin subcategoria";
+		return normalizeSubcategory(String(raw));
+	};
+
+	const averagesBySubcategory = history.reduce(
+		(acc, h) => {
+			const subcategory = getEntrySubcategory(h);
+			if (!acc[subcategory]) {
+				acc[subcategory] = { total: 0, count: 0 };
+			}
+			acc[subcategory].total += h.score / h.total;
+			acc[subcategory].count += 1;
+			return acc;
+		},
+		{} as Record<string, { total: number; count: number }>,
+	);
+
+	const subcategoryChartData = Object.entries(averagesBySubcategory).map(
+		([subcategory, { total, count }]) => ({
+			category: subcategory,
+			average: Number(((total / count) * 10).toFixed(2)),
+		}),
+	);
+
 	const lastFive = [...history]
+		.filter((entry) => {
+			const normalizedFilter = historyFilter.toLowerCase();
+			if (!normalizedFilter) return true;
+
+			return (
+				String(entry.category).toLowerCase().includes(normalizedFilter) ||
+				getEntrySubcategory(entry).toLowerCase().includes(normalizedFilter)
+			);
+		})
 		.sort((a, b) => b.timestamp - a.timestamp) // ordena de más reciente a más antiguo
 		.slice(0, 5);
 
@@ -102,15 +150,33 @@ export default function Dashboard() {
 
 			{/* (Placeholder) Aquí irá el gráfico y resumen más adelante */}
 			<h2 className="text-2xl font-bold mb-4">Rendimiento por Categoría</h2>
-			<PerformanceChart data={chartData} />
+			<PerformanceChart data={chartData} title="Rendimiento por categoria" />
+
+			<h2 className="text-2xl font-bold mt-8 mb-4">
+				Rendimiento por Subcategoria
+			</h2>
+			<PerformanceChart
+				data={subcategoryChartData}
+				title="Rendimiento por subcategoria"
+			/>
 
 			{/* Últimos 5 quiz */}
 			<section className="bg-white rounded shadow p-4">
-				<h3 className="text-lg font-semibold mb-2">🕒 Últimos 5 quiz</h3>
+				<div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-2">
+					<h3 className="text-lg font-semibold">🕒 Últimos 5 quiz</h3>
+					<input
+						type="text"
+						className="border px-3 py-2 rounded w-full md:w-72"
+						placeholder="Filtrar por categoria o subcategoria..."
+						value={historyFilter}
+						onChange={(e) => setHistoryFilter(e.target.value)}
+					/>
+				</div>
 				<table className="w-full text-left text-sm">
 					<thead>
 						<tr className="border-b font-medium">
 							<th className="p-2">Categoría</th>
+							<th className="p-2">Subcategoría</th>
 							<th className="p-2">Fecha</th>
 							<th className="p-2">Puntaje</th>
 							<th className="p-2">Detalles</th>
@@ -120,6 +186,7 @@ export default function Dashboard() {
 						{lastFive.map((entry, i) => (
 							<tr key={i} className="border-b hover:bg-gray-50">
 								<td className="p-2">{entry.category}</td>
+								<td className="p-2">{getEntrySubcategory(entry)}</td>
 								<td className="p-2">
 									{new Date(entry.timestamp).toLocaleString()}
 								</td>

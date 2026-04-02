@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS resultados (
   score INTEGER NOT NULL,
   total INTEGER NOT NULL,
   category TEXT NOT NULL,
+  subcategory TEXT,
   summary JSONB,
   timestamp TIMESTAMPTZ DEFAULT now()
 );

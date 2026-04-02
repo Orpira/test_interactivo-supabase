@@ -1,18 +1,27 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../services/supabase";
 
-export function useQuestions(category: string, count: number = 10) {
+export function useQuestions(
+	category: string,
+	count: number = 10,
+	subcategory?: string,
+) {
 	const [questions, setQuestions] = useState<any[]>([]);
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		const load = async () => {
 			try {
-				const { data, error } = await supabase
+				let query = supabase
 					.from("questions")
 					.select("*")
-					.eq("category", category)
-					.limit(count);
+					.eq("category", category);
+
+				if (subcategory) {
+					query = query.eq("subcategory", decodeURIComponent(subcategory));
+				}
+
+				const { data, error } = await query.limit(count);
 				if (error) throw error;
 				setQuestions(data ?? []);
 			} catch (err) {
@@ -22,7 +31,7 @@ export function useQuestions(category: string, count: number = 10) {
 			}
 		};
 		load();
-	}, [category, count]);
+	}, [category, count, subcategory]);
 
 	return { questions, loading };
 }
