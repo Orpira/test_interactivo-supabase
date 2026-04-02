@@ -64,13 +64,13 @@ export default function QuizRunner() {
 
 	useEffect(() => {
 		let isMounted = true;
-		// Cargar preguntas desde Supabase para todas las categorías
+		// Cargar preguntas desde Supabase para todas las subcategorías
 		const loadQuestions = async () => {
 			try {
 				const { data, error } = await supabase
 					.from("questions")
 					.select("*")
-					.eq("subcategoria", category);
+					.eq("subcategory", category);
 				if (error) throw error;
 				// Barajar y tomar las primeras N
 				const shuffled = shuffleArray(data ?? []).slice(0, count);

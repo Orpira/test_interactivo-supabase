@@ -11,7 +11,7 @@ export function useQuestions(category: string, count: number = 10) {
 				const { data, error } = await supabase
 					.from("questions")
 					.select("*")
-					.eq("subcategoria", category)
+					.eq("subcategory", category)
 					.limit(count);
 				if (error) throw error;
 				setQuestions(data ?? []);
