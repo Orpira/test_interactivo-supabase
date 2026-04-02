@@ -3,47 +3,12 @@ import { useAuth } from "../../services/auth";
 import { useState } from "react";
 
 export default function Navbar() {
-	const { isAuthenticated, loginWithRedirect, loginWithGoogle, user, logout } =
-		useAuth();
+	const { isAuthenticated, loginWithGoogle, user, logout } = useAuth();
 	const [showLoginModal, setShowLoginModal] = useState(false);
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState("");
 	const [loading, setLoading] = useState(false);
-	const [showSubcategoryModal, setShowSubcategoryModal] = useState(false);
-	const [selectedCategory, setSelectedCategory] = useState("");
-
-	const MAIN_CATEGORIES = [
-		{ key: "frontend", label: "Frontend" },
-		{ key: "backend", label: "Backend" },
-		{ key: "devops", label: "DevOps" },
-		{ key: "testing", label: "Testing" },
-	];
-
-	const SUBCATEGORIES: Record<string, { name: string; count: number }[]> = {
-		frontend: [
-			{ name: "HTML", count: 12 },
-			{ name: "CSS", count: 10 },
-			{ name: "JavaScript", count: 18 },
-			{ name: "React", count: 8 },
-		],
-		backend: [
-			{ name: "Node.js", count: 9 },
-			{ name: "Express", count: 7 },
-			{ name: "Bases de Datos", count: 15 },
-			{ name: "Autenticación", count: 6 },
-		],
-		devops: [
-			{ name: "Docker", count: 5 },
-			{ name: "CI/CD", count: 4 },
-			{ name: "Kubernetes", count: 3 },
-		],
-		testing: [
-			{ name: "Unitario", count: 6 },
-			{ name: "Integración", count: 4 },
-			{ name: "E2E", count: 2 },
-		],
-	};
 
 	async function handleEmailLogin(e: React.FormEvent) {
 		e.preventDefault();
@@ -62,31 +27,6 @@ export default function Navbar() {
 		}
 	}
 
-	function handleCategoryClick(categoryKey: string) {
-		setSelectedCategory(categoryKey);
-		setShowSubcategoryModal(true);
-	}
-
-	function handleSubcategorySelect(subcat: string) {
-		setShowSubcategoryModal(false);
-		// Aquí puedes navegar o filtrar quizzes por subcategoría
-	}
-
-	function getSubcategories(category: string): string[] {
-		switch (category) {
-			case "HTML":
-				return ["Etiquetas", "Formularios", "Semántica", "Accesibilidad"];
-			case "CSS":
-				return ["Selectores", "Flexbox", "Grid", "Animaciones"];
-			case "JavaScript":
-				return ["Sintaxis", "Funciones", "DOM", "ES6+"];
-			case "React":
-				return ["Componentes", "Hooks", "Estado", "Context"];
-			default:
-				return [];
-		}
-	}
-
 	return (
 		<>
 			<nav className="sticky top-0 z-50 bg-slate-900 text-white px-4 py-3 flex items-center gap-8 shadow-md backdrop-blur-md">
@@ -97,35 +37,9 @@ export default function Navbar() {
 				<Link to="/" className="hover:text-indigo-300">
 					Inicio
 				</Link>
-				<div className="relative group">
-					<button className="hover:text-indigo-300 focus:outline-none flex items-center gap-1">
-						Quizzes
-						<svg
-							className="w-4 h-4"
-							fill="none"
-							stroke="currentColor"
-							strokeWidth="2"
-							viewBox="0 0 24 24"
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								d="M19 9l-7 7-7-7"
-							/>
-						</svg>
-					</button>
-					<div className="absolute left-0 mt-2 w-48 bg-white text-slate-900 rounded shadow-lg opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity z-40">
-						{MAIN_CATEGORIES.map((cat) => (
-							<button
-								key={cat.key}
-								onClick={() => handleCategoryClick(cat.key)}
-								className="w-full text-left px-4 py-2 hover:bg-indigo-100"
-							>
-								{cat.label}
-							</button>
-						))}
-					</div>
-				</div>
+				<Link to="/quiz" className="hover:text-indigo-300">
+					Quizzes
+				</Link>
 				<Link to="/editor/html/html-01" className="hover:text-indigo-300">
 					Retos
 				</Link>
@@ -210,13 +124,6 @@ export default function Navbar() {
 							</svg>
 							Continuar con Google
 						</button>
-						<button
-							onClick={loginWithRedirect}
-							className="w-full bg-gray-700 hover:bg-gray-800 text-white py-2 rounded mb-4 flex items-center justify-center gap-2"
-							disabled={loading}
-						>
-							Iniciar con Email/Contraseña
-						</button>
 						<form onSubmit={handleEmailLogin} className="space-y-3">
 							<input
 								type="email"
@@ -246,38 +153,6 @@ export default function Navbar() {
 								{loading ? "Ingresando..." : "Ingresar"}
 							</button>
 						</form>
-					</div>
-				</div>
-			)}
-			{showSubcategoryModal && (
-				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-					<div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-xs relative">
-						<button
-							className="absolute top-2 right-3 text-gray-500 hover:text-red-500 text-2xl font-bold"
-							onClick={() => setShowSubcategoryModal(false)}
-							aria-label="Cerrar"
-						>
-							×
-						</button>
-						<h2 className="text-xl font-bold mb-4 text-center text-slate-900">
-							Subcategorías de{" "}
-							{MAIN_CATEGORIES.find((c) => c.key === selectedCategory)?.label}
-						</h2>
-						<ul className="space-y-2">
-							{(SUBCATEGORIES[selectedCategory] || []).map((subcat) => (
-								<li key={subcat.name}>
-									<button
-										className="w-full text-left px-4 py-2 rounded hover:bg-indigo-100 flex justify-between"
-										onClick={() => handleSubcategorySelect(subcat.name)}
-									>
-										<span>{subcat.name}</span>
-										<span className="text-xs text-slate-500">
-											{subcat.count} preguntas
-										</span>
-									</button>
-								</li>
-							))}
-						</ul>
 					</div>
 				</div>
 			)}

@@ -1,43 +1,57 @@
-[
-  {
-    "question": "¿Qué es el viewport en diseño web responsive?",
-    "options": [
-      "El área visible de una página web en un dispositivo",
-      "Un tipo de layout en CSS",
-      "Una propiedad de color en CSS",
-      "Un framework de javascript"
-    ],
-    "correctAnswer": "El área visible de una página web en un dispositivo",
-    "category": "responsive",
-    "shortExplanation": "El viewport es el área visible de una página web en un dispositivo.",
-    "sourceUrl": "https://developer.mozilla.org/es/docs/Web/CSS/@viewport",
-    "sourceName": "MDN"
-  },
-  {
-    "question": "¿Para qué sirve la etiqueta <meta name=viewport>?",
-    "options": [
-      "Para definir el título de la página",
-      "Para ajustar la escala y el tamaño de la página en dispositivos móviles",
-      "Para incluir archivos CSS",
-      "Para agregar scripts externos"
-    ],
-    "correctAnswer": "Para ajustar la escala y el tamaño de la página en dispositivos móviles",
-    "category": "responsive",
-    "shortExplanation": "El viewport es el área visible de una página web en un dispositivo.",
-    "sourceUrl": "https://developer.mozilla.org/es/docs/Web/HTML/Elemento/meta",
-    "sourceName": "MDN"
-  },
-  {
-    "question": "¿Cuál es el valor recomendado para el atributo 'width' en la meta viewport?",
-    "options": ["device-width", "100px", "screen-width", "auto"],
-    "correctAnswer": "device-width",
-    "category": "responsive",
-    "shortExplanation": "El valor recomendado para el atributo 'width' es 'device-width'.",
-    "sourceUrl": "https://developer.mozilla.org/es/docs/Web/HTML/Elemento/meta",
-    "sourceName": "MDN"
-  },
-  {
-    "question": "¿Qué hace el atributo 'initial-scale=1.0' en la meta viewport?",
+{
+  "categories": [
+    {
+      "category": "Frontend",
+      "subcategories": [
+        {
+          "name": "Responsive Design",
+          "questions": [
+            {
+              "question": "¿Qué es el viewport en diseño web responsive?",
+              "options": [
+                "El área visible de una página web en un dispositivo",
+                "Un tipo de layout en CSS",
+                "Una propiedad de color en CSS",
+                "Un framework de javascript"
+              ],
+              "correctAnswer": "El área visible de una página web en un dispositivo",
+              "category": "responsive",
+              "shortExplanation": "El viewport es el área visible de una página web en un dispositivo.",
+              "sourceUrl": "https://developer.mozilla.org/es/docs/Web/CSS/@viewport",
+              "sourceName": "MDN"
+            },
+            {
+              "question": "¿Para qué sirve la etiqueta <meta name=viewport>?",
+              "options": [
+                "Para definir el título de la página",
+                "Para ajustar la escala y el tamaño de la página en dispositivos móviles",
+                "Para incluir archivos CSS",
+                "Para agregar scripts externos"
+              ],
+              "correctAnswer": "Para ajustar la escala y el tamaño de la página en dispositivos móviles",
+              "category": "responsive",
+              "shortExplanation": "El viewport es el área visible de una página web en un dispositivo.",
+              "sourceUrl": "https://developer.mozilla.org/es/docs/Web/HTML/Elemento/meta",
+              "sourceName": "MDN"
+            },
+            {
+              "question": "¿Cuál es el valor recomendado para el atributo 'width' en la meta viewport?",
+              "options": ["device-width", "100px", "screen-width", "auto"],
+              "correctAnswer": "device-width",
+              "category": "responsive",
+              "shortExplanation": "El valor recomendado para el atributo 'width' es 'device-width'.",
+              "sourceUrl": "https://developer.mozilla.org/es/docs/Web/HTML/Elemento/meta",
+              "sourceName": "MDN"
+            }
+            // ...agregar aquí el resto de preguntas de la categoría Responsive Design
+          ]
+        }
+        // ...agregar aquí otras subcategorías de Frontend como HTML, CSS, JavaScript, Frameworks Frontend
+      ]
+    }
+    // ...agregar aquí otras categorías como Backend, Testing, DevOps, etc.
+  ]
+}
     "options": [
       "Establece el zoom inicial al cargar la página",
       "Define el color de fondo",

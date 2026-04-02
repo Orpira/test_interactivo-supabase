@@ -24,7 +24,7 @@ type AnswerSummary = {
 };
 
 export default function QuizRunner() {
-	const { category } = useParams();
+	const { category, subcategory } = useParams();
 	const [searchParams] = useSearchParams();
 	const navigate = useNavigate();
 
@@ -64,13 +64,17 @@ export default function QuizRunner() {
 
 	useEffect(() => {
 		let isMounted = true;
-		// Cargar preguntas desde Supabase para todas las categorías
+		// Cargar preguntas desde Supabase filtrando por categoría y subcategoría si existe
 		const loadQuestions = async () => {
 			try {
-				const { data, error } = await supabase
+				let query = supabase
 					.from("questions")
 					.select("*")
 					.eq("category", category);
+				if (subcategory) {
+					query = query.eq("subcategory", subcategory);
+				}
+				const { data, error } = await query;
 				if (error) throw error;
 				// Barajar y tomar las primeras N
 				const shuffled = shuffleArray(data ?? []).slice(0, count);
