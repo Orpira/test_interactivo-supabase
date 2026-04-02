@@ -197,6 +197,37 @@ Nota:
 
 - Este registro documenta el proceso operativo realizado en Git para separar el desarrollo local en una rama específica.
 
+### Registro: 2026-04-02 - Actualización funcional y visual
+
+Cambios documentados en esta iteración:
+
+1. Robustez con Supabase
+
+- Se añadió manejo visible de errores en consultas e inserciones para los módulos de quiz, resultados, ranking y dashboard.
+- El objetivo es evitar fallos silenciosos y dar retroalimentación directa al usuario cuando la base de datos no responde o rechaza una operación.
+
+2. Banco de preguntas ampliado
+
+- Se cargó contenido adicional en la tabla `questions` con `category = backend` y `subcategory = Linux`.
+- Esta carga amplía la cobertura temática del sistema para quizzes técnicos orientados a GNU/Linux.
+
+3. Corrección de navegación e interacción
+
+- Se corrigió el dropdown oculto del menú `Quizzes` del navbar para que no intercepte clics sobre otros elementos de la interfaz.
+- Esta corrección resuelve el bloqueo reportado sobre la acción `Top 10` en la pantalla de ranking.
+
+4. Ajuste visual del footer
+
+- Se redujo la altura del footer ajustando espaciados, tamaños tipográficos e iconografía.
+- El footer mantiene la línea visual inspirada en el portafolio de referencia, pero con una ocupación vertical menor.
+
+Estado resultante:
+
+- La aplicación comunica mejor los errores de Supabase.
+- El ranking vuelve a ser completamente clicable en la zona superior.
+- El sistema dispone de una nueva subcategoría operativa para quizzes de backend sobre Linux.
+- El pie de página quedó más compacto y consistente con el diseño general.
+
 ---
 
 ¿Dudas o sugerencias? ¡Consulta con tu tutor o revisa la documentación de cada tecnología empleada!

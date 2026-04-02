@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import QuizRunner from "@/features/quiz/QuizRunner";
 import Hero from "@/features/hero/Hero";
-import Quiz from "@/pages/Quiz";
 import Result from "@/features/quiz/Result";
 import Ranking from "@/features/ranking/Ranking";
 import Historial from "@/pages/Historial";
@@ -26,7 +25,6 @@ export default function AppRouter() {
 			{/* <Header /> */}
 			<Routes>
 				<Route path="/" element={<Hero />} />
-				<Route path="/quiz" element={<Quiz />} />
 				<Route path="/quiz/:category" element={<QuizRunner />} />
 				<Route path="/quiz/:category/:subcategory" element={<QuizRunner />} />
 				<Route path="/result" element={<Result />} />

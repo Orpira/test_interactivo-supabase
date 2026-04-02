@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useAuth } from "../../services/auth";
 import { useUserHistory } from "@/hooks/useUserHistory";
 import PerformanceChart from "./PerformanceChart"; // Placeholder para el gráfico
@@ -8,7 +9,7 @@ import { calculateAchievements } from "../../utils/achievements";
 
 export default function Dashboard() {
 	const { user } = useAuth();
-	const { history, loading } = useUserHistory();
+	const { history, loading, error: historyError } = useUserHistory();
 	const navigate = useNavigate();
 	const [historyFilter, setHistoryFilter] = useState("");
 
@@ -103,6 +104,11 @@ export default function Dashboard() {
 
 	return (
 		<div className="max-w-5xl mx-auto p-6">
+			{historyError && (
+				<p className="mb-4 text-center text-red-600 bg-red-50 border border-red-200 rounded p-2">
+					{historyError}
+				</p>
+			)}
 			<h1 className="text-3xl font-bold text-center mb-6">Tu Dashboard</h1>
 
 			{/* Bienvenida */}

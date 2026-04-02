@@ -12,6 +12,7 @@
 - La aplicación consulta Supabase por `category` y construye una modal con las subcategorías disponibles.
 - En la modal, el usuario elige la subcategoría y la cantidad de preguntas.
 - Las preguntas se obtienen de Supabase filtrando por `category` y `subcategory`.
+- Si la consulta falla, la interfaz muestra un mensaje visible para que el usuario sepa que hubo un problema de lectura.
 - El estado del quiz (pregunta actual, score, selección, feedback) se gestiona globalmente con Zustand.
 
 ## 3. Proceso de preguntas
@@ -19,17 +20,24 @@
 - El usuario responde cada pregunta y recibe feedback inmediato (correcta/incorrecta).
 - Al finalizar, se calcula el puntaje y se muestra el resultado.
 - El resultado se guarda en Supabase si el usuario está autenticado, incluyendo categoría, subcategoría y resumen.
+- Si el guardado falla, la vista de resultados informa el error sin ocultarlo detrás de la consola.
 
 ## 4. Resultados y ranking
 
 - El usuario ve su resultado y puede acceder al ranking general.
 - El ranking se obtiene en tiempo real desde Supabase y se muestra en una tabla ordenada con categoría y subcategoría.
+- El ranking muestra errores de carga cuando Supabase no responde correctamente.
 
 ## 5. Dashboard y métricas
 
 - El dashboard muestra rendimiento por categoría.
 - También muestra rendimiento por subcategoría mediante una barra adicional.
 - La tabla de últimos quizzes incluye categoría, subcategoría, fecha y puntaje.
+- Si el historial no puede cargarse desde Supabase, el dashboard muestra una alerta visible.
+
+## 5.1. Datos cargados recientemente
+
+- Se incorporó un banco adicional de preguntas para backend en la subcategoría `Linux` dentro de la tabla `questions`.
 
 ## 6. Editor de código
 
@@ -81,3 +89,8 @@ ADD COLUMN IF NOT EXISTS subcategory TEXT;
 
 **Resumen:**
 La app es una SPA moderna, segura y profesional, con estado global, consumo de API externa, autenticación, pruebas y despliegue automatizado. El flujo es intuitivo y cubre todas las competencias solicitadas para un entorno profesional de desarrollo FrontEnd.
+
+## 11. Ajustes recientes de interfaz
+
+- Se corrigió el comportamiento del menú desplegable `Quizzes` del navbar para que no capture eventos cuando está oculto.
+- Se redujo la altura del footer para lograr un cierre visual más compacto sin perder accesos de contacto y redes.

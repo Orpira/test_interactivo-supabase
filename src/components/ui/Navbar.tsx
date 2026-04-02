@@ -3,6 +3,7 @@ import { useAuth } from "../../services/auth";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/services/supabase";
 import QuizCategoryModal from "./QuizCategoryModal";
+import { getCategoryVariants } from "@/utils/categoryVariants";
 
 type SubcategoryOption = {
 	name: string;
@@ -59,10 +60,11 @@ export default function Navbar() {
 		setSubcategoriesLoading(true);
 
 		try {
+			const categoryVariants = getCategoryVariants(categoryKey);
 			const { data, error } = await supabase
 				.from("questions")
 				.select("subcategory")
-				.eq("category", categoryKey);
+				.in("category", categoryVariants);
 
 			if (error) throw error;
 
@@ -73,11 +75,11 @@ export default function Navbar() {
 				return acc;
 			}, {});
 
-			const mapped = Object.entries(counts)
-				.map(([name, questionCount]) => ({
+			const mapped = Object.keys(counts)
+				.map((name) => ({
 					name,
 					slug: encodeURIComponent(name),
-					questionCount,
+					questionCount: counts[name],
 				}))
 				.sort((a, b) => b.questionCount - a.questionCount);
 
@@ -146,7 +148,7 @@ export default function Navbar() {
 							/>
 						</svg>
 					</button>
-					<div className="absolute left-0 mt-2 w-48 bg-white text-slate-900 rounded shadow-lg opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity z-40">
+					<div className="absolute left-0 mt-2 w-48 bg-white text-slate-900 rounded shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto transition-opacity z-40">
 						{MAIN_CATEGORIES.map((cat) => (
 							<button
 								key={cat.key}
@@ -158,9 +160,6 @@ export default function Navbar() {
 						))}
 					</div>
 				</div>
-				<Link to="/editor/html/html-01" className="hover:text-indigo-300">
-					Retos
-				</Link>
 				{isAuthenticated && (
 					<Link to="/dashboard" className="hover:text-indigo-300">
 						Dashboard
@@ -177,7 +176,7 @@ export default function Navbar() {
 							</span>
 							<button
 								onClick={() => void logout()}
-								className="bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded transition"
+								className="bg-orange-600 hover:bg-orange-500 text-white px-4 py-2 rounded transition"
 							>
 								Cerrar sesion
 							</button>
@@ -185,7 +184,7 @@ export default function Navbar() {
 					) : (
 						<button
 							onClick={() => setShowLoginModal(true)}
-							className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded transition"
+							className="bg-indigo-400 hover:bg-indigo-300 text-white px-4 py-2 rounded transition"
 						>
 							Iniciar sesion
 						</button>

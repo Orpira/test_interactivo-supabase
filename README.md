@@ -15,6 +15,8 @@ Desarrollada con tecnologías: React, Vite, Tailwind, Zustand, Supabase y más.
 - ✅ Acceso con o sin autenticación (Supabase Auth)
 - ✅ Resultados con puntuación y ranking en tiempo real
 - ✅ Dashboard y ranking con métricas por categoría y subcategoría
+- ✅ Manejo visible de errores en consultas e inserciones de Supabase
+- ✅ Banco de preguntas ampliado con contenido de backend y subcategoría Linux
 - ✅ Editor de código con soporte para HTML, CSS y JS
 - ✅ Guardado de código y visualización de historial
 - ✅ Formulario de contacto usando `formsubmit.co`
@@ -131,7 +133,15 @@ npx playwright test
 3. Con ese resultado se construye una modal dinámica con las subcategorías disponibles y el total de preguntas por cada una.
 4. El usuario selecciona la subcategoría y la cantidad de preguntas a responder.
 5. El runner del quiz consulta `questions` filtrando por `category` y `subcategory`.
-6. Al finalizar, el resultado guarda categoría, subcategoría y resumen de respuestas para alimentar dashboard, historial y ranking.
+6. Si falla la consulta o el guardado en Supabase, la interfaz muestra mensajes de error visibles al usuario.
+7. Al finalizar, el resultado guarda categoría, subcategoría y resumen de respuestas para alimentar dashboard, historial y ranking.
+
+## Cambios recientes
+
+- Se añadió manejo visible de errores en el flujo de quizzes, resultados, ranking y dashboard cuando fallan consultas o escrituras en Supabase.
+- Se corrigió el solapamiento del menú `Quizzes` del navbar para evitar que bloqueara clics sobre acciones del ranking, como `Top 10`.
+- Se incorporó un nuevo bloque de preguntas en Supabase para `category = backend` y `subcategory = Linux`.
+- Se compactó el footer para reducir altura vertical y mantener el estilo visual del producto.
 
 ### Nota de esquema en Supabase
 

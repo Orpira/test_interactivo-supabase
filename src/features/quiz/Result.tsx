@@ -18,6 +18,8 @@ export default function Result({ answers: answersProp }: Props) {
 	const [dbTotal, setDbTotal] = useState<number | undefined>();
 	const [dbCategory, setDbCategory] = useState<string | undefined>();
 	const [dbSubcategory, setDbSubcategory] = useState<string | undefined>();
+	const [dbError, setDbError] = useState<string | null>(null);
+	const [saveError, setSaveError] = useState<string | null>(null);
 
 	// Leer id desde query params (?id=xxx)
 	const searchParams = new URLSearchParams(location.search);
@@ -44,12 +46,16 @@ export default function Result({ answers: answersProp }: Props) {
 	useEffect(() => {
 		if (resultId) {
 			setLoadingFromDB(true);
+			setDbError(null);
 			supabase
 				.from("resultados")
 				.select("*")
 				.eq("id", resultId)
 				.single()
 				.then(({ data, error }) => {
+					if (error) {
+						setDbError(error.message || "No se pudo cargar el resultado.");
+					}
 					if (data) {
 						setDbSummary(data.summary);
 						setDbScore(data.score);
@@ -118,6 +124,9 @@ export default function Result({ answers: answersProp }: Props) {
 				.then(({ error }) => {
 					if (error) {
 						console.error("Error guardando resultado:", error);
+						setSaveError(
+							error.message || "No se pudo guardar el resultado del quiz.",
+						);
 					}
 				});
 			updateUserStats(user, finalCategory, finalScore, finalTotal);
@@ -133,6 +142,10 @@ export default function Result({ answers: answersProp }: Props) {
 
 	if (loadingFromDB) {
 		return <p className="p-6 text-center">Cargando resultado...</p>;
+	}
+
+	if (dbError) {
+		return <p className="p-6 text-center text-red-600">{dbError}</p>;
 	}
 
 	if (!answers || answers.length === 0) {
@@ -190,6 +203,11 @@ export default function Result({ answers: answersProp }: Props) {
 
 			{/* Resumen */}
 			<div className="text-center space-y-3 mb-6">
+				{saveError && (
+					<p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded p-2">
+						{saveError}
+					</p>
+				)}
 				<p className="text-6xl">{message.emoji}</p>
 				<p className="text-2xl font-bold">
 					{scoreToShow} / {totalToShow}{" "}

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../services/supabase";
+import { getCategoryVariants } from "@/utils/categoryVariants";
 
 export type SubcategoryCount = {
 	slug: string;
@@ -18,13 +19,14 @@ export function useSubcategoryCounts(
 		async function fetchCounts() {
 			setLoading(true);
 			const slugs = subcategories.map((s) => s.slug);
+			const categoryVariants = getCategoryVariants(category);
 			const { data, error } = await supabase
 				.from("questions")
 				.select("subcategory, count:subcategory", {
 					count: "exact",
 					head: false,
 				})
-				.eq("category", category)
+				.in("category", categoryVariants)
 				.in("subcategory", slugs);
 			if (!error && data && isMounted) {
 				// data es un array de objetos { subcategory, count }

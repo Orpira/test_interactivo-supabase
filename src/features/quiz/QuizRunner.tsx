@@ -3,6 +3,7 @@ import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import { supabase } from "../../services/supabase";
 import { useQuestions } from "@/hooks/useQuestions";
 import QuestionCard from "@/components/ui/QuestionCard";
+import { getCategoryVariants } from "@/utils/categoryVariants";
 
 type Question = {
 	question: string;
@@ -37,11 +38,11 @@ export default function QuizRunner() {
 	}
 
 	// Use useQuestions only for loading/initial state, but manage questions locally for Supabase logic
-	const { questions: initialQuestions, loading: initialLoading } = useQuestions(
-		category,
-		count,
-		subcategory,
-	);
+	const {
+		questions: initialQuestions,
+		loading: initialLoading,
+		error: initialError,
+	} = useQuestions(category, count, subcategory);
 
 	const [questions, setQuestions] = useState<Question[]>(
 		initialQuestions || [],
@@ -55,6 +56,7 @@ export default function QuizRunner() {
 	const [showFeedback, setShowFeedback] = useState(false);
 	const [correctAnswer, setCorrectAnswer] = useState<string | null>(null);
 	const [summaryData, setSummaryData] = useState<AnswerSummary[]>([]);
+	const [queryError, setQueryError] = useState<string | null>(initialError);
 
 	// Utilidad para mezclar un array aleatoriamente
 	function shuffleArray<T>(array: T[]): T[] {
@@ -66,13 +68,15 @@ export default function QuizRunner() {
 
 	useEffect(() => {
 		let isMounted = true;
+		setQueryError(null);
 		// Cargar preguntas desde Supabase filtrando por categoría y subcategoría si existe
 		const loadQuestions = async () => {
 			try {
+				const categoryVariants = getCategoryVariants(category);
 				let query = supabase
 					.from("questions")
 					.select("*")
-					.eq("category", category);
+					.in("category", categoryVariants);
 				if (subcategory) {
 					query = query.eq("subcategory", decodeURIComponent(subcategory));
 				}
@@ -81,8 +85,13 @@ export default function QuizRunner() {
 				// Barajar y tomar las primeras N
 				const shuffled = shuffleArray(data ?? []).slice(0, count);
 				if (isMounted) setQuestions(shuffled);
-			} catch (error) {
+			} catch (error: any) {
 				console.error("Error cargando preguntas:", error);
+				if (isMounted) {
+					setQueryError(
+						error?.message || "No se pudieron cargar las preguntas del quiz.",
+					);
+				}
 			} finally {
 				if (isMounted) setLoading(false);
 			}
@@ -92,6 +101,10 @@ export default function QuizRunner() {
 			isMounted = false;
 		};
 	}, [category, subcategory, count]);
+
+	useEffect(() => {
+		if (initialError) setQueryError(initialError);
+	}, [initialError]);
 
 	const currentQuestion = questions[currentIndex];
 
@@ -151,6 +164,9 @@ export default function QuizRunner() {
 	};
 
 	if (loading) return <p className="p-6 text-center">Cargando preguntas...</p>;
+	if (queryError) {
+		return <p className="p-6 text-center text-red-600">{queryError}</p>;
+	}
 	if (!currentQuestion)
 		return <p className="p-6 text-center">No se encontraron preguntas.</p>;
 

@@ -25,13 +25,18 @@ export default function Ranking() {
 	const [recientesPage, setRecientesPage] = useState(1);
 	const [rankingFilter, setRankingFilter] = useState("");
 	const [recientesFilter, setRecientesFilter] = useState("");
+	const [queryError, setQueryError] = useState<string | null>(null);
 	const recientesPerPage = 5;
 	const recientesTotalPages = Math.ceil(recientes.length / recientesPerPage);
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		const cargarResultados = async () => {
-			const [{ data: top }, { data: recent }] = await Promise.all([
+			setQueryError(null);
+			const [
+				{ data: top, error: topError },
+				{ data: recent, error: recentError },
+			] = await Promise.all([
 				supabase
 					.from("resultados")
 					.select("*")
@@ -43,6 +48,14 @@ export default function Ranking() {
 					.order("timestamp", { ascending: false })
 					.limit(20),
 			]);
+
+			if (topError || recentError) {
+				setQueryError(
+					topError?.message ||
+						recentError?.message ||
+						"No se pudo cargar el ranking.",
+				);
+			}
 			setResultados((top ?? []) as Resultado[]);
 			setRecientes((recent ?? []) as Resultado[]);
 			setLoading(false);
@@ -93,6 +106,11 @@ export default function Ranking() {
 	return (
 		<>
 			<section className="max-w-4xl mx-auto p-6">
+				{queryError && (
+					<p className="mb-4 text-center text-red-600 bg-red-50 border border-red-200 rounded p-2">
+						{queryError}
+					</p>
+				)}
 				<h2 className="text-2xl font-bold mb-4 text-center">Ranking general</h2>
 				<h3 className="text-lg font-semibold mb-2 text-center">
 					🏆 Mejores puntajes
