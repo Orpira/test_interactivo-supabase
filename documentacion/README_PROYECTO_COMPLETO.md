@@ -157,19 +157,29 @@ Objetivo ejecutado: mover el trabajo local no versionado a una rama dedicada lla
 Pasos realizados:
 
 1. Validación de estado local y remoto
-  - Rama base detectada: `main` sincronizada con `origin/main`.
-  - Se verificó que existían cambios locales (modificados y nuevos sin commit).
+
+- Rama base detectada: `main` sincronizada con `origin/main`.
+- Se verificó que existían cambios locales (modificados y nuevos sin commit).
+
 2. Sincronización de referencias remotas
-  - Se ejecutó actualización de referencias para trabajar con la base remota más reciente.
+
+- Se ejecutó actualización de referencias para trabajar con la base remota más reciente.
+
 3. Creación/uso de rama objetivo
-  - Se confirmó la existencia de la rama `desarrollos`.
-  - Se cambió el trabajo activo a `desarrollos`.
+
+- Se confirmó la existencia de la rama `desarrollos`.
+- Se cambió el trabajo activo a `desarrollos`.
+
 4. Verificación de traspaso de cambios
-  - Los cambios locales quedaron disponibles en la rama `desarrollos`.
+
+- Los cambios locales quedaron disponibles en la rama `desarrollos`.
+
 5. Documentación del proceso
-  - Se añadió este registro para dejar trazabilidad del flujo aplicado.
+
+- Se añadió este registro para dejar trazabilidad del flujo aplicado.
 
 Nota:
+
 - Este registro documenta el proceso operativo realizado en Git para separar el desarrollo local en una rama específica.
 
 ---
