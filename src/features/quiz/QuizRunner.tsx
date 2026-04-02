@@ -70,7 +70,7 @@ export default function QuizRunner() {
 				const { data, error } = await supabase
 					.from("questions")
 					.select("*")
-					.eq("category", category);
+					.eq("subcategoria", category);
 				if (error) throw error;
 				// Barajar y tomar las primeras N
 				const shuffled = shuffleArray(data ?? []).slice(0, count);
