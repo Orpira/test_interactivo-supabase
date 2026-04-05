@@ -3,10 +3,19 @@ import { useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { useState } from "react";
 import LightParticles from "@/components/ui/LightParticles";
+import { useAuth } from "@/services/auth";
+import {
+	getStoredExperienceLevel,
+	setStoredExperienceLevel,
+	type ExperienceLevel,
+	upsertUserExperience,
+} from "@/services/feedback";
 
 export default function Hero() {
 	const [showQuizCategoryPicker, setShowQuizCategoryPicker] = useState(false);
+	const [showExperiencePicker, setShowExperiencePicker] = useState(false);
 	const navigate = useNavigate();
+	const { user } = useAuth();
 
 	const MAIN_CATEGORIES = [
 		{ key: "frontend", label: "Frontend", icon: "🎨" },
@@ -16,6 +25,25 @@ export default function Hero() {
 	];
 
 	const handleStartNow = () => {
+		if (!getStoredExperienceLevel()) {
+			setShowExperiencePicker(true);
+			return;
+		}
+		setShowQuizCategoryPicker(true);
+	};
+
+	const handleExperienceSelect = async (level: ExperienceLevel) => {
+		setStoredExperienceLevel(level);
+		setShowExperiencePicker(false);
+
+		if (user?.id) {
+			try {
+				await upsertUserExperience(user.id, level);
+			} catch (error) {
+				console.error("No se pudo guardar la experiencia del usuario:", error);
+			}
+		}
+
 		setShowQuizCategoryPicker(true);
 	};
 
@@ -94,6 +122,45 @@ export default function Hero() {
 					"Domina la magia del código, un quiz a la vez."
 				</p>
 				<LightParticles />
+				{showExperiencePicker && (
+					<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+						<div className="w-full max-w-md rounded-xl bg-white shadow-2xl p-6 relative">
+							<button
+								className="absolute top-2 right-3 text-gray-500 hover:text-red-500 text-2xl font-bold"
+								onClick={() => setShowExperiencePicker(false)}
+								aria-label="Cerrar"
+							>
+								x
+							</button>
+							<h3 className="text-xl font-bold text-slate-900 text-center mb-2">
+								¿Cuál es tu nivel?
+							</h3>
+							<p className="text-sm text-slate-600 text-center mb-4">
+								Esto nos ayuda a adaptar tus evaluaciones.
+							</p>
+							<div className="grid gap-3">
+								<button
+									onClick={() => handleExperienceSelect("junior")}
+									className="w-full rounded-lg border border-slate-200 px-4 py-3 text-left hover:bg-indigo-50 hover:border-indigo-300 transition"
+								>
+									Junior
+								</button>
+								<button
+									onClick={() => handleExperienceSelect("semi_senior")}
+									className="w-full rounded-lg border border-slate-200 px-4 py-3 text-left hover:bg-indigo-50 hover:border-indigo-300 transition"
+								>
+									Semi Senior
+								</button>
+								<button
+									onClick={() => handleExperienceSelect("senior")}
+									className="w-full rounded-lg border border-slate-200 px-4 py-3 text-left hover:bg-indigo-50 hover:border-indigo-300 transition"
+								>
+									Senior
+								</button>
+							</div>
+						</div>
+					</div>
+				)}
 				<motion.img
 					src="/languajes.png"
 					alt="Lenguajes de Programación"

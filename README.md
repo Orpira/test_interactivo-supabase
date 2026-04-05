@@ -142,6 +142,10 @@ npx playwright test
 - Se corrigió el solapamiento del menú `Quizzes` del navbar para evitar que bloqueara clics sobre acciones del ranking, como `Top 10`.
 - Se incorporó un nuevo bloque de preguntas en Supabase para `category = backend` y `subcategory = Linux`.
 - Se compactó el footer para reducir altura vertical y mantener el estilo visual del producto.
+- Se incorporó captura de nivel de experiencia (`junior`, `semi_senior`, `senior`) antes de iniciar el quiz.
+- Se añadió feedback adaptativo post-quiz con rating, comentario opcional y motivo obligatorio para ratings bajos.
+- Se activó la regla anti-fatiga para feedback: máximo una solicitud cada 7 días por usuario.
+- Se mejoró el dashboard con gráficos tipo dona para rendimiento por categoría y subcategoría, incluyendo escala visual de referencia.
 
 ### Nota de esquema en Supabase
 
@@ -151,6 +155,37 @@ La tabla `resultados` debe incluir la columna `subcategory` para registrar corre
 ALTER TABLE resultados
 ADD COLUMN IF NOT EXISTS subcategory TEXT;
 ```
+
+Además, para soportar experiencia y feedback adaptativo se incorporan estas tablas:
+
+```sql
+CREATE TABLE IF NOT EXISTS user_experience (
+  user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  level TEXT NOT NULL CHECK (level IN ('junior', 'semi_senior', 'senior')),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS quiz_feedback (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  quiz_id UUID,
+  experience_level TEXT NOT NULL CHECK (experience_level IN ('junior', 'semi_senior', 'senior')),
+  rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
+  comment TEXT,
+  reason TEXT CHECK (reason IN ('dificultad', 'claridad', 'errores_tecnicos', 'desactualizado')),
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+```
+
+## Estado de implementación
+
+### Evaluación por experiencia del usuario
+
+- [x] Captura de nivel al inicio (`junior`, `semi_senior`, `senior`) antes de iniciar quiz.
+- [x] Feedback adaptativo al finalizar quiz con rating (1-5) y comentario opcional.
+- [x] Persistencia de evaluación en Supabase (`quiz_feedback`) para análisis de mejora continua.
+- [x] Regla anti-fatiga: no solicitar feedback más de una vez cada 7 días por usuario.
+- [x] Motivo obligatorio para rating bajo (`dificultad`, `claridad`, `errores_tecnicos`, `desactualizado`).
 
 ---
 

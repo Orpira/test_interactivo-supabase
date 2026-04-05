@@ -5,6 +5,13 @@ import { supabase } from "../../services/supabase";
 import { updateUserStats } from "../../services/userStats";
 import { motion, AnimatePresence } from "framer-motion";
 import type { AnswerResume } from "@/types/TestResult";
+import ExperienceFeedbackModal from "@/components/ui/ExperienceFeedbackModal";
+import {
+	canUserSendFeedback,
+	getStoredExperienceLevel,
+	saveQuizFeedback,
+	type ExperienceLevel,
+} from "@/services/feedback";
 
 type Props = { answers?: AnswerResume[] };
 
@@ -20,6 +27,10 @@ export default function Result({ answers: answersProp }: Props) {
 	const [dbSubcategory, setDbSubcategory] = useState<string | undefined>();
 	const [dbError, setDbError] = useState<string | null>(null);
 	const [saveError, setSaveError] = useState<string | null>(null);
+	const [feedbackOpen, setFeedbackOpen] = useState(false);
+	const [feedbackLoading, setFeedbackLoading] = useState(false);
+	const [feedbackError, setFeedbackError] = useState<string | null>(null);
+	const feedbackChecked = useRef(false);
 
 	// Leer id desde query params (?id=xxx)
 	const searchParams = new URLSearchParams(location.search);
@@ -93,6 +104,8 @@ export default function Result({ answers: answersProp }: Props) {
 		state?.summary?.[0]?.subcategory ??
 		dbSubcategory ??
 		dbSummary?.[0]?.subcategory;
+	const experienceLevel =
+		getStoredExperienceLevel() ?? ("junior" as ExperienceLevel);
 
 	// Guardar resultado en Supabase (solo cuando viene del quiz, no desde ?id=)
 	useEffect(() => {
@@ -139,6 +152,63 @@ export default function Result({ answers: answersProp }: Props) {
 		finalCategory,
 		finalSubcategory,
 	]);
+
+	// Mostrar feedback solo al finalizar quiz nuevo y si pasó la ventana de 7 días.
+	useEffect(() => {
+		if (feedbackChecked.current) {
+			return;
+		}
+
+		if (
+			!resultId &&
+			isAuthenticated &&
+			user?.id &&
+			typeof finalTotal === "number" &&
+			finalTotal > 0
+		) {
+			feedbackChecked.current = true;
+			canUserSendFeedback(user.id)
+				.then((canSend) => {
+					if (canSend) {
+						setFeedbackOpen(true);
+					}
+				})
+				.catch((error) => {
+					console.error("No se pudo validar feedback:", error);
+				});
+		}
+	}, [resultId, isAuthenticated, user, finalTotal]);
+
+	const handleSubmitFeedback = async (payload: {
+		rating: number;
+		comment: string;
+		reason?: "dificultad" | "claridad" | "errores_tecnicos" | "desactualizado";
+	}) => {
+		if (!user?.id) {
+			setFeedbackOpen(false);
+			return;
+		}
+
+		try {
+			setFeedbackLoading(true);
+			setFeedbackError(null);
+			await saveQuizFeedback({
+				userId: user.id,
+				experienceLevel,
+				rating: payload.rating,
+				comment: payload.comment,
+				reason: payload.reason,
+				quizId: resultId ?? undefined,
+			});
+			setFeedbackOpen(false);
+		} catch (error: any) {
+			setFeedbackError(
+				error?.message || "No se pudo enviar tu evaluación. Intenta de nuevo.",
+			);
+		} finally {
+			setFeedbackLoading(false);
+		}
+	};
 
 	if (loadingFromDB) {
 		return <p className="p-6 text-center">Cargando resultado...</p>;
@@ -198,55 +268,65 @@ export default function Result({ answers: answersProp }: Props) {
 		: "/";
 
 	return (
-		<section className="max-w-2xl mx-auto px-4 py-8 space-y-6">
-			<h1 className="text-3xl font-bold text-center mb-2">Resultados</h1>
+		<>
+			<section className="max-w-2xl mx-auto px-4 py-8 space-y-6">
+				<h1 className="text-3xl font-bold text-center mb-2">Resultados</h1>
 
-			{/* Resumen */}
-			<div className="text-center space-y-3 mb-6">
-				{saveError && (
-					<p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded p-2">
-						{saveError}
-					</p>
-				)}
-				<p className="text-6xl">{message.emoji}</p>
-				<p className="text-2xl font-bold">
-					{scoreToShow} / {totalToShow}{" "}
-					<span className="text-lg font-normal text-gray-500">
-						({percentage}%)
-					</span>
-				</p>
-				{finalCategory && (
-					<p className="text-sm text-gray-500">
-						Categoría: <strong>{finalCategory}</strong>
-					</p>
-				)}
-				<p className="text-lg text-gray-700 dark:text-gray-300">
-					{message.text}
-				</p>
-				<div className="flex justify-center gap-3 pt-2">
-					<Link
-						to={retryQuizLink}
-						className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-sm"
-					>
-						Intentar otro quiz
-					</Link>
-					{isAuthenticated && (
-						<Link
-							to="/dashboard"
-							className="px-4 py-2 bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200 rounded-lg hover:bg-gray-300 dark:hover:bg-slate-600 transition text-sm"
-						>
-							Ver Dashboard
-						</Link>
+				{/* Resumen */}
+				<div className="text-center space-y-3 mb-6">
+					{saveError && (
+						<p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded p-2">
+							{saveError}
+						</p>
 					)}
+					<p className="text-6xl">{message.emoji}</p>
+					<p className="text-2xl font-bold">
+						{scoreToShow} / {totalToShow}{" "}
+						<span className="text-lg font-normal text-gray-500">
+							({percentage}%)
+						</span>
+					</p>
+					{finalCategory && (
+						<p className="text-sm text-gray-500">
+							Categoría: <strong>{finalCategory}</strong>
+						</p>
+					)}
+					<p className="text-lg text-gray-700 dark:text-gray-300">
+						{message.text}
+					</p>
+					<div className="flex justify-center gap-3 pt-2">
+						<Link
+							to={retryQuizLink}
+							className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-sm"
+						>
+							Intentar otro quiz
+						</Link>
+						{isAuthenticated && (
+							<Link
+								to="/dashboard"
+								className="px-4 py-2 bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200 rounded-lg hover:bg-gray-300 dark:hover:bg-slate-600 transition text-sm"
+							>
+								Ver Dashboard
+							</Link>
+						)}
+					</div>
 				</div>
-			</div>
 
-			<h2 className="text-xl font-semibold">Detalle de respuestas</h2>
+				<h2 className="text-xl font-semibold">Detalle de respuestas</h2>
 
-			{answers.map((ans) => (
-				<ResultItem key={ans.id} data={ans} />
-			))}
-		</section>
+				{answers.map((ans) => (
+					<ResultItem key={ans.id} data={ans} />
+				))}
+			</section>
+			<ExperienceFeedbackModal
+				open={feedbackOpen}
+				experienceLevel={experienceLevel}
+				loading={feedbackLoading}
+				error={feedbackError}
+				onClose={() => setFeedbackOpen(false)}
+				onSubmit={handleSubmitFeedback}
+			/>
+		</>
 	);
 
 	function ResultItem({ data }: { data: AnswerResume }) {

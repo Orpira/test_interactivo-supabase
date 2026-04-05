@@ -154,17 +154,54 @@ export default function Dashboard() {
 				/>
 			</div>
 
-			{/* (Placeholder) Aquí irá el gráfico y resumen más adelante */}
-			<h2 className="text-2xl font-bold mb-4">Rendimiento por Categoría</h2>
-			<PerformanceChart data={chartData} title="Rendimiento por categoria" />
+			{/* Gráficos lado a lado */}
+			<div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+				<div>
+					<h2 className="text-xl font-bold text-center">
+						Rendimiento por Categoría
+					</h2>
+					<p className="text-sm text-slate-500 text-center mb-3">
+						Promedio de aciertos (0–10) agrupado por categoría principal
+					</p>
+					<PerformanceChart
+						data={chartData}
+						title="Por categoría"
+						centerLabel="Categoría"
+					/>
+				</div>
+				<div>
+					<h2 className="text-xl font-bold text-center">
+						Rendimiento por Subcategoría
+					</h2>
+					<p className="text-sm text-slate-500 text-center mb-3">
+						Promedio de aciertos (0–10) desglosado por tema específico
+					</p>
+					<PerformanceChart
+						data={subcategoryChartData}
+						title="Por subcategoría"
+						centerLabel="Sub categoría"
+					/>
+				</div>
+			</div>
 
-			<h2 className="text-2xl font-bold mt-8 mb-4">
-				Rendimiento por Subcategoria
-			</h2>
-			<PerformanceChart
-				data={subcategoryChartData}
-				title="Rendimiento por subcategoria"
-			/>
+			{/* Escala de referencia compartida para ambos gráficos */}
+			<div className="mb-8 flex flex-wrap justify-center gap-2 text-xs">
+				<span className="text-slate-500 font-medium self-center mr-1">
+					Escala:
+				</span>
+				<span className="flex items-center gap-1 rounded-full bg-red-100 px-3 py-1 text-red-700 font-medium">
+					🔴 0–4 Bajo
+				</span>
+				<span className="flex items-center gap-1 rounded-full bg-yellow-100 px-3 py-1 text-yellow-700 font-medium">
+					🟡 5–6 Regular
+				</span>
+				<span className="flex items-center gap-1 rounded-full bg-green-100 px-3 py-1 text-green-700 font-medium">
+					🟢 7–8 Bueno
+				</span>
+				<span className="flex items-center gap-1 rounded-full bg-indigo-100 px-3 py-1 text-indigo-700 font-medium">
+					🌟 9–10 Excelente
+				</span>
+			</div>
 
 			{/* Últimos 5 quiz */}
 			<section className="bg-white rounded shadow p-4">

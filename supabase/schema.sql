@@ -73,6 +73,25 @@ CREATE TABLE IF NOT EXISTS user_stats (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- Tabla: user_experience (nivel de experiencia por usuario)
+CREATE TABLE IF NOT EXISTS user_experience (
+  user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  level TEXT NOT NULL CHECK (level IN ('junior', 'semi_senior', 'senior')),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Tabla: quiz_feedback (evaluación adaptativa post-quiz)
+CREATE TABLE IF NOT EXISTS quiz_feedback (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  quiz_id UUID,
+  experience_level TEXT NOT NULL CHECK (experience_level IN ('junior', 'semi_senior', 'senior')),
+  rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
+  comment TEXT,
+  reason TEXT CHECK (reason IN ('dificultad', 'claridad', 'errores_tecnicos', 'desactualizado')),
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
 -- =============================================
 -- Row Level Security (RLS) Policies
 -- =============================================
@@ -84,6 +103,8 @@ ALTER TABLE challenges ENABLE ROW LEVEL SECURITY;
 ALTER TABLE resultados ENABLE ROW LEVEL SECURITY;
 ALTER TABLE envios_codigo ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_stats ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_experience ENABLE ROW LEVEL SECURITY;
+ALTER TABLE quiz_feedback ENABLE ROW LEVEL SECURITY;
 
 -- Lectura pública para preguntas y retos
 CREATE POLICY "Lectura pública de questions" ON questions
@@ -116,6 +137,23 @@ CREATE POLICY "Usuarios ven sus stats" ON user_stats
 CREATE POLICY "Usuarios actualizan sus stats" ON user_stats
   FOR ALL USING (auth.jwt() ->> 'email' = email);
 
+-- user_experience: cada usuario lee/escribe su propio nivel
+CREATE POLICY "Usuarios ven su experiencia" ON user_experience
+  FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Usuarios insertan su experiencia" ON user_experience
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Usuarios actualizan su experiencia" ON user_experience
+  FOR UPDATE USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+
+-- quiz_feedback: cada usuario inserta y consulta su feedback
+CREATE POLICY "Usuarios insertan su feedback" ON quiz_feedback
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Usuarios ven su feedback" ON quiz_feedback
+  FOR SELECT USING (auth.uid() = user_id);
+
 -- =============================================
 -- Índices para performance
 -- =============================================
@@ -125,3 +163,4 @@ CREATE INDEX IF NOT EXISTS idx_resultados_userId ON resultados("userId");
 CREATE INDEX IF NOT EXISTS idx_resultados_score ON resultados(score DESC);
 CREATE INDEX IF NOT EXISTS idx_resultados_timestamp ON resultados(timestamp DESC);
 CREATE INDEX IF NOT EXISTS idx_envios_userId ON envios_codigo("userId");
+CREATE INDEX IF NOT EXISTS idx_quiz_feedback_user_date ON quiz_feedback(user_id, created_at DESC);

@@ -228,6 +228,43 @@ Estado resultante:
 - El sistema dispone de una nueva subcategoría operativa para quizzes de backend sobre Linux.
 - El pie de página quedó más compacto y consistente con el diseño general.
 
+### Registro: 2026-04-05 - Evaluación adaptativa y dashboard
+
+Cambios documentados en esta iteración:
+
+1. Captura de experiencia al iniciar quiz
+
+- Se incorporó una modal de nivel para seleccionar `junior`, `semi_senior` o `senior` antes de iniciar el flujo de cuestionarios.
+- El nivel se conserva en almacenamiento local y, si el usuario está autenticado, se sincroniza en Supabase (`user_experience`).
+
+2. Feedback adaptativo al finalizar
+
+- Se agregó un modal de evaluación post-quiz con pregunta adaptada por nivel de experiencia.
+- La evaluación permite rating de 1 a 5 y comentario opcional.
+- Para rating bajo (1 o 2), el motivo pasa a ser obligatorio (`dificultad`, `claridad`, `errores_tecnicos`, `desactualizado`).
+
+3. Regla anti-fatiga de 7 días
+
+- Se implementó validación de ventana temporal para no solicitar feedback más de una vez cada 7 días por usuario.
+- La persistencia se realiza en la tabla `quiz_feedback`.
+
+4. Evolución del esquema y seguridad en Supabase
+
+- Se añadieron tablas `user_experience` y `quiz_feedback` con restricciones de integridad para nivel, rating y motivo.
+- Se habilitaron políticas RLS para lectura/inserción/actualización según el usuario autenticado.
+- Se incorporó índice por usuario y fecha para optimizar consultas recientes de feedback.
+
+5. Mejora visual del dashboard
+
+- Los gráficos de rendimiento por categoría y subcategoría se migraron a visualización tipo dona.
+- Se incorporó leyenda, tooltip en escala 0-10 y una referencia visual común para interpretar resultados.
+
+Estado resultante:
+
+- La evaluación por experiencia quedó implementada extremo a extremo (UI + lógica + persistencia).
+- El feedback post-quiz ahora es contextual, medible y gobernado por frecuencia.
+- El dashboard presenta métricas más legibles para el usuario final.
+
 ---
 
 ¿Dudas o sugerencias? ¡Consulta con tu tutor o revisa la documentación de cada tecnología empleada!

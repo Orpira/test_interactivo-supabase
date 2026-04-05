@@ -8,7 +8,10 @@
 
 ## 2. Cuestionarios
 
-- El usuario abre `Quizzes` desde el navbar y selecciona una categoría principal.
+- El usuario abre `Quizzes` desde el navbar.
+- Si todavía no definió su nivel, se muestra una modal para seleccionar experiencia (`junior`, `semi_senior`, `senior`).
+- Si está autenticado, la experiencia seleccionada se persiste también en Supabase (`user_experience`).
+- Luego selecciona la categoría principal.
 - La aplicación consulta Supabase por `category` y construye una modal con las subcategorías disponibles.
 - En la modal, el usuario elige la subcategoría y la cantidad de preguntas.
 - Las preguntas se obtienen de Supabase filtrando por `category` y `subcategory`.
@@ -20,6 +23,9 @@
 - El usuario responde cada pregunta y recibe feedback inmediato (correcta/incorrecta).
 - Al finalizar, se calcula el puntaje y se muestra el resultado.
 - El resultado se guarda en Supabase si el usuario está autenticado, incluyendo categoría, subcategoría y resumen.
+- Tras finalizar, se puede abrir una evaluación adaptativa del quiz según nivel de experiencia.
+- La evaluación usa rating (1 a 5), comentario opcional y motivo obligatorio cuando el rating es bajo (1 o 2).
+- Para evitar fatiga, la solicitud de feedback se limita a una vez cada 7 días por usuario (`quiz_feedback`).
 - Si el guardado falla, la vista de resultados informa el error sin ocultarlo detrás de la consola.
 
 ## 4. Resultados y ranking
@@ -30,8 +36,9 @@
 
 ## 5. Dashboard y métricas
 
-- El dashboard muestra rendimiento por categoría.
-- También muestra rendimiento por subcategoría mediante una barra adicional.
+- El dashboard muestra rendimiento por categoría y subcategoría con gráficos tipo dona.
+- Cada gráfico incluye leyenda y tooltip de promedio sobre escala de 0 a 10.
+- Se incorpora una escala visual compartida para interpretación rápida (Bajo, Regular, Bueno, Excelente).
 - La tabla de últimos quizzes incluye categoría, subcategoría, fecha y puntaje.
 - Si el historial no puede cargarse desde Supabase, el dashboard muestra una alerta visible.
 
@@ -76,13 +83,34 @@
 | `supabaseUrl is required`    | Variables de entorno no configuradas en hosting | Agregar `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` en Vercel |
 | Login redirige a `localhost` | Site URL de Supabase apunta a localhost         | Actualizar Site URL y Redirect URLs en Supabase Auth config      |
 
-### Ajuste de esquema recomendado
+### Ajustes de esquema recomendados
 
 Para guardar correctamente resultados por subcategoría, la tabla `resultados` debe incluir:
 
 ```sql
 ALTER TABLE resultados
 ADD COLUMN IF NOT EXISTS subcategory TEXT;
+```
+
+Para soportar experiencia de usuario y evaluación adaptativa del quiz:
+
+```sql
+CREATE TABLE IF NOT EXISTS user_experience (
+  user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  level TEXT NOT NULL CHECK (level IN ('junior', 'semi_senior', 'senior')),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS quiz_feedback (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  quiz_id UUID,
+  experience_level TEXT NOT NULL CHECK (experience_level IN ('junior', 'semi_senior', 'senior')),
+  rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
+  comment TEXT,
+  reason TEXT CHECK (reason IN ('dificultad', 'claridad', 'errores_tecnicos', 'desactualizado')),
+  created_at TIMESTAMPTZ DEFAULT now()
+);
 ```
 
 ---
