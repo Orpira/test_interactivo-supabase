@@ -39,3 +39,14 @@ La integración de herramientas de análisis y la ejecución de **CI/CD** con **
 ## **Conclusión**
 
 Para cumplir todos los requerimientos técnicos y de producto, utiliza **Supabase** como fuente de datos para las preguntas tipo test y consume esos datos desde tu app **React** con **Zustand** y el cliente de Supabase. Esto te permitirá escalar, testear y mantener la aplicación de forma profesional y eficiente.
+
+---
+
+## 8. Implementación reciente (2026-04-05)
+
+- Se implementó la selección de nivel de experiencia del usuario antes de iniciar cuestionarios (`junior`, `semi_senior`, `senior`).
+- Se añadió persistencia de experiencia por usuario en Supabase mediante la tabla `user_experience`.
+- Se incorporó un flujo de feedback adaptativo al finalizar quizzes con rating de 1 a 5, comentario opcional y motivo obligatorio para calificaciones bajas.
+- Se aplicó una regla anti-fatiga de 7 días por usuario para el envío de feedback, almacenado en `quiz_feedback`.
+- Se reforzó el modelo de datos con validaciones de integridad (checks para nivel, rating y motivo) y políticas RLS orientadas al usuario autenticado.
+- Se mejoró la visualización de métricas del dashboard migrando a gráficos tipo dona para categoría y subcategoría, con escala de lectura común.

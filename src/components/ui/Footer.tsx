@@ -1,52 +1,56 @@
-import { FaGithub, FaTwitter, FaLinkedin } from "react-icons/fa";
+import {
+	FaEnvelope,
+	FaGithub,
+	FaLinkedin,
+	FaMapMarkerAlt,
+} from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 export default function Footer() {
-  return (
-    <footer className="bg-gradient-to-r from-gray-50 via-gray-100 to-gray-200 text-white px-4 py-3 shadow-lg relative z-30">
-      <div className="flex flex-col text-black md:flex-row items-center justify-between max-w-5xl mx-auto gap-4">
-        <p>
-          © {new Date().getFullYear()}{" "}
-          <strong>
-            <a href="/">WebWiz Quiz</a>
-          </strong>
-          . Todos los derechos reservados. <br />
-          Desarrollado por{" "}
-          <a
-            href="https://github.com/orpira"
-            className="text-blue-900 hover:underline font-semibold"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Orlando Pineda Raad
-          </a>
-        </p>
-        <div className="flex gap-6 justify-center mt-2 md:mt-0">
-          <a
-            href="https://github.com/orpira"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="GitHub"
-          >
-            <FaGithub className="w-7 h-7 hover:text-blue-300 transition-colors" />
-          </a>
-          <a
-            href="https://twitter.com/your_twitter"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Twitter"
-          >
-            <FaTwitter className="w-7 h-7 hover:text-blue-300 transition-colors" />
-          </a>
-          <a
-            href="https://linkedin.com/in/your_linkedin"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="LinkedIn"
-          >
-            <FaLinkedin className="w-7 h-7 hover:text-blue-300 transition-colors" />
-          </a>
-        </div>
-      </div>
-    </footer>
-  );
+	return (
+		<footer className="mt-0 py-3 px-4 border-t border-slate-200 bg-slate-50 text-center">
+			<div className="max-w-3xl mx-auto">
+				<div className="flex justify-center gap-5 mb-2">
+					<Link
+						to="/contacto"
+						className="text-slate-600 hover:text-indigo-700 transition-colors"
+						aria-label="Formulario de contacto"
+					>
+						<FaEnvelope className="w-5 h-5" />
+					</Link>
+					<a
+						href="https://www.linkedin.com/in/orlando-pineda-raad-273402257"
+						target="_blank"
+						rel="noopener noreferrer"
+						className="text-slate-600 hover:text-indigo-700 transition-colors"
+						aria-label="LinkedIn"
+					>
+						<FaLinkedin className="w-5 h-5" />
+					</a>
+					<a
+						href="https://github.com/Orpira"
+						target="_blank"
+						rel="noopener noreferrer"
+						className="text-slate-600 hover:text-indigo-700 transition-colors"
+						aria-label="GitHub"
+					>
+						<FaGithub className="w-5 h-5" />
+					</a>
+				</div>
+
+				<p className="text-[11px] text-slate-500 font-medium leading-none">
+					<i className="fa fa-copyright" aria-hidden="true"></i> OrPiRa - Test
+					Interactivos
+				</p>
+
+				<p className="text-xs text-slate-600 mt-1 flex items-center justify-center gap-1 leading-none">
+					<FaMapMarkerAlt className="w-3.5 h-3.5" />
+					Bilbao, España
+				</p>
+				<p className="text-[11px] text-slate-500 mt-0.5 leading-none">
+					{new Date().getFullYear()}
+				</p>
+			</div>
+		</footer>
+	);
 }

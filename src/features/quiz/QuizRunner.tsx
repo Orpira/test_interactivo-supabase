@@ -3,6 +3,7 @@ import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import { supabase } from "../../services/supabase";
 import { useQuestions } from "@/hooks/useQuestions";
 import QuestionCard from "@/components/ui/QuestionCard";
+import { getCategoryVariants } from "@/utils/categoryVariants";
 
 type Question = {
 	question: string;
@@ -18,13 +19,14 @@ type AnswerSummary = {
 	options: string[];
 	correctAnswer: string;
 	selectedAnswer: string;
+	subcategory?: string;
 	shortExplanation?: string;
 	sourceUrl?: string;
 	sourceName?: string;
 };
 
 export default function QuizRunner() {
-	const { category } = useParams();
+	const { category, subcategory } = useParams();
 	const [searchParams] = useSearchParams();
 	const navigate = useNavigate();
 
@@ -36,10 +38,11 @@ export default function QuizRunner() {
 	}
 
 	// Use useQuestions only for loading/initial state, but manage questions locally for Supabase logic
-	const { questions: initialQuestions, loading: initialLoading } = useQuestions(
-		category,
-		count,
-	);
+	const {
+		questions: initialQuestions,
+		loading: initialLoading,
+		error: initialError,
+	} = useQuestions(category, count, subcategory);
 
 	const [questions, setQuestions] = useState<Question[]>(
 		initialQuestions || [],
@@ -53,6 +56,7 @@ export default function QuizRunner() {
 	const [showFeedback, setShowFeedback] = useState(false);
 	const [correctAnswer, setCorrectAnswer] = useState<string | null>(null);
 	const [summaryData, setSummaryData] = useState<AnswerSummary[]>([]);
+	const [queryError, setQueryError] = useState<string | null>(initialError);
 
 	// Utilidad para mezclar un array aleatoriamente
 	function shuffleArray<T>(array: T[]): T[] {
@@ -64,19 +68,30 @@ export default function QuizRunner() {
 
 	useEffect(() => {
 		let isMounted = true;
-		// Cargar preguntas desde Supabase para todas las subcategorías
+		setQueryError(null);
+		// Cargar preguntas desde Supabase filtrando por categoría y subcategoría si existe
 		const loadQuestions = async () => {
 			try {
-				const { data, error } = await supabase
+				const categoryVariants = getCategoryVariants(category);
+				let query = supabase
 					.from("questions")
 					.select("*")
-					.eq("subcategory", category);
+					.in("category", categoryVariants);
+				if (subcategory) {
+					query = query.eq("subcategory", decodeURIComponent(subcategory));
+				}
+				const { data, error } = await query;
 				if (error) throw error;
 				// Barajar y tomar las primeras N
 				const shuffled = shuffleArray(data ?? []).slice(0, count);
 				if (isMounted) setQuestions(shuffled);
-			} catch (error) {
+			} catch (error: any) {
 				console.error("Error cargando preguntas:", error);
+				if (isMounted) {
+					setQueryError(
+						error?.message || "No se pudieron cargar las preguntas del quiz.",
+					);
+				}
 			} finally {
 				if (isMounted) setLoading(false);
 			}
@@ -85,7 +100,11 @@ export default function QuizRunner() {
 		return () => {
 			isMounted = false;
 		};
-	}, [category, count, setQuestions]);
+	}, [category, subcategory, count]);
+
+	useEffect(() => {
+		if (initialError) setQueryError(initialError);
+	}, [initialError]);
 
 	const currentQuestion = questions[currentIndex];
 
@@ -114,6 +133,7 @@ export default function QuizRunner() {
 			options: currentQuestion.options,
 			correctAnswer: currentQuestion.correctAnswer,
 			selectedAnswer: option,
+			subcategory: subcategory ? decodeURIComponent(subcategory) : undefined,
 			shortExplanation: currentQuestion.shortExplanation,
 			sourceUrl: currentQuestion.sourceUrl,
 			sourceName: currentQuestion.sourceName,
@@ -133,6 +153,9 @@ export default function QuizRunner() {
 						total: questions.length,
 						category,
 						summary: summaryCopy,
+						subcategory: subcategory
+							? decodeURIComponent(subcategory)
+							: undefined,
 					},
 				});
 				// No limpiar el estado aquí, para que el usuario pueda ver el resultado y navegar correctamente
@@ -141,6 +164,9 @@ export default function QuizRunner() {
 	};
 
 	if (loading) return <p className="p-6 text-center">Cargando preguntas...</p>;
+	if (queryError) {
+		return <p className="p-6 text-center text-red-600">{queryError}</p>;
+	}
 	if (!currentQuestion)
 		return <p className="p-6 text-center">No se encontraron preguntas.</p>;
 

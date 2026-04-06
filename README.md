@@ -10,9 +10,13 @@ Desarrollada con tecnologías: React, Vite, Tailwind, Zustand, Supabase y más.
 
 ## 🚀 Funcionalidades principales
 
-- ✅ Realización de cuestionarios por categoría (HTML, CSS, JavaScript, Formularios, Responsive, Linux)
+- ✅ Realización de cuestionarios por categoría principal y subcategoría
+- ✅ Selección de subcategoría y número de preguntas desde modal dinámica en el navbar
 - ✅ Acceso con o sin autenticación (Supabase Auth)
 - ✅ Resultados con puntuación y ranking en tiempo real
+- ✅ Dashboard y ranking con métricas por categoría y subcategoría
+- ✅ Manejo visible de errores en consultas e inserciones de Supabase
+- ✅ Banco de preguntas ampliado con contenido de backend y subcategoría Linux
 - ✅ Editor de código con soporte para HTML, CSS y JS
 - ✅ Guardado de código y visualización de historial
 - ✅ Formulario de contacto usando `formsubmit.co`
@@ -119,6 +123,69 @@ npm run test
 ```bash
 npx playwright test
 ```
+
+---
+
+## 🧩 Flujo actual de quizzes
+
+1. Desde el navbar, el usuario abre `Quizzes` y elige una categoría principal.
+2. La aplicación consulta Supabase en la tabla `questions` filtrando primero por `category`.
+3. Con ese resultado se construye una modal dinámica con las subcategorías disponibles y el total de preguntas por cada una.
+4. El usuario selecciona la subcategoría y la cantidad de preguntas a responder.
+5. El runner del quiz consulta `questions` filtrando por `category` y `subcategory`.
+6. Si falla la consulta o el guardado en Supabase, la interfaz muestra mensajes de error visibles al usuario.
+7. Al finalizar, el resultado guarda categoría, subcategoría y resumen de respuestas para alimentar dashboard, historial y ranking.
+
+## Cambios recientes
+
+- Se añadió manejo visible de errores en el flujo de quizzes, resultados, ranking y dashboard cuando fallan consultas o escrituras en Supabase.
+- Se corrigió el solapamiento del menú `Quizzes` del navbar para evitar que bloqueara clics sobre acciones del ranking, como `Top 10`.
+- Se incorporó un nuevo bloque de preguntas en Supabase para `category = backend` y `subcategory = Linux`.
+- Se compactó el footer para reducir altura vertical y mantener el estilo visual del producto.
+- Se incorporó captura de nivel de experiencia (`junior`, `semi_senior`, `senior`) antes de iniciar el quiz.
+- Se añadió feedback adaptativo post-quiz con rating, comentario opcional y motivo obligatorio para ratings bajos.
+- Se activó la regla anti-fatiga para feedback: máximo una solicitud cada 7 días por usuario.
+- Se mejoró el dashboard con gráficos tipo dona para rendimiento por categoría y subcategoría, incluyendo escala visual de referencia.
+
+### Nota de esquema en Supabase
+
+La tabla `resultados` debe incluir la columna `subcategory` para registrar correctamente los quizzes realizados por subcategoría:
+
+```sql
+ALTER TABLE resultados
+ADD COLUMN IF NOT EXISTS subcategory TEXT;
+```
+
+Además, para soportar experiencia y feedback adaptativo se incorporan estas tablas:
+
+```sql
+CREATE TABLE IF NOT EXISTS user_experience (
+  user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  level TEXT NOT NULL CHECK (level IN ('junior', 'semi_senior', 'senior')),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS quiz_feedback (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  quiz_id UUID,
+  experience_level TEXT NOT NULL CHECK (experience_level IN ('junior', 'semi_senior', 'senior')),
+  rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
+  comment TEXT,
+  reason TEXT CHECK (reason IN ('dificultad', 'claridad', 'errores_tecnicos', 'desactualizado')),
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+```
+
+## Estado de implementación
+
+### Evaluación por experiencia del usuario
+
+- [x] Captura de nivel al inicio (`junior`, `semi_senior`, `senior`) antes de iniciar quiz.
+- [x] Feedback adaptativo al finalizar quiz con rating (1-5) y comentario opcional.
+- [x] Persistencia de evaluación en Supabase (`quiz_feedback`) para análisis de mejora continua.
+- [x] Regla anti-fatiga: no solicitar feedback más de una vez cada 7 días por usuario.
+- [x] Motivo obligatorio para rating bajo (`dificultad`, `claridad`, `errores_tecnicos`, `desactualizado`).
 
 ---
 

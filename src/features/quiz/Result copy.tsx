@@ -191,7 +191,11 @@ export default function Result() {
 			<div className="flex flex-row flex-wrap gap-3 mt-8 justify-center">
 				<button
 					onClick={() =>
-						navigate("/quiz", { state: { category: finalCategory } })
+						navigate(
+							`/?quizCategory=${encodeURIComponent(
+								(finalCategory || "frontend").toLowerCase(),
+							)}`,
+						)
 					}
 					className="px-4 py-2 bg-green-600 text-white rounded hover:bg-blue-700"
 				>

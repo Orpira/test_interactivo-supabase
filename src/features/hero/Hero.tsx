@@ -1,38 +1,61 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
-import { useAuth } from "../../services/auth";
 import { useState } from "react";
-import AuthModal from "@/components/ui/AuthModal";
-import ChallengeCategories from "../challenges/pages/ChallengeCategories";
 import LightParticles from "@/components/ui/LightParticles";
+import { useAuth } from "@/services/auth";
+import {
+	getStoredExperienceLevel,
+	setStoredExperienceLevel,
+	type ExperienceLevel,
+	upsertUserExperience,
+} from "@/services/feedback";
 
 export default function Hero() {
-	const { isAuthenticated, loginWithRedirect } = useAuth();
-	const [showAuthAlert, setShowAuthAlert] = useState(false);
-	// Para manejar el modal de autenticación
-	const [showAuth, setShowAuth] = useState(false);
+	const [showQuizCategoryPicker, setShowQuizCategoryPicker] = useState(false);
+	const [showExperiencePicker, setShowExperiencePicker] = useState(false);
 	const navigate = useNavigate();
+	const { user } = useAuth();
 
-	type Lang = "HTML" | "CSS" | "JavaScript";
+	const MAIN_CATEGORIES = [
+		{ key: "frontend", label: "Frontend", icon: "🎨" },
+		{ key: "backend", label: "Backend", icon: "🛠️" },
+		{ key: "devops", label: "DevOps", icon: "⚙️" },
+		{ key: "testing", label: "Testing", icon: "🧪" },
+	];
 
-	const handleCardClick = (category: Lang) => {
-		if (!isAuthenticated) {
-			setShowAuthAlert(true);
+	const handleStartNow = () => {
+		if (!getStoredExperienceLevel()) {
+			setShowExperiencePicker(true);
 			return;
 		}
-		goToFirstChallenge(category);
+		setShowQuizCategoryPicker(true);
 	};
 
-	const goToFirstChallenge = (category: Lang) => {
-		// … lógica que ya tenías para localizar el reto …
-		navigate(`/editor/${category.toLowerCase()}/${category.toLowerCase()}-01`);
+	const handleExperienceSelect = async (level: ExperienceLevel) => {
+		setStoredExperienceLevel(level);
+		setShowExperiencePicker(false);
+
+		if (user?.id) {
+			try {
+				await upsertUserExperience(user.id, level);
+			} catch (error) {
+				console.error("No se pudo guardar la experiencia del usuario:", error);
+			}
+		}
+
+		setShowQuizCategoryPicker(true);
+	};
+
+	const handleQuizCategorySelect = (categoryKey: string) => {
+		setShowQuizCategoryPicker(false);
+		navigate(`/?quizCategory=${encodeURIComponent(categoryKey)}`);
 	};
 
 	return (
 		<>
 			<section
-				className="w-full min-h-screen flex flex-col items-center justify-start px-4 pt-10 relative"
+				className="w-full min-h-[calc(100vh-8.5rem)] flex flex-col items-center justify-start px-4 pt-10 relative"
 				style={{
 					backgroundImage: "url('/fondo.png')",
 					backgroundSize: "cover",
@@ -40,26 +63,50 @@ export default function Hero() {
 				}}
 			>
 				<h2 className="text-2xl sm:text-4xl md:text-6xl font-bold mb-2 text-white text-center">
-					Quizzes y retos interactivos <br />
+					Quizzes interactivos <br />
 					<strong>
 						<span style={{ color: "orange" }}>HTML, </span>
 						<span style={{ color: "cyan" }}>CSS,</span>
-						<span style={{ color: "yellow" }}>JavaScript.</span>
+						<span style={{ color: "yellow" }}>JavaScript</span>
+						<span style={{ color: "orange" }}> y mucho más!!...</span>
 					</strong>
 				</h2>
 
 				<div className="flex flex-col sm:flex-row items-center justify-between w-full max-w-6xl">
-					<p className="text-lg sm:text-xl md:text-3xl font-bold mb-2 text-white text-center sm:text-left">
-						WebWiz Quiz <br />
-						<span className="text-orange-400 text-lg sm:text-xl md:text-2xl">
-							¡Aprende y diviértete!
-						</span>
-						<span className="text-sm sm:text-base md:text-lg mb-6 text-left text-white">
-							<br />
-							Evalua tus conocimientos, valida y comparte tus soluciones al
-							instante.
-						</span>
-					</p>
+					<div className="flex flex-col items-center sm:items-start">
+						<p className="text-lg sm:text-xl md:text-3xl font-bold mb-2 text-white text-center sm:text-left">
+							WebWiz Quiz <br />
+							<span className="text-orange-400 text-lg sm:text-xl md:text-2xl">
+								Entrena tus habilidades en frontend, backend y más con quizzes
+								interactivos.
+							</span>
+							<span className="text-sm sm:text-base md:text-lg mb-6 text-left text-white">
+								<br />
+								Evalua tus conocimientos, valida y comparte tus soluciones al
+								instante.
+							</span>
+						</p>
+						<button
+							className="mt-4 px-4 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 bg-gray-800 text-white text-sm sm:text-base md:text-lg font-bold rounded-lg shadow-lg hover:bg-gray-700 transition-colors duration-200 flex items-center"
+							onClick={handleStartNow}
+						>
+							¡Empieza ahora!
+							<motion.div
+								animate={{
+									x: [0, 3, 0],
+								}}
+								transition={{
+									duration: 1.5,
+									repeat: Infinity,
+									repeatType: "loop",
+									ease: "easeInOut",
+								}}
+								className="inline-block"
+							>
+								<ArrowRight className="ml-2" />
+							</motion.div>
+						</button>
+					</div>
 
 					<motion.img
 						src="/logo.png"
@@ -75,28 +122,45 @@ export default function Hero() {
 					"Domina la magia del código, un quiz a la vez."
 				</p>
 				<LightParticles />
-				<button
-					className="mt-6 px-4 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 bg-gray-800 text-white text-sm sm:text-base md:text-lg font-bold rounded-lg shadow-lg hover:bg-gray-700 transition-colors duration-200 flex items-center"
-					onClick={() => {
-						navigate("/quiz");
-					}}
-				>
-					¡Empieza ahora!
-					<motion.div
-						animate={{
-							x: [0, 3, 0],
-						}}
-						transition={{
-							duration: 1.5,
-							repeat: Infinity,
-							repeatType: "loop",
-							ease: "easeInOut",
-						}}
-						className="inline-block"
-					>
-						<ArrowRight className="ml-2" />
-					</motion.div>
-				</button>
+				{showExperiencePicker && (
+					<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+						<div className="w-full max-w-md rounded-xl bg-white shadow-2xl p-6 relative">
+							<button
+								className="absolute top-2 right-3 text-gray-500 hover:text-red-500 text-2xl font-bold"
+								onClick={() => setShowExperiencePicker(false)}
+								aria-label="Cerrar"
+							>
+								x
+							</button>
+							<h3 className="text-xl font-bold text-slate-900 text-center mb-2">
+								¿Cuál es tu nivel?
+							</h3>
+							<p className="text-sm text-slate-600 text-center mb-4">
+								Esto nos ayuda a adaptar tus evaluaciones.
+							</p>
+							<div className="grid gap-3">
+								<button
+									onClick={() => handleExperienceSelect("junior")}
+									className="w-full rounded-lg border border-slate-200 px-4 py-3 text-left hover:bg-indigo-50 hover:border-indigo-300 transition"
+								>
+									Junior
+								</button>
+								<button
+									onClick={() => handleExperienceSelect("semi_senior")}
+									className="w-full rounded-lg border border-slate-200 px-4 py-3 text-left hover:bg-indigo-50 hover:border-indigo-300 transition"
+								>
+									Semi Senior
+								</button>
+								<button
+									onClick={() => handleExperienceSelect("senior")}
+									className="w-full rounded-lg border border-slate-200 px-4 py-3 text-left hover:bg-indigo-50 hover:border-indigo-300 transition"
+								>
+									Senior
+								</button>
+							</div>
+						</div>
+					</div>
+				)}
 				<motion.img
 					src="/languajes.png"
 					alt="Lenguajes de Programación"
@@ -110,22 +174,39 @@ export default function Hero() {
 					decoding="async"
 					fetchPriority="low"
 				/>
-				<div className="mt-12 mb-16 flex flex-col md:flex-row gap-6 w-full max-w-2xl justify-center items-center">
-					{showAuthAlert && (
-						<AuthModal
-							open={showAuthAlert}
-							onLogin={() => {
-								setShowAuthAlert(false);
-								loginWithRedirect();
-							}}
-							onClose={() => setShowAuthAlert(false)}
-						/>
-					)}
-					<ChallengeCategories
-						isAuthenticated={isAuthenticated}
-						onSelectCategory={handleCardClick}
-					/>
-				</div>
+				{showQuizCategoryPicker && (
+					<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+						<div className="w-full max-w-md rounded-xl bg-white shadow-2xl p-6 relative">
+							<button
+								className="absolute top-2 right-3 text-gray-500 hover:text-red-500 text-2xl font-bold"
+								onClick={() => setShowQuizCategoryPicker(false)}
+								aria-label="Cerrar"
+							>
+								x
+							</button>
+							<h3 className="text-xl font-bold text-slate-900 text-center mb-2">
+								Elige una categoría
+							</h3>
+							<p className="text-sm text-slate-600 text-center mb-4">
+								Luego eliges subcategoría y número de preguntas.
+							</p>
+							<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+								{MAIN_CATEGORIES.map((cat) => (
+									<button
+										key={cat.key}
+										onClick={() => handleQuizCategorySelect(cat.key)}
+										className="w-full rounded-lg border border-slate-200 px-4 py-3 text-left hover:bg-indigo-50 hover:border-indigo-300 transition"
+									>
+										<span className="mr-2">{cat.icon}</span>
+										<span className="font-medium text-slate-800">
+											{cat.label}
+										</span>
+									</button>
+								))}
+							</div>
+						</div>
+					</div>
+				)}
 			</section>
 		</>
 	);

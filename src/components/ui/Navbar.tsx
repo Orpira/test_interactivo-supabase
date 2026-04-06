@@ -1,232 +1,297 @@
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../services/auth";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import UserButton from "./UserButton";
-import { ArrowRight } from "lucide-react";
-import AuthModal from "./AuthModal";
+import { useEffect, useRef, useState } from "react";
+import { supabase } from "@/services/supabase";
+import QuizCategoryModal from "./QuizCategoryModal";
+import { getCategoryVariants } from "@/utils/categoryVariants";
 
-/* ——— helpers ——— */
-const desktopLink =
-	"relative after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-indigo-500 after:transition-all text-xl hover:after:w-full";
-const desktopDashboard =
-	"relative after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-indigo-500 after:transition-all text-xl hover:after:w-full font-semibold text-indigo-600 dark:text-indigo-400";
-const mobileLink = "text-slate-100 hover:text-indigo-300 transition";
-const mobileDashboard = "text-slate-100 hover:text-indigo-300 transition";
+type SubcategoryOption = {
+	name: string;
+	slug: string;
+	questionCount: number;
+};
 
 export default function Navbar() {
-	const { isAuthenticated, loginWithRedirect } = useAuth();
-	const [open, setOpen] = useState(false);
-	const [showAuthAlert, setShowAuthAlert] = useState(false);
+	const { isAuthenticated, loginWithRedirect, loginWithGoogle, user, logout } =
+		useAuth();
+	const location = useLocation();
 	const navigate = useNavigate();
+	const autoOpenedCategoryRef = useRef("");
+	const [showLoginModal, setShowLoginModal] = useState(false);
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+	const [error, setError] = useState("");
+	const [loading, setLoading] = useState(false);
+	const [showSubcategoryModal, setShowSubcategoryModal] = useState(false);
+	const [selectedCategory, setSelectedCategory] = useState("");
+	const [subcategories, setSubcategories] = useState<SubcategoryOption[]>([]);
+	const [subcategoriesLoading, setSubcategoriesLoading] = useState(false);
+	const [subcategoriesError, setSubcategoriesError] = useState("");
 
-	const close = () => setOpen(false);
+	const MAIN_CATEGORIES = [
+		{ key: "frontend", label: "Frontend" },
+		{ key: "backend", label: "Backend" },
+		{ key: "devops", label: "DevOps" },
+		{ key: "testing", label: "Testing" },
+	];
 
-	type Lang = "HTML" | "CSS" | "JavaScript";
+	async function handleEmailLogin(e: React.FormEvent) {
+		e.preventDefault();
+		setLoading(true);
+		setError("");
+		try {
+			const { error } = await import("../../services/supabase").then(
+				({ supabase }) => supabase.auth.signInWithPassword({ email, password }),
+			);
+			if (error) setError(error.message);
+			else setShowLoginModal(false);
+		} catch (err: any) {
+			setError(err.message || "Error desconocido");
+		} finally {
+			setLoading(false);
+		}
+	}
 
-	const handleCardClick = (category: Lang) => {
-		if (!isAuthenticated) {
-			setShowAuthAlert(true);
+	async function handleCategoryClick(categoryKey: string) {
+		setSelectedCategory(categoryKey);
+		setShowSubcategoryModal(true);
+		setSubcategories([]);
+		setSubcategoriesError("");
+		setSubcategoriesLoading(true);
+
+		try {
+			const categoryVariants = getCategoryVariants(categoryKey);
+			const { data, error } = await supabase
+				.from("questions")
+				.select("subcategory")
+				.in("category", categoryVariants);
+
+			if (error) throw error;
+
+			const counts = (data ?? []).reduce<Record<string, number>>((acc, row) => {
+				const value = (row as { subcategory?: string }).subcategory;
+				if (!value) return acc;
+				acc[value] = (acc[value] || 0) + 1;
+				return acc;
+			}, {});
+
+			const mapped = Object.keys(counts)
+				.map((name) => ({
+					name,
+					slug: encodeURIComponent(name),
+					questionCount: counts[name],
+				}))
+				.sort((a, b) => b.questionCount - a.questionCount);
+
+			setSubcategories(mapped);
+			if (mapped.length === 0) {
+				setSubcategoriesError(
+					"No hay subcategorias disponibles en esta categoria.",
+				);
+			}
+		} catch (err: any) {
+			setSubcategoriesError(
+				err?.message || "No se pudieron cargar las subcategorias.",
+			);
+		} finally {
+			setSubcategoriesLoading(false);
+		}
+	}
+
+	function handleStartQuiz(subcat: string, count: number) {
+		setShowSubcategoryModal(false);
+		navigate(
+			`/quiz/${selectedCategory}/${encodeURIComponent(subcat)}?count=${count}`,
+		);
+	}
+
+	useEffect(() => {
+		const params = new URLSearchParams(location.search);
+		const categoryFromQuery = params.get("quizCategory");
+		if (!categoryFromQuery) {
+			autoOpenedCategoryRef.current = "";
 			return;
 		}
-		navigate(`/editor/${category.toLowerCase()}/${category.toLowerCase()}-01`);
-	};
+
+		const decodedCategory = decodeURIComponent(categoryFromQuery);
+		if (autoOpenedCategoryRef.current === decodedCategory) return;
+		if (!MAIN_CATEGORIES.some((cat) => cat.key === decodedCategory)) return;
+
+		autoOpenedCategoryRef.current = decodedCategory;
+		void handleCategoryClick(decodedCategory);
+	}, [location.search]);
 
 	return (
-		/* ---------- NAV ---------- */
-		<nav
-			className="
-        sticky top-0 z-50 w-full
-        bg-gradient-to-r from-white/70 via-white/60 to-white/30
-        dark:from-slate-900/90 dark:via-slate-900/80 dark:to-slate-900/60
-        backdrop-blur-md ring-1 ring-slate-900/5 dark:ring-slate-50/10
-        shadow-md transition-colors
-        font-sans
-      "
-		>
-			<div className="mx-auto max-w-7xl flex items-center justify-between px-4 sm:px-6 lg:px-8 py-4">
-				{/* ---------- LOGO ---------- */}
-				<Link
-					to="/"
-					className="flex items-center gap-2 font-extrabold text-xl sm:text-3xl text-slate-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition"
-					onClick={close}
-				>
-					<img src="/logo.png" alt="Logo" className="w-24 h-24" />
-					WebWiz&nbsp;Quiz
+		<>
+			<nav className="sticky top-0 z-50 bg-slate-900 text-white px-4 py-3 flex items-center gap-8 shadow-md backdrop-blur-md">
+				<Link to="/" className="flex items-center gap-2 font-bold text-xl">
+					<img src="/logo.png" alt="Logo" className="w-10 h-10" />
+					WebWiz Quiz
 				</Link>
-
-				{/* ---------- LINKS DESKTOP ---------- */}
-				<ul className="hidden md:flex gap-8 text-base font-semibold text-slate-700 dark:text-slate-200">
-					<li>
-						<Link to="/" className={desktopLink}>
-							Inicio
-						</Link>
-					</li>
-					<li>
-						<Link to="/quiz" className={desktopLink}>
-							Quizzes
-						</Link>
-					</li>
-					<li>
-						{showAuthAlert && (
-							<AuthModal
-								open={showAuthAlert}
-								onLogin={() => {
-									setShowAuthAlert(false);
-									loginWithRedirect();
-								}}
-								onClose={() => setShowAuthAlert(false)}
-							/>
-						)}
-						<button
-							onClick={() => handleCardClick("HTML")}
-							className={desktopLink}
+				<Link to="/" className="hover:text-indigo-300">
+					Inicio
+				</Link>
+				<div className="relative group">
+					<button className="hover:text-indigo-300 focus:outline-none flex items-center gap-1">
+						Quizzes
+						<svg
+							className="w-4 h-4"
+							fill="none"
+							stroke="currentColor"
+							strokeWidth="2"
+							viewBox="0 0 24 24"
 						>
-							Retos
-						</button>
-					</li>
-
-					{isAuthenticated && (
-						<>
-							<li>
-								<Link to="/dashboard" className={desktopDashboard}>
-									Dashboard
-								</Link>
-							</li>
-						</>
-					)}
-					<li>
-						<Link to="/contacto" className={desktopLink}>
-							Contacto
-						</Link>
-					</li>
-				</ul>
-
-				{/* ---------- CTA DESKTOP ---------- */}
-				{!isAuthenticated && (
-					<button
-						onClick={() => loginWithRedirect()}
-						className="hidden md:inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 transition text-lg"
-					>
-						Iniciar&nbsp;sesión
-						<ArrowRight className="w-5 h-5" />
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								d="M19 9l-7 7-7-7"
+							/>
+						</svg>
 					</button>
-				)}
-
-				{isAuthenticated && (
-					<div className="hidden md:inline-flex">
-						<UserButton />
+					<div className="absolute left-0 mt-2 w-48 bg-white text-slate-900 rounded shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto transition-opacity z-40">
+						{MAIN_CATEGORIES.map((cat) => (
+							<button
+								key={cat.key}
+								onClick={() => handleCategoryClick(cat.key)}
+								className="w-full text-left px-4 py-2 hover:bg-indigo-100"
+							>
+								{cat.label}
+							</button>
+						))}
 					</div>
+				</div>
+				{isAuthenticated && (
+					<Link to="/dashboard" className="hover:text-indigo-300">
+						Dashboard
+					</Link>
 				)}
-
-				{/* ---------- HAMBURGER ---------- */}
-				<button
-					aria-label={open ? "Cerrar menú" : "Abrir menú"}
-					onClick={() => setOpen(!open)}
-					className="md:hidden p-3 text-slate-700 dark:text-slate-200"
-				>
-					{open ? (
-						<svg
-							className="w-8 h-8"
-							fill="none"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth={2}
-								d="M6 18L18 6M6 6l12 12"
-							/>
-						</svg>
+				<Link to="/contacto" className="hover:text-indigo-300">
+					Contacto
+				</Link>
+				<div className="ml-auto flex items-center gap-4">
+					{isAuthenticated ? (
+						<>
+							<span className="font-semibold text-indigo-200">
+								{user?.email}
+							</span>
+							<button
+								onClick={() => void logout()}
+								className="bg-orange-600 hover:bg-orange-500 text-white px-4 py-2 rounded transition"
+							>
+								Cerrar sesion
+							</button>
+						</>
 					) : (
-						<svg
-							className="w-8 h-8"
-							fill="none"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
+						<button
+							onClick={() => setShowLoginModal(true)}
+							className="bg-indigo-400 hover:bg-indigo-300 text-white px-4 py-2 rounded transition"
 						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth={2}
-								d="M4 8h16M4 16h16"
-							/>
-						</svg>
+							Iniciar sesion
+						</button>
 					)}
-				</button>
-			</div>
-
-			{/* ---------- PANEL MOBILE ---------- */}
-			{open && (
-				<nav
-					aria-label="Menú móvil"
-					data-testid="mobile-nav"
-					className="md:hidden absolute top-full left-0 w-full z-40 bg-slate-800/95 dark:bg-slate-950 backdrop-blur-md shadow-xl"
-				>
-					<button
-						aria-label="Cerrar menú"
-						onClick={() => setOpen(false)}
-						className="p-3 text-white hover:text-gray-300"
-					>
-						Cerrar
-					</button>
-					<div className="flex flex-col items-center gap-6 py-8">
-						<Link to="/" onClick={close} className={mobileLink}>
-							Inicio
-						</Link>
-						<Link to="/quiz" onClick={close} className={mobileLink}>
-							Quizzes
-						</Link>
-						<li>
-							{showAuthAlert && (
-								<AuthModal
-									open={showAuthAlert}
-									onLogin={() => {
-										setShowAuthAlert(false);
-										loginWithRedirect();
-									}}
-									onClose={() => setShowAuthAlert(false)}
-								/>
+				</div>
+			</nav>
+			{showLoginModal && (
+				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+					<div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-xs relative">
+						<button
+							className="absolute top-2 right-3 text-gray-500 hover:text-red-500 text-2xl font-bold"
+							onClick={() => setShowLoginModal(false)}
+							aria-label="Cerrar"
+						>
+							x
+						</button>
+						<h2 className="text-xl font-bold mb-4 text-center text-slate-900">
+							Iniciar sesion
+						</h2>
+						<button
+							onClick={async () => {
+								setLoading(true);
+								setError("");
+								try {
+									await loginWithGoogle();
+								} catch (e: any) {
+									setError(e.message);
+								} finally {
+									setLoading(false);
+								}
+							}}
+							className="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded mb-4 flex items-center justify-center gap-2"
+							disabled={loading}
+						>
+							<svg className="w-5 h-5" viewBox="0 0 48 48">
+								<g>
+									<path
+										fill="#4285F4"
+										d="M44.5 20H24v8.5h11.7C34.7 33.1 29.9 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c2.7 0 5.2.9 7.2 2.4l6.4-6.4C33.5 5.1 28.1 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21c10.5 0 20-8.1 20-21 0-1.3-.1-2.1-.3-3z"
+									/>
+									<path
+										fill="#34A853"
+										d="M6.3 14.7l7 5.1C15.1 17.1 19.2 14 24 14c2.7 0 5.2.9 7.2 2.4l6.4-6.4C33.5 5.1 28.1 3 24 3c-7.2 0-13.4 3.1-17.7 8.1z"
+									/>
+									<path
+										fill="#FBBC05"
+										d="M24 44c5.9 0 10.7-1.9 14.3-5.1l-6.6-5.4C29.7 35.1 27 36 24 36c-5.8 0-10.7-3.9-12.5-9.3l-7 5.4C7.9 41.1 15.4 44 24 44z"
+									/>
+									<path
+										fill="#EA4335"
+										d="M44.5 20H24v8.5h11.7c-1.6 4.1-6.1 7.5-11.7 7.5-6.6 0-12-5.4-12-12s5.4-12 12-12c2.7 0 5.2.9 7.2 2.4l6.4-6.4C33.5 5.1 28.1 3 24 3c-7.2 0-13.4 3.1-17.7 8.1z"
+									/>
+								</g>
+							</svg>
+							Continuar con Google
+						</button>
+						<button
+							onClick={loginWithRedirect}
+							className="w-full bg-gray-700 hover:bg-gray-800 text-white py-2 rounded mb-4 flex items-center justify-center gap-2"
+							disabled={loading}
+						>
+							Iniciar con Email/Contrasena
+						</button>
+						<form onSubmit={handleEmailLogin} className="space-y-3">
+							<input
+								type="email"
+								className="w-full border px-3 py-2 rounded"
+								placeholder="Correo electronico"
+								value={email}
+								onChange={(e) => setEmail(e.target.value)}
+								required
+								autoFocus
+							/>
+							<input
+								type="password"
+								className="w-full border px-3 py-2 rounded"
+								placeholder="Contrasena"
+								value={password}
+								onChange={(e) => setPassword(e.target.value)}
+								required
+							/>
+							{error && (
+								<div className="text-red-600 text-sm text-center">{error}</div>
 							)}
 							<button
-								onClick={() => {
-									handleCardClick("HTML");
-									close();
-								}}
-								className={mobileDashboard}
+								type="submit"
+								className="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-2 rounded mt-2"
+								disabled={loading}
 							>
-								Retos
+								{loading ? "Ingresando..." : "Ingresar"}
 							</button>
-						</li>
-
-						{isAuthenticated && (
-							<Link to="/dashboard" onClick={close} className={mobileDashboard}>
-								Dashboard
-							</Link>
-						)}
-						<Link to="/contacto" onClick={close} className={mobileLink}>
-							Contacto
-						</Link>
-
-						{/* CTA / User */}
-						{isAuthenticated ? (
-							<div className="mt-auto">
-								<UserButton />
-							</div>
-						) : (
-							<button
-								onClick={() => {
-									loginWithRedirect();
-									close();
-								}}
-								className="mt-auto px-6 py-3 rounded-lg bg-indigo-600 text-white hover:bg-indigo-500 transition text-lg"
-							>
-								Iniciar sesión
-							</button>
-						)}
+						</form>
 					</div>
-				</nav>
+				</div>
 			)}
-		</nav>
+			<QuizCategoryModal
+				open={showSubcategoryModal}
+				onClose={() => setShowSubcategoryModal(false)}
+				category={
+					MAIN_CATEGORIES.find((c) => c.key === selectedCategory)?.label ||
+					selectedCategory
+				}
+				subcategories={subcategories}
+				loading={subcategoriesLoading}
+				error={subcategoriesError}
+				onStartQuiz={handleStartQuiz}
+			/>
+		</>
 	);
 }

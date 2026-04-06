@@ -9,11 +9,17 @@ export function useUserHistory() {
 	const { user } = useAuth();
 	const [history, setHistory] = useState<HistoryItem[]>([]);
 	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
-		if (!user?.id) return;
+		if (!user?.id) {
+			setLoading(false);
+			return;
+		}
 
 		const loadHistory = async () => {
+			setLoading(true);
+			setError(null);
 			const { data, error } = await supabase
 				.from("resultados")
 				.select("*")
@@ -22,6 +28,7 @@ export function useUserHistory() {
 
 			if (error) {
 				console.error("Error cargando historial:", error);
+				setError(error.message || "No se pudo cargar el historial.");
 			} else {
 				setHistory(data ?? []);
 			}
@@ -31,5 +38,5 @@ export function useUserHistory() {
 		loadHistory();
 	}, [user?.id]);
 
-	return { history, loading };
+	return { history, loading, error };
 }
