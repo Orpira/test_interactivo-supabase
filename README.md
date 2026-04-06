@@ -191,18 +191,45 @@ CREATE TABLE IF NOT EXISTS quiz_feedback (
 
 ## 🚀 Despliegue
 
-### Opción 1: Vercel (recomendado)
+### Producción: Vercel + dominio personalizado
 
-1. Importa el repositorio en [Vercel](https://vercel.com)
-2. Configura las variables de entorno en **Settings → Environment Variables**:
+**URL de producción:** https://orpira.es
+
+El proyecto está desplegado en Vercel con dominio personalizado `orpira.es`.
+
+#### Configuración realizada
+
+1. **Build de producción** — `npm run build` (genera carpeta `dist/` con Vite)
+2. **vercel.json** — Configuración de Vercel con `outputDirectory: "dist"` y rewrites para SPA:
+   ```json
+   {
+   	"buildCommand": "npm run build",
+   	"outputDirectory": "dist",
+   	"rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+   }
+   ```
+3. **Dominio personalizado** — `orpira.es` añadido en Vercel → Settings → Domains
+4. **Nameservers** — Cambiados en el registrador de dominio (register.domains) de `ns01.dns.nexus` / `ns02.dns.nexus` a:
+   - `ns1.vercel-dns.com`
+   - `ns2.vercel-dns.com`
+5. **SSL/HTTPS** — Certificado generado automáticamente por Vercel (Let's Encrypt)
+6. **Variables de entorno en Vercel** — Configuradas en Settings → Environment Variables:
    - `VITE_SUPABASE_URL`
    - `VITE_SUPABASE_ANON_KEY`
-3. En Supabase Dashboard → **Authentication → URL Configuration**:
-   - Cambia **Site URL** a la URL de tu proyecto en Vercel (ej: `https://tu-proyecto.vercel.app`)
-   - Agrega la URL de Vercel en **Redirect URLs**: `https://tu-proyecto.vercel.app/**`
-4. Vercel despliega automáticamente con cada push a `main`
+7. **Supabase Auth** — Actualizado en Authentication → URL Configuration:
+   - **Site URL**: `https://orpira.es`
+   - **Redirect URLs**: `https://orpira.es/**`, `https://www.orpira.es/**`
+8. **Merge a main** — Rama `categorias` fusionada a `main` con resolución de conflictos en `QuizRunner.tsx` y `useQuestions.ts`
+9. **Deploy automático** — Vercel despliega automáticamente con cada push a `main`
 
-### Opción 2: Manual
+#### Resolución de conflictos del merge (categorias → main)
+
+Se resolvieron conflictos en dos archivos conservando la lógica de filtrado por categoría + subcategoría de la rama `categorias`:
+
+- `src/features/quiz/QuizRunner.tsx` — Filtrado con `.in("category", categoryVariants)` + subcategoría opcional
+- `src/hooks/useQuestions.ts` — Misma lógica de filtrado por variantes de categoría + subcategoría
+
+#### Configuración alternativa: Manual
 
 1. Configura tu proyecto en [Supabase](https://supabase.com)
 2. Ejecuta el schema SQL en el SQL Editor de Supabase
@@ -215,7 +242,7 @@ npm run build
 
 > **Importante:** Si al desplegar ves el error `supabaseUrl is required`, significa que las variables de entorno `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` no están configuradas en el entorno de hosting. Agrégalas en el panel de tu proveedor.
 
-> **Importante:** Si al iniciar sesión redirige a `localhost`, ve a Supabase Dashboard → Authentication → URL Configuration y actualiza la **Site URL** y las **Redirect URLs** con la URL de producción.
+> **Importante:** Si al iniciar sesión redirige a `localhost`, ve a Supabase Dashboard → Authentication → URL Configuration y actualiza la **Site URL** y las **Redirect URLs** con la URL de producción (`https://orpira.es`).
 
 ---
 
