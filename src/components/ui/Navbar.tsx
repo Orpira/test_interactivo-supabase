@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/services/supabase";
 import QuizCategoryModal from "./QuizCategoryModal";
 import { getCategoryVariants } from "@/utils/categoryVariants";
+import { ChevronDown, Menu, X } from "lucide-react";
 
 type SubcategoryOption = {
 	name: string;
@@ -27,6 +28,8 @@ export default function Navbar() {
 	const [subcategories, setSubcategories] = useState<SubcategoryOption[]>([]);
 	const [subcategoriesLoading, setSubcategoriesLoading] = useState(false);
 	const [subcategoriesError, setSubcategoriesError] = useState("");
+	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+	const [mobileQuizOpen, setMobileQuizOpen] = useState(false);
 
 	const MAIN_CATEGORIES = [
 		{ key: "frontend", label: "Frontend" },
@@ -121,73 +124,169 @@ export default function Navbar() {
 		void handleCategoryClick(decodedCategory);
 	}, [location.search]);
 
+	useEffect(() => {
+		setMobileMenuOpen(false);
+		setMobileQuizOpen(false);
+	}, [location.pathname, location.search]);
+
+	async function handleCategoryClickFromMenu(categoryKey: string) {
+		setMobileMenuOpen(false);
+		setMobileQuizOpen(false);
+		await handleCategoryClick(categoryKey);
+	}
+
 	return (
 		<>
-			<nav className="sticky top-0 z-50 bg-slate-900 text-white px-4 py-3 flex items-center gap-8 shadow-md backdrop-blur-md">
-				<Link to="/" className="flex items-center gap-2 font-bold text-xl">
-					<img src="/logo.png" alt="Logo" className="w-10 h-10" />
-					WebWiz Quiz
-				</Link>
-				<Link to="/" className="hover:text-indigo-300">
-					Inicio
-				</Link>
-				<div className="relative group">
-					<button className="hover:text-indigo-300 focus:outline-none flex items-center gap-1">
-						Quizzes
-						<svg
-							className="w-4 h-4"
-							fill="none"
-							stroke="currentColor"
-							strokeWidth="2"
-							viewBox="0 0 24 24"
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								d="M19 9l-7 7-7-7"
-							/>
-						</svg>
-					</button>
-					<div className="absolute left-0 mt-2 w-48 bg-white text-slate-900 rounded shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto transition-opacity z-40">
-						{MAIN_CATEGORIES.map((cat) => (
-							<button
-								key={cat.key}
-								onClick={() => handleCategoryClick(cat.key)}
-								className="w-full text-left px-4 py-2 hover:bg-indigo-100"
-							>
-								{cat.label}
-							</button>
-						))}
-					</div>
-				</div>
-				{isAuthenticated && (
-					<Link to="/dashboard" className="hover:text-indigo-300">
-						Dashboard
+			<nav className="sticky top-0 z-50 bg-slate-900 text-white px-4 py-3 shadow-md backdrop-blur-md">
+				<div className="mx-auto flex w-full max-w-7xl flex-wrap items-center gap-3">
+					<Link
+						to="/"
+						className="flex items-center gap-2 font-bold text-lg sm:text-xl"
+					>
+						<img src="/logo.png" alt="Logo" className="w-10 h-10" />
+						<span className="hidden sm:inline">WebWiz Quiz</span>
 					</Link>
-				)}
-				<Link to="/contacto" className="hover:text-indigo-300">
-					Contacto
-				</Link>
-				<div className="ml-auto flex items-center gap-4">
-					{isAuthenticated ? (
-						<>
-							<span className="font-semibold text-indigo-200">
-								{user?.email}
-							</span>
-							<button
-								onClick={() => void logout()}
-								className="bg-orange-600 hover:bg-orange-500 text-white px-4 py-2 rounded transition"
-							>
-								Cerrar sesion
+
+					<div className="ml-auto hidden items-center gap-6 md:flex">
+						<Link to="/" className="hover:text-indigo-300">
+							Inicio
+						</Link>
+						<div className="relative group">
+							<button className="hover:text-indigo-300 focus:outline-none flex items-center gap-1">
+								Quizzes
+								<ChevronDown className="h-4 w-4" aria-hidden="true" />
 							</button>
-						</>
-					) : (
-						<button
-							onClick={() => setShowLoginModal(true)}
-							className="bg-indigo-400 hover:bg-indigo-300 text-white px-4 py-2 rounded transition"
-						>
-							Iniciar sesion
-						</button>
+							<div className="absolute left-0 mt-2 w-48 bg-white text-slate-900 rounded shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto transition-opacity z-40">
+								{MAIN_CATEGORIES.map((cat) => (
+									<button
+										key={cat.key}
+										onClick={() => {
+											void handleCategoryClick(cat.key);
+										}}
+										className="w-full text-left px-4 py-2 hover:bg-indigo-100"
+									>
+										{cat.label}
+									</button>
+								))}
+							</div>
+						</div>
+						{isAuthenticated && (
+							<Link to="/dashboard" className="hover:text-indigo-300">
+								Dashboard
+							</Link>
+						)}
+						<Link to="/contacto" className="hover:text-indigo-300">
+							Contacto
+						</Link>
+						{isAuthenticated ? (
+							<>
+								<span className="max-w-[14rem] truncate font-semibold text-indigo-200">
+									{user?.email}
+								</span>
+								<button
+									onClick={() => void logout()}
+									className="bg-orange-600 hover:bg-orange-500 text-white px-4 py-2 rounded transition"
+								>
+									Cerrar sesion
+								</button>
+							</>
+						) : (
+							<button
+								onClick={() => setShowLoginModal(true)}
+								className="bg-indigo-400 hover:bg-indigo-300 text-white px-4 py-2 rounded transition"
+							>
+								Iniciar sesion
+							</button>
+						)}
+					</div>
+
+					<button
+						type="button"
+						className="ml-auto inline-flex items-center justify-center rounded-md border border-slate-700 p-2 text-white md:hidden"
+						onClick={() => setMobileMenuOpen((prev) => !prev)}
+						aria-expanded={mobileMenuOpen}
+						aria-label="Abrir menu"
+					>
+						{mobileMenuOpen ? (
+							<X className="h-5 w-5" aria-hidden="true" />
+						) : (
+							<Menu className="h-5 w-5" aria-hidden="true" />
+						)}
+					</button>
+
+					{mobileMenuOpen && (
+						<div className="mt-2 w-full border-t border-slate-700 pt-3 md:hidden">
+							<div className="flex flex-col gap-2 text-sm">
+								<Link to="/" className="rounded px-2 py-2 hover:bg-slate-800">
+									Inicio
+								</Link>
+								<button
+									type="button"
+									onClick={() => setMobileQuizOpen((prev) => !prev)}
+									className="flex items-center justify-between rounded px-2 py-2 hover:bg-slate-800"
+								>
+									<span>Quizzes</span>
+									<ChevronDown
+										className={`h-4 w-4 transition-transform ${
+											mobileQuizOpen ? "rotate-180" : ""
+										}`}
+										aria-hidden="true"
+									/>
+								</button>
+								{mobileQuizOpen && (
+									<div className="ml-2 flex flex-col rounded bg-slate-800/70 p-2">
+										{MAIN_CATEGORIES.map((cat) => (
+											<button
+												key={cat.key}
+												type="button"
+												onClick={() => {
+													void handleCategoryClickFromMenu(cat.key);
+												}}
+												className="rounded px-2 py-2 text-left hover:bg-slate-700"
+											>
+												{cat.label}
+											</button>
+										))}
+									</div>
+								)}
+								{isAuthenticated && (
+									<Link
+										to="/dashboard"
+										className="rounded px-2 py-2 hover:bg-slate-800"
+									>
+										Dashboard
+									</Link>
+								)}
+								<Link
+									to="/contacto"
+									className="rounded px-2 py-2 hover:bg-slate-800"
+								>
+									Contacto
+								</Link>
+								{isAuthenticated ? (
+									<>
+										<span className="truncate rounded bg-slate-800 px-2 py-2 text-indigo-200">
+											{user?.email}
+										</span>
+										<button
+											type="button"
+											onClick={() => void logout()}
+											className="rounded bg-orange-600 px-3 py-2 text-left hover:bg-orange-500"
+										>
+											Cerrar sesion
+										</button>
+									</>
+								) : (
+									<button
+										type="button"
+										onClick={() => setShowLoginModal(true)}
+										className="rounded bg-indigo-500 px-3 py-2 text-left hover:bg-indigo-400"
+									>
+										Iniciar sesion
+									</button>
+								)}
+							</div>
+						</div>
 					)}
 				</div>
 			</nav>

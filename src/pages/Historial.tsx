@@ -110,7 +110,7 @@ export default function Historial() {
 
 	return (
 		<>
-			<section className="max-w-4xl mx-auto p-6">
+			<section className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-6">
 				<h2 className="text-2xl font-bold mb-4 text-center">
 					{tipo === "test" ? "Historial de Quizzes" : "Historial de Código"}
 				</h2>

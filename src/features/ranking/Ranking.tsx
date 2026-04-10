@@ -105,7 +105,7 @@ export default function Ranking() {
 
 	return (
 		<>
-			<section className="max-w-4xl mx-auto p-6">
+			<section className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-6">
 				{queryError && (
 					<p className="mb-4 text-center text-red-600 bg-red-50 border border-red-200 rounded p-2">
 						{queryError}
@@ -149,53 +149,55 @@ export default function Ranking() {
 				{loading ? (
 					<p className="text-center">Cargando...</p>
 				) : (
-					<table className="w-full table-auto border mb-8">
-						<thead>
-							<tr className="bg-gray-100 text-left">
-								<th className="p-2">#</th>
-								<th className="p-2">Nombre</th>
-								<th className="p-2">Categoría</th>
-								<th className="p-2">Subcategoría</th>
-								<th className="p-2">Puntuación</th>
-								<th className="p-2">Porcentaje</th>
-							</tr>
-						</thead>
-						<tbody>
-							{resultados
-								.filter((res) => matchesRankingFilter(res, rankingFilter))
-								.slice(0, topCount)
-								.map((res, i) => (
-									<tr
-										key={i}
-										className={`border-t ${
-											i === 0
-												? "bg-yellow-100 font-extrabold text-blue-900"
-												: i === 1
-													? "bg-gray-200 font-bold text-gray-800"
-													: i === 2
-														? "bg-yellow-300 font-semibold text-yellow-900"
-														: ""
-										}`}
-									>
-										<td className="p-2">
-											{i + 1}
-											{i === 0 && " 🥇"}
-											{i === 1 && " 🥈"}
-											{i === 2 && " 🥉"}
-										</td>
-										<td className="p-2">{res.name || res.email}</td>
-										<td className="p-2">{res.category.toUpperCase()}</td>
-										<td className="p-2">{getSubcategory(res)}</td>
-										<td className="p-2">
-											{res.score} / {res.total}
-										</td>
-										<td className="p-2">
-											{Math.round((res.score / res.total) * 100)}%
-										</td>
-									</tr>
-								))}
-						</tbody>
-					</table>
+					<div className="-mx-4 mb-8 overflow-x-auto sm:mx-0">
+						<table className="w-full min-w-[40rem] table-auto border">
+							<thead>
+								<tr className="bg-gray-100 text-left">
+									<th className="p-2">#</th>
+									<th className="p-2">Nombre</th>
+									<th className="p-2">Categoría</th>
+									<th className="p-2">Subcategoría</th>
+									<th className="p-2">Puntuación</th>
+									<th className="p-2">Porcentaje</th>
+								</tr>
+							</thead>
+							<tbody>
+								{resultados
+									.filter((res) => matchesRankingFilter(res, rankingFilter))
+									.slice(0, topCount)
+									.map((res, i) => (
+										<tr
+											key={i}
+											className={`border-t ${
+												i === 0
+													? "bg-yellow-100 font-extrabold text-blue-900"
+													: i === 1
+														? "bg-gray-200 font-bold text-gray-800"
+														: i === 2
+															? "bg-yellow-300 font-semibold text-yellow-900"
+															: ""
+											}`}
+										>
+											<td className="p-2">
+												{i + 1}
+												{i === 0 && " 🥇"}
+												{i === 1 && " 🥈"}
+												{i === 2 && " 🥉"}
+											</td>
+											<td className="p-2">{res.name || res.email}</td>
+											<td className="p-2">{res.category.toUpperCase()}</td>
+											<td className="p-2">{getSubcategory(res)}</td>
+											<td className="p-2">
+												{res.score} / {res.total}
+											</td>
+											<td className="p-2">
+												{Math.round((res.score / res.total) * 100)}%
+											</td>
+										</tr>
+									))}
+							</tbody>
+						</table>
+					</div>
 				)}
 				<h3 className="text-lg font-semibold mb-2 text-center">
 					🕒 Últimos resultados
@@ -213,44 +215,46 @@ export default function Ranking() {
 					<p className="text-center">Cargando...</p>
 				) : (
 					<>
-						<table className="w-full table-auto border">
-							<thead>
-								<tr className="bg-gray-100 text-left">
-									<th className="p-2">Fecha</th>
-									<th className="p-2">Nombre</th>
-									<th className="p-2">Categoría</th>
-									<th className="p-2">Subcategoría</th>
-									<th className="p-2">Puntuación</th>
-									<th className="p-2">Porcentaje</th>
-								</tr>
-							</thead>
-							<tbody>
-								{recientes
-									.filter((res) => matchesRankingFilter(res, recientesFilter))
-									.slice(
-										(recientesPage - 1) * recientesPerPage,
-										recientesPage * recientesPerPage,
-									)
-									.map((res, i) => (
-										<tr key={i} className="border-t">
-											<td className="p-2">
-												{res.timestamp
-													? new Date(res.timestamp).toLocaleString()
-													: ""}
-											</td>
-											<td className="p-2">{res.name || res.email}</td>
-											<td className="p-2">{res.category.toUpperCase()}</td>
-											<td className="p-2">{getSubcategory(res)}</td>
-											<td className="p-2">
-												{res.score} / {res.total}
-											</td>
-											<td className="p-2">
-												{Math.round((res.score / res.total) * 100)}%
-											</td>
-										</tr>
-									))}
-							</tbody>
-						</table>
+						<div className="-mx-4 overflow-x-auto sm:mx-0">
+							<table className="w-full min-w-[40rem] table-auto border">
+								<thead>
+									<tr className="bg-gray-100 text-left">
+										<th className="p-2">Fecha</th>
+										<th className="p-2">Nombre</th>
+										<th className="p-2">Categoría</th>
+										<th className="p-2">Subcategoría</th>
+										<th className="p-2">Puntuación</th>
+										<th className="p-2">Porcentaje</th>
+									</tr>
+								</thead>
+								<tbody>
+									{recientes
+										.filter((res) => matchesRankingFilter(res, recientesFilter))
+										.slice(
+											(recientesPage - 1) * recientesPerPage,
+											recientesPage * recientesPerPage,
+										)
+										.map((res, i) => (
+											<tr key={i} className="border-t">
+												<td className="p-2">
+													{res.timestamp
+														? new Date(res.timestamp).toLocaleString()
+														: ""}
+												</td>
+												<td className="p-2">{res.name || res.email}</td>
+												<td className="p-2">{res.category.toUpperCase()}</td>
+												<td className="p-2">{getSubcategory(res)}</td>
+												<td className="p-2">
+													{res.score} / {res.total}
+												</td>
+												<td className="p-2">
+													{Math.round((res.score / res.total) * 100)}%
+												</td>
+											</tr>
+										))}
+								</tbody>
+							</table>{" "}
+						</div>{" "}
 						{/* Paginación */}
 						<div className="flex justify-center gap-2 mt-4">
 							<button

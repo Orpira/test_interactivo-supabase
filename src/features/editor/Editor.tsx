@@ -179,7 +179,7 @@ export default function Editor({
 		console.log(evaluador);
 	}
 	return (
-		<div className="p-6 max-w-7xl mx-auto">
+		<div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6">
 			{" "}
 			{/* Contenedor principal más ancho */}
 			<div className="grid gap-6 md:grid-cols-2">

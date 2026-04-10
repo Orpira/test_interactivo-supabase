@@ -22,7 +22,7 @@ export default function UserProfileModal({
 
 	return (
 		<div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-			<div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative mt-64">
+			<div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
 				{/* Botón X cerrar arriba a la derecha */}
 				<button
 					onClick={() => setOpen(false)}

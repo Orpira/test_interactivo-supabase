@@ -103,7 +103,7 @@ export default function Dashboard() {
 	const userAchievements = calculateAchievements(testResults);
 
 	return (
-		<div className="max-w-5xl mx-auto p-6">
+		<div className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6">
 			{historyError && (
 				<p className="mb-4 text-center text-red-600 bg-red-50 border border-red-200 rounded p-2">
 					{historyError}
@@ -215,39 +215,41 @@ export default function Dashboard() {
 						onChange={(e) => setHistoryFilter(e.target.value)}
 					/>
 				</div>
-				<table className="w-full text-left text-sm">
-					<thead>
-						<tr className="border-b font-medium">
-							<th className="p-2">Categoría</th>
-							<th className="p-2">Subcategoría</th>
-							<th className="p-2">Fecha</th>
-							<th className="p-2">Puntaje</th>
-							<th className="p-2">Detalles</th>
-						</tr>
-					</thead>
-					<tbody>
-						{lastFive.map((entry, i) => (
-							<tr key={i} className="border-b hover:bg-gray-50">
-								<td className="p-2">{entry.category}</td>
-								<td className="p-2">{getEntrySubcategory(entry)}</td>
-								<td className="p-2">
-									{new Date(entry.timestamp).toLocaleString()}
-								</td>
-								<td className="p-2">
-									{entry.score} / {entry.total}
-								</td>
-								<td className="p-2">
-									<button
-										className="text-blue-600 hover:underline text-sm"
-										onClick={() => navigate(`/result?id=${entry.id}`)}
-									>
-										Ver
-									</button>
-								</td>
+				<div className="-mx-4 overflow-x-auto sm:mx-0">
+					<table className="w-full min-w-[36rem] text-left text-sm">
+						<thead>
+							<tr className="border-b font-medium">
+								<th className="p-2">Categoría</th>
+								<th className="p-2">Subcategoría</th>
+								<th className="p-2">Fecha</th>
+								<th className="p-2">Puntaje</th>
+								<th className="p-2">Detalles</th>
 							</tr>
-						))}
-					</tbody>
-				</table>
+						</thead>
+						<tbody>
+							{lastFive.map((entry, i) => (
+								<tr key={i} className="border-b hover:bg-gray-50">
+									<td className="p-2">{entry.category}</td>
+									<td className="p-2">{getEntrySubcategory(entry)}</td>
+									<td className="whitespace-nowrap p-2">
+										{new Date(entry.timestamp).toLocaleString()}
+									</td>
+									<td className="p-2">
+										{entry.score} / {entry.total}
+									</td>
+									<td className="p-2">
+										<button
+											className="text-blue-600 hover:underline text-sm"
+											onClick={() => navigate(`/result?id=${entry.id}`)}
+										>
+											Ver
+										</button>
+									</td>
+								</tr>
+							))}
+						</tbody>
+					</table>
+				</div>
 			</section>
 
 			{/* Ejemplo de logros, reemplaza esto con la lógica real si la tienes */}

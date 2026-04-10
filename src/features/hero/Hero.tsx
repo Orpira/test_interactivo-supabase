@@ -55,7 +55,7 @@ export default function Hero() {
 	return (
 		<>
 			<section
-				className="w-full min-h-[calc(100vh-8.5rem)] flex flex-col items-center justify-start px-4 pt-10 relative"
+				className="relative flex min-h-[calc(100vh-8.5rem)] w-full flex-col items-center justify-start overflow-hidden px-4 pt-8 sm:pt-10"
 				style={{
 					backgroundImage: "url('/fondo.png')",
 					backgroundSize: "cover",
@@ -72,7 +72,7 @@ export default function Hero() {
 					</strong>
 				</h2>
 
-				<div className="flex flex-col sm:flex-row items-center justify-between w-full max-w-6xl">
+				<div className="flex w-full max-w-6xl flex-col items-center justify-between gap-6 sm:flex-row sm:gap-10">
 					<div className="flex flex-col items-center sm:items-start">
 						<p className="text-lg sm:text-xl md:text-3xl font-bold mb-2 text-white text-center sm:text-left">
 							WebWiz Quiz <br />
@@ -111,7 +111,7 @@ export default function Hero() {
 					<motion.img
 						src="/logo.png"
 						alt="WebWiz Quiz Logo"
-						className="w-32 sm:w-40 md:w-64 lg:w-80 h-auto"
+						className="h-auto w-28 sm:w-40 md:w-64 lg:w-80"
 						initial={{ opacity: 0, scale: 0.7 }}
 						animate={{ opacity: 1, scale: 1 }}
 						transition={{ duration: 0.6, ease: "easeOut" }}
