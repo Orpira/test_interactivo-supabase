@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    /* Solo verificación: Vite se encarga de emitir ---------------- */
+    "noEmit": true,
+    /* Evitar errores de tipado en libs de terceros ---------------- */
+    "skipLibCheck": true
+    /* (opcional) generar .d.ts si necesitas publicar tu lib
+       "declaration": true,
+       "emitDeclarationOnly": true
+    */
+    /* 👉  No declaramos 'bundler' aquí */
+  }
+}
