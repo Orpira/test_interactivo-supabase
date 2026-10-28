@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS questions (
   options JSONB NOT NULL,
   "correctAnswer" TEXT NOT NULL,
   category TEXT NOT NULL,
+  subcategory TEXT,
   difficulty TEXT NOT NULL DEFAULT 'junior' CHECK (difficulty IN ('junior', 'semi_senior', 'senior')),
   "shortExplanation" TEXT,
   "sourceUrl" TEXT,
@@ -45,14 +46,16 @@ CREATE TABLE IF NOT EXISTS challenges (
 CREATE TABLE IF NOT EXISTS resultados (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   name TEXT,
-  email TEXT,
+  email TEXT, -- obsoleto: ya no se guarda (la tabla es de lectura pública)
   "userId" TEXT NOT NULL,
   score INTEGER NOT NULL,
   total INTEGER NOT NULL,
   category TEXT NOT NULL,
   subcategory TEXT,
   summary JSONB,
-  timestamp TIMESTAMPTZ DEFAULT now()
+  timestamp TIMESTAMPTZ DEFAULT now(),
+  CONSTRAINT resultados_score_valido
+    CHECK (total BETWEEN 1 AND 50 AND score BETWEEN 0 AND total)
 );
 
 -- Tabla: envios_codigo (envíos de código del editor)
@@ -121,8 +124,9 @@ CREATE POLICY "Lectura pública de challenges" ON challenges
 CREATE POLICY "Lectura pública de resultados" ON resultados
   FOR SELECT USING (true);
 
-CREATE POLICY "Insertar resultados autenticados" ON resultados
-  FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+-- Solo se insertan resultados propios (ver migración 20261028_harden_resultados)
+CREATE POLICY "Insertar resultados propios" ON resultados
+  FOR INSERT TO authenticated WITH CHECK (auth.uid()::text = "userId");
 
 -- Envíos de código: lectura/escritura solo del propio usuario
 CREATE POLICY "Usuarios ven sus envios" ON envios_codigo
@@ -161,6 +165,7 @@ CREATE POLICY "Usuarios ven su feedback" ON quiz_feedback
 CREATE INDEX IF NOT EXISTS idx_questions_category ON questions(category);
 CREATE INDEX IF NOT EXISTS idx_questions_difficulty ON questions(difficulty);
 CREATE INDEX IF NOT EXISTS idx_questions_category_difficulty ON questions(category, difficulty);
+CREATE INDEX IF NOT EXISTS idx_questions_category_subcategory ON questions(category, subcategory);
 CREATE INDEX IF NOT EXISTS idx_challenges_category ON challenges(category);
 CREATE INDEX IF NOT EXISTS idx_resultados_userId ON resultados("userId");
 CREATE INDEX IF NOT EXISTS idx_resultados_score ON resultados(score DESC);

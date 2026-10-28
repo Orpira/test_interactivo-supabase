@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../services/auth";
 import { supabase } from "../services/supabase";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 // Tipos para ambos historiales
 
@@ -26,11 +26,9 @@ export default function Historial() {
 	const [tipo, setTipo] = useState<"test" | "codigo" | null>(null);
 	const [testPage, setTestPage] = useState(1);
 	const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-	const [categoria, setCategoria] = useState<string | null>(null);
 	const [expandedEnvio, setExpandedEnvio] = useState<number | null>(null);
 	const testsPerPage = 5;
 	const testTotalPages = Math.ceil(tests.length / testsPerPage);
-	const navigate = useNavigate();
 
 	// Modificar el efecto para incluir la categoría en el filtro correctamente
 	useEffect(() => {
@@ -38,14 +36,11 @@ export default function Historial() {
 		setLoading(true);
 		if (tipo === "codigo") {
 			const cargarEnvios = async () => {
-				let query = supabase
+				const query = supabase
 					.from("envios_codigo")
 					.select("*")
 					.eq("userId", user.id)
 					.order("timestamp", { ascending: false });
-				if (categoria) {
-					query = query.eq("category", categoria);
-				}
 				const { data } = await query;
 				setEnvios((data ?? []) as Envio[]);
 				setLoading(false);
@@ -53,21 +48,18 @@ export default function Historial() {
 			cargarEnvios();
 		} else if (tipo === "test") {
 			const cargarTests = async () => {
-				let query = supabase
+				const query = supabase
 					.from("resultados")
 					.select("*")
 					.eq("userId", user.id)
 					.order("timestamp", { ascending: false });
-				if (categoria) {
-					query = query.eq("category", categoria);
-				}
 				const { data } = await query;
 				setTests((data ?? []) as Test[]);
 				setLoading(false);
 			};
 			cargarTests();
 		}
-	}, [user, tipo, categoria]);
+	}, [user, tipo]);
 
 	// Agregar filtro por categoría para historial de código
 	const filteredEnvios = selectedCategory
@@ -168,7 +160,9 @@ export default function Historial() {
 						</select>
 					</div>
 				)}
-				{tipo === "codigo" ? (
+				{loading ? (
+					<p className="text-center">Cargando...</p>
+				) : tipo === "codigo" ? (
 					filteredEnvios.length === 0 ? (
 						<p className="text-center">Aún no has guardado ningún código.</p>
 					) : (
@@ -197,14 +191,14 @@ export default function Historial() {
 													{e.code}
 												</pre>
 												<div className="mt-2 text-right">
-													<a
-														href={`/editor?language=${
+													<Link
+														to={`/editor?language=${encodeURIComponent(
 															e.language
-														}&code=${encodeURIComponent(e.code)}`}
+														)}&code=${encodeURIComponent(e.code)}`}
 														className="text-blue-600 underline text-sm hover:text-blue-800"
 													>
 														Abrir en editor
-													</a>
+													</Link>
 												</div>
 											</div>
 										)}
@@ -279,8 +273,8 @@ export default function Historial() {
 								setTestPage((p) =>
 									Math.min(
 										Math.ceil(filteredEnvios.length / testsPerPage),
-										p + 1,
-									),
+										p + 1
+									)
 								)
 							}
 							disabled={

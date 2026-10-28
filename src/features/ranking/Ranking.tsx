@@ -1,23 +1,25 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../services/supabase";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../services/auth";
-import { useQuizStore } from "../../store/quizStore";
 
 type Resultado = {
-	name: string;
-	email: string;
+	id?: string;
+	name: string | null;
 	score: number;
 	total: number;
 	category: string;
 	subcategory?: string;
-	subcategoria?: string;
-	summary?: Array<{ subcategory?: string; subcategoria?: string }>;
+	legacySubcategory?: string | null;
 	timestamp?: string;
 };
 
+const RANKING_COLUMNS =
+	"id, name, score, total, category, subcategory, legacySubcategory:summary->0->>subcategory, timestamp";
+
+const displayName = (r: Resultado) => r.name?.trim() || "Anónimo";
+
 export default function Ranking() {
-	const { isAuthenticated } = useAuth();
+	const { isAuthenticated, isLoading: authLoading } = useAuth();
 	const [resultados, setResultados] = useState<Resultado[]>([]);
 	const [recientes, setRecientes] = useState<Resultado[]>([]);
 	const [loading, setLoading] = useState(true);
@@ -28,9 +30,9 @@ export default function Ranking() {
 	const [queryError, setQueryError] = useState<string | null>(null);
 	const recientesPerPage = 5;
 	const recientesTotalPages = Math.ceil(recientes.length / recientesPerPage);
-	const navigate = useNavigate();
 
 	useEffect(() => {
+		if (!isAuthenticated) return;
 		const cargarResultados = async () => {
 			setQueryError(null);
 			const [
@@ -39,12 +41,12 @@ export default function Ranking() {
 			] = await Promise.all([
 				supabase
 					.from("resultados")
-					.select("*")
+					.select(RANKING_COLUMNS)
 					.order("score", { ascending: false })
-					.limit(20),
+					.limit(200),
 				supabase
 					.from("resultados")
-					.select("*")
+					.select(RANKING_COLUMNS)
 					.order("timestamp", { ascending: false })
 					.limit(20),
 			]);
@@ -53,25 +55,29 @@ export default function Ranking() {
 				setQueryError(
 					topError?.message ||
 						recentError?.message ||
-						"No se pudo cargar el ranking.",
+						"No se pudo cargar el ranking."
 				);
 			}
-			setResultados((top ?? []) as Resultado[]);
+			// Ordenar por porcentaje (y a igualdad, por nº de preguntas):
+			// un 5/5 debe quedar por encima de un 7/20.
+			setResultados(
+				((top ?? []) as Resultado[])
+					.filter((r) => r.total > 0)
+					.sort(
+						(a, b) => b.score / b.total - a.score / a.total || b.total - a.total
+					)
+			);
 			setRecientes((recent ?? []) as Resultado[]);
 			setLoading(false);
 		};
 
 		cargarResultados();
-	}, []);
+	}, [isAuthenticated]);
 
 	const getSubcategory = (resultado: Resultado) => {
-		const raw =
-			resultado.subcategory ??
-			resultado.subcategoria ??
-			resultado.summary?.[0]?.subcategory ??
-			resultado.summary?.[0]?.subcategoria;
+		const raw = resultado.subcategory ?? resultado.legacySubcategory;
 
-		if (!raw) return "Sin subcategoria";
+		if (!raw) return "Sin subcategoría";
 
 		try {
 			return decodeURIComponent(raw);
@@ -85,13 +91,15 @@ export default function Ranking() {
 		if (!normalizedFilter) return true;
 
 		return (
-			(resultado.name || resultado.email)
-				.toLowerCase()
-				.includes(normalizedFilter) ||
+			displayName(resultado).toLowerCase().includes(normalizedFilter) ||
 			resultado.category.toLowerCase().includes(normalizedFilter) ||
 			getSubcategory(resultado).toLowerCase().includes(normalizedFilter)
 		);
 	};
+
+	if (authLoading) {
+		return <p className="p-6 text-center">Cargando...</p>;
+	}
 
 	if (!isAuthenticated) {
 		return (
@@ -100,8 +108,6 @@ export default function Ranking() {
 			</p>
 		);
 	}
-
-	const result = useQuizStore((state) => state.result);
 
 	return (
 		<>
@@ -141,7 +147,7 @@ export default function Ranking() {
 					<input
 						type="text"
 						className="border px-3 py-2 rounded w-full md:w-64"
-						placeholder="Filtrar por nombre, categoria, subcategoria o email..."
+						placeholder="Filtrar por nombre, categoría o subcategoría..."
 						value={rankingFilter}
 						onChange={(e) => setRankingFilter(e.target.value)}
 					/>
@@ -167,15 +173,15 @@ export default function Ranking() {
 									.slice(0, topCount)
 									.map((res, i) => (
 										<tr
-											key={i}
+											key={res.id ?? i}
 											className={`border-t ${
 												i === 0
 													? "bg-yellow-100 font-extrabold text-blue-900"
 													: i === 1
-														? "bg-gray-200 font-bold text-gray-800"
-														: i === 2
-															? "bg-yellow-300 font-semibold text-yellow-900"
-															: ""
+													? "bg-gray-200 font-bold text-gray-800"
+													: i === 2
+													? "bg-yellow-300 font-semibold text-yellow-900"
+													: ""
 											}`}
 										>
 											<td className="p-2">
@@ -184,7 +190,7 @@ export default function Ranking() {
 												{i === 1 && " 🥈"}
 												{i === 2 && " 🥉"}
 											</td>
-											<td className="p-2">{res.name || res.email}</td>
+											<td className="p-2">{displayName(res)}</td>
 											<td className="p-2">{res.category.toUpperCase()}</td>
 											<td className="p-2">{getSubcategory(res)}</td>
 											<td className="p-2">
@@ -206,7 +212,7 @@ export default function Ranking() {
 					<input
 						type="text"
 						className="border px-3 py-2 rounded w-full md:w-64"
-						placeholder="Filtrar por nombre, categoria, subcategoria o email..."
+						placeholder="Filtrar por nombre, categoría o subcategoría..."
 						value={recientesFilter}
 						onChange={(e) => setRecientesFilter(e.target.value)}
 					/>
@@ -232,16 +238,16 @@ export default function Ranking() {
 										.filter((res) => matchesRankingFilter(res, recientesFilter))
 										.slice(
 											(recientesPage - 1) * recientesPerPage,
-											recientesPage * recientesPerPage,
+											recientesPage * recientesPerPage
 										)
 										.map((res, i) => (
-											<tr key={i} className="border-t">
+											<tr key={res.id ?? i} className="border-t">
 												<td className="p-2">
 													{res.timestamp
 														? new Date(res.timestamp).toLocaleString()
 														: ""}
 												</td>
-												<td className="p-2">{res.name || res.email}</td>
+												<td className="p-2">{displayName(res)}</td>
 												<td className="p-2">{res.category.toUpperCase()}</td>
 												<td className="p-2">{getSubcategory(res)}</td>
 												<td className="p-2">
@@ -265,14 +271,14 @@ export default function Ranking() {
 								Anterior
 							</button>
 							<span className="px-2 py-1 font-semibold">
-								Página {recientesPage} de {recientesTotalPages}
+								Página {recientesPage} de {Math.max(1, recientesTotalPages)}
 							</span>
 							<button
 								className="px-3 py-1 rounded bg-gray-200 text-gray-700 font-bold disabled:opacity-50"
 								onClick={() =>
 									setRecientesPage((p) => Math.min(recientesTotalPages, p + 1))
 								}
-								disabled={recientesPage === recientesTotalPages}
+								disabled={recientesPage >= recientesTotalPages}
 							>
 								Siguiente
 							</button>

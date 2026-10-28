@@ -1,19 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
-import { supabase } from "../../services/supabase";
 import { useQuestions } from "@/hooks/useQuestions";
 import QuestionCard from "@/components/ui/QuestionCard";
-import { getCategoryVariants } from "@/utils/categoryVariants";
 import { getStoredExperienceLevel } from "@/services/feedback";
-
-type Question = {
-	question: string;
-	options: string[];
-	correctAnswer: string;
-	shortExplanation?: string;
-	sourceUrl?: string;
-	sourceName?: string;
-};
 
 type AnswerSummary = {
 	question: string;
@@ -26,151 +15,114 @@ type AnswerSummary = {
 	sourceName?: string;
 };
 
+const ADVANCE_DELAY_MS = 300;
+
 export default function QuizRunner() {
 	const { category, subcategory } = useParams();
 	const [searchParams] = useSearchParams();
 	const navigate = useNavigate();
 
-	const count = Number(searchParams.get("count")) || 5;
+	const requested = Number(searchParams.get("count"));
+	const count =
+		Number.isFinite(requested) && requested > 0 ? Math.min(requested, 50) : 5;
 	const difficulty = getStoredExperienceLevel() ?? "junior";
+	const decodedSubcategory = subcategory ? safeDecode(subcategory) : undefined;
 
-	// Ensure category is a string
+	const [reloadKey, setReloadKey] = useState(0);
+	const { questions, loading, error } = useQuestions(
+		category,
+		count,
+		subcategory,
+		difficulty,
+		reloadKey
+	);
+
+	const [currentIndex, setCurrentIndex] = useState(0);
+	const [selected, setSelected] = useState<string | null>(null);
+	const answersRef = useRef<AnswerSummary[]>([]);
+	const lockedRef = useRef(false);
+	const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+	// Reiniciar el progreso cada vez que llega un nuevo set de preguntas
+	// (cambio de categoría/subcategoría o "reiniciar").
+	useEffect(() => {
+		setCurrentIndex(0);
+		setSelected(null);
+		answersRef.current = [];
+		lockedRef.current = false;
+	}, [questions]);
+
+	useEffect(
+		() => () => {
+			if (timerRef.current) clearTimeout(timerRef.current);
+		},
+		[]
+	);
+
 	if (!category) {
 		return <p className="p-6 text-center">Categoría no especificada.</p>;
 	}
 
-	// Use useQuestions only for loading/initial state, but manage questions locally for Supabase logic
-	const {
-		questions: initialQuestions,
-		loading: initialLoading,
-		error: initialError,
-	} = useQuestions(category, count, subcategory, difficulty);
-
-	const [questions, setQuestions] = useState<Question[]>(
-		initialQuestions || [],
-	);
-	const [loading, setLoading] = useState(initialLoading);
-
-	const [currentIndex, setCurrentIndex] = useState(0);
-	const [selected, setSelected] = useState<string | null>(null);
-	const [score, setScore] = useState(0);
-	//const [loading, setLoading] = useState(true);
-	const [showFeedback, setShowFeedback] = useState(false);
-	const [correctAnswer, setCorrectAnswer] = useState<string | null>(null);
-	const [summaryData, setSummaryData] = useState<AnswerSummary[]>([]);
-	const [queryError, setQueryError] = useState<string | null>(initialError);
-
-	// Utilidad para mezclar un array aleatoriamente
-	function shuffleArray<T>(array: T[]): T[] {
-		return array
-			.map((value) => ({ value, sort: Math.random() }))
-			.sort((a, b) => a.sort - b.sort)
-			.map(({ value }) => value);
-	}
-
-	useEffect(() => {
-		let isMounted = true;
-		setQueryError(null);
-		// Cargar preguntas desde Supabase filtrando por categoría y subcategoría si existe
-		const loadQuestions = async () => {
-			try {
-				const categoryVariants = getCategoryVariants(category);
-				let query = supabase
-					.from("questions")
-					.select("*")
-					.in("category", categoryVariants);
-				if (subcategory) {
-					query = query.eq("subcategory", decodeURIComponent(subcategory));
-				}
-				if (difficulty) {
-					query = query.eq("difficulty", difficulty);
-				}
-				const { data, error } = await query;
-				if (error) throw error;
-				// Barajar y tomar las primeras N
-				const shuffled = shuffleArray(data ?? []).slice(0, count);
-				if (isMounted) setQuestions(shuffled);
-			} catch (error: any) {
-				console.error("Error cargando preguntas:", error);
-				if (isMounted) {
-					setQueryError(
-						error?.message || "No se pudieron cargar las preguntas del quiz.",
-					);
-				}
-			} finally {
-				if (isMounted) setLoading(false);
-			}
-		};
-		loadQuestions();
-		return () => {
-			isMounted = false;
-		};
-	}, [category, subcategory, count]);
-
-	useEffect(() => {
-		if (initialError) setQueryError(initialError);
-	}, [initialError]);
-
 	const currentQuestion = questions[currentIndex];
 
 	const handleSelect = (option: string) => {
+		// Evita doble puntuación por doble clic durante la transición.
+		if (lockedRef.current || !currentQuestion) return;
+		lockedRef.current = true;
 		setSelected(option);
-		// Comparar por texto real, no por valor crudo
-		let selectedText = option;
-		let correctText = currentQuestion.correctAnswer;
-		if (typeof option === "number" && Array.isArray(currentQuestion.options)) {
-			selectedText = currentQuestion.options[option] ?? option;
-		}
-		if (
-			typeof currentQuestion.correctAnswer === "number" &&
-			Array.isArray(currentQuestion.options)
-		) {
-			correctText =
-				currentQuestion.options[currentQuestion.correctAnswer] ??
-				currentQuestion.correctAnswer;
-		}
-		const isReallyCorrect = String(selectedText) === String(correctText);
-		if (isReallyCorrect) {
-			setScore((prev) => prev + 1);
-		}
-		const summaryEntry = {
-			question: currentQuestion.question,
-			options: currentQuestion.options,
-			correctAnswer: currentQuestion.correctAnswer,
-			selectedAnswer: option,
-			subcategory: subcategory ? decodeURIComponent(subcategory) : undefined,
-			shortExplanation: currentQuestion.shortExplanation,
-			sourceUrl: currentQuestion.sourceUrl,
-			sourceName: currentQuestion.sourceName,
-		};
-		setSummaryData((prev) => [...prev, summaryEntry]);
-		// Avanzar automáticamente
-		setTimeout(() => {
+
+		answersRef.current = [
+			...answersRef.current,
+			{
+				question: currentQuestion.question,
+				options: currentQuestion.options,
+				correctAnswer: currentQuestion.correctAnswer,
+				selectedAnswer: option,
+				subcategory: decodedSubcategory,
+				shortExplanation: currentQuestion.shortExplanation,
+				sourceUrl: currentQuestion.sourceUrl,
+				sourceName: currentQuestion.sourceName,
+			},
+		];
+
+		timerRef.current = setTimeout(() => {
 			if (currentIndex + 1 < questions.length) {
-				setCurrentIndex((prev) => prev + 1);
+				setCurrentIndex(currentIndex + 1);
 				setSelected(null);
-			} else {
-				const summaryCopy = [...summaryData, summaryEntry];
-				// Mostrar resultado automáticamente al terminar
-				navigate("/result", {
-					state: {
-						score: isReallyCorrect ? score + 1 : score,
-						total: questions.length,
-						category,
-						summary: summaryCopy,
-						subcategory: subcategory
-							? decodeURIComponent(subcategory)
-							: undefined,
-					},
-				});
-				// No limpiar el estado aquí, para que el usuario pueda ver el resultado y navegar correctamente
+				lockedRef.current = false;
+				return;
 			}
-		}, 300); // Pequeño delay para UX
+
+			const summary = answersRef.current;
+			const score = summary.filter(
+				(a) => a.selectedAnswer === a.correctAnswer
+			).length;
+
+			navigate("/result", {
+				state: {
+					score,
+					total: questions.length,
+					category,
+					subcategory: decodedSubcategory,
+					summary,
+				},
+			});
+		}, ADVANCE_DELAY_MS);
 	};
 
 	if (loading) return <p className="p-6 text-center">Cargando preguntas...</p>;
-	if (queryError) {
-		return <p className="p-6 text-center text-red-600">{queryError}</p>;
+	if (error) {
+		return (
+			<div className="p-6 text-center space-y-3">
+				<p className="text-red-600">{error}</p>
+				<button
+					className="px-4 py-2 rounded bg-indigo-600 text-white hover:bg-indigo-700"
+					onClick={() => setReloadKey((k) => k + 1)}
+				>
+					Reintentar
+				</button>
+			</div>
+		);
 	}
 	if (!currentQuestion)
 		return <p className="p-6 text-center">No se encontraron preguntas.</p>;
@@ -187,8 +139,16 @@ export default function QuizRunner() {
 				showFeedback={false}
 				number={currentIndex + 1}
 				total={questions.length}
-				onPrev={undefined}
+				onRestart={() => setReloadKey((k) => k + 1)}
 			/>
 		</div>
 	);
+}
+
+function safeDecode(value: string) {
+	try {
+		return decodeURIComponent(value);
+	} catch {
+		return value;
+	}
 }

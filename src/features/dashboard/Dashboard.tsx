@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useAuth } from "../../services/auth";
-import { useUserHistory } from "@/hooks/useUserHistory";
+import { useUserHistory, type HistoryItem } from "@/hooks/useUserHistory";
 import PerformanceChart from "./PerformanceChart"; // Placeholder para el gráfico
 import { useNavigate, Link } from "react-router-dom";
-import { exportToCSV } from "../../utils/exportCSV"; // Asegúrate de tener esta función implementada
+import { exportToCSV } from "../../utils/exportCSV";
 import Achievements from "@/components/ui/Achievements"; // Componente no encontrado, import eliminado
 import { calculateAchievements } from "../../utils/achievements";
 
@@ -17,27 +17,24 @@ export default function Dashboard() {
 	const averageScore = history.length
 		? (
 				history.reduce((acc, h) => acc + h.score / h.total, 0) / history.length
-			).toFixed(2)
+		  ).toFixed(2)
 		: 0;
 	const lastTest = history[0];
 
-	const averagesByCategory = history.reduce(
-		(acc, h) => {
-			if (!acc[h.category]) {
-				acc[h.category] = { total: 0, count: 0 };
-			}
-			acc[h.category].total += h.score / h.total;
-			acc[h.category].count += 1;
-			return acc;
-		},
-		{} as Record<string, { total: number; count: number }>,
-	);
+	const averagesByCategory = history.reduce((acc, h) => {
+		if (!acc[h.category]) {
+			acc[h.category] = { total: 0, count: 0 };
+		}
+		acc[h.category].total += h.score / h.total;
+		acc[h.category].count += 1;
+		return acc;
+	}, {} as Record<string, { total: number; count: number }>);
 
 	const chartData = Object.entries(averagesByCategory).map(
 		([category, { total, count }]) => ({
 			category,
 			average: Number(((total / count) * 10).toFixed(2)), // Escalado a 10
-		}),
+		})
 	);
 
 	const normalizeSubcategory = (value: string) => {
@@ -48,7 +45,7 @@ export default function Dashboard() {
 		}
 	};
 
-	const getEntrySubcategory = (entry: any) => {
+	const getEntrySubcategory = (entry: HistoryItem) => {
 		const raw =
 			entry.subcategory ??
 			entry.subcategoria ??
@@ -58,24 +55,21 @@ export default function Dashboard() {
 		return normalizeSubcategory(String(raw));
 	};
 
-	const averagesBySubcategory = history.reduce(
-		(acc, h) => {
-			const subcategory = getEntrySubcategory(h);
-			if (!acc[subcategory]) {
-				acc[subcategory] = { total: 0, count: 0 };
-			}
-			acc[subcategory].total += h.score / h.total;
-			acc[subcategory].count += 1;
-			return acc;
-		},
-		{} as Record<string, { total: number; count: number }>,
-	);
+	const averagesBySubcategory = history.reduce((acc, h) => {
+		const subcategory = getEntrySubcategory(h);
+		if (!acc[subcategory]) {
+			acc[subcategory] = { total: 0, count: 0 };
+		}
+		acc[subcategory].total += h.score / h.total;
+		acc[subcategory].count += 1;
+		return acc;
+	}, {} as Record<string, { total: number; count: number }>);
 
 	const subcategoryChartData = Object.entries(averagesBySubcategory).map(
 		([subcategory, { total, count }]) => ({
 			category: subcategory,
 			average: Number(((total / count) * 10).toFixed(2)),
-		}),
+		})
 	);
 
 	const lastFive = [...history]
@@ -88,7 +82,7 @@ export default function Dashboard() {
 				getEntrySubcategory(entry).toLowerCase().includes(normalizedFilter)
 			);
 		})
-		.sort((a, b) => b.timestamp - a.timestamp) // ordena de más reciente a más antiguo
+		.sort((a, b) => Date.parse(b.timestamp) - Date.parse(a.timestamp)) // más reciente primero
 		.slice(0, 5);
 
 	// Adaptar los datos de history (Firestore) al tipo TestResult para calculateAchievements
@@ -101,6 +95,10 @@ export default function Dashboard() {
 	}));
 
 	const userAchievements = calculateAchievements(testResults);
+
+	if (loading) {
+		return <p className="p-6 text-center">Cargando tu dashboard...</p>;
+	}
 
 	return (
 		<div className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6">
@@ -255,7 +253,19 @@ export default function Dashboard() {
 			{/* Ejemplo de logros, reemplaza esto con la lógica real si la tienes */}
 			<Achievements achievements={userAchievements} />
 			<button
-				onClick={() => exportToCSV(history, "historial_test")}
+				onClick={() =>
+					exportToCSV(
+						history.map((h) => ({
+							fecha: h.timestamp,
+							categoria: h.category,
+							subcategoria: getEntrySubcategory(h),
+							aciertos: h.score,
+							total: h.total,
+							porcentaje: h.total ? Math.round((h.score / h.total) * 100) : 0,
+						})),
+						"historial_test"
+					)
+				}
 				className="mt-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
 			>
 				Exportar historial (.CSV)

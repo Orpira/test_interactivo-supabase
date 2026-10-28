@@ -26,3 +26,8 @@ dist-ssr
 .env
 src/utils/importQuestions.cjs
 src/utils/uploadChallenges.cjs
+
+# Informes de tests
+playwright-report/
+test-results/
+coverage/

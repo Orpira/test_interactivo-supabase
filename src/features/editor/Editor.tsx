@@ -1,309 +1,207 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import SimpleCodeEditor from "react-simple-code-editor";
-import { highlight } from "prismjs";
-import * as Prism from "prismjs";
+import Prism from "prismjs";
 import "prismjs/components/prism-markup";
 import "prismjs/components/prism-css";
 import "prismjs/components/prism-javascript";
 import "prismjs/themes/prism.css";
 import { useAuth } from "../../services/auth";
 import { supabase } from "../../services/supabase";
-import { useSearchParams } from "react-router-dom";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { validarHTML } from "../../utils/validadorHTML";
+import {
+	toLanguage,
+	validateChallenge,
+	type ChallengeLanguage,
+	type ValidationResult,
+} from "@/utils/challengeValidation";
 
 type EditorProps = {
 	starterCode?: string;
 	categoryFromChallenge?: string;
-	initialCode?: string;
 	expectedOutput?: string;
-	validationRules?: string[];
+	challengeId?: string;
+	onSolved?: () => void;
 };
 
-function Evaluador({
-	respuestaUsuario,
-	reto,
-	onNext,
-}: {
-	respuestaUsuario: string;
-	reto: { title: string; expectedOutput: string };
-	onNext?: () => void;
-}) {
-	const esCorrecto = validarHTML(respuestaUsuario, reto.expectedOutput);
+const TEMPLATES: Record<ChallengeLanguage, string> = {
+	html: "<h1>Hola Mundo</h1>",
+	css: "body { background-color: lightblue; }",
+	javascript: "console.log('Hola desde JavaScript!');",
+};
 
-	return (
-		<div>
-			<h2>{reto.title}</h2>
-			{esCorrecto ? (
-				<div>
-					<p style={{ color: "green" }}>✅ ¡Respuesta correcta!</p>
-					{onNext && (
-						<button
-							onClick={onNext}
-							style={{
-								marginTop: "10px",
-								padding: "10px",
-								backgroundColor: "blue",
-								color: "white",
-								border: "none",
-								borderRadius: "5px",
-							}}
-						>
-							Avanzar al siguiente reto
-						</button>
-					)}
-				</div>
-			) : (
-				<p style={{ color: "red" }}>❌ La estructura HTML no es correcta.</p>
-			)}
-		</div>
-	);
-}
+// HTML de ejemplo sobre el que se aplica el CSS en la vista previa
+const CSS_PREVIEW_HTML = `<div class="container"><p>Vista previa</p></div>`;
 
 export default function Editor({
 	starterCode,
 	categoryFromChallenge,
-	expectedOutput: expectedOutputProp,
-	validationRules,
+	expectedOutput,
+	challengeId,
+	onSolved,
 }: EditorProps) {
-	const templates: Record<"html" | "css" | "javascript", string> = {
-		html: "<h1>Hola Mundo</h1>",
-		css: "body { background-color: lightblue; }",
-		javascript: "alert('Hola desde JavaScript!');",
-	};
-
-	const [language, setLanguage] = useState<"html" | "css" | "javascript">(
-		(categoryFromChallenge?.toLowerCase() as "html" | "css" | "javascript") ||
-			"html",
-	);
-
-	const [code, setCode] = useState(() => {
-		return starterCode ?? templates[language];
-	});
-
+	const language = toLanguage(categoryFromChallenge);
+	const [code, setCode] = useState(() => starterCode ?? TEMPLATES[language]);
+	const [result, setResult] = useState<ValidationResult | null>(null);
+	const [validating, setValidating] = useState(false);
+	const [saving, setSaving] = useState(false);
+	const [saveMessage, setSaveMessage] = useState<string | null>(null);
 	const { isAuthenticated, user } = useAuth();
-	const [searchParams] = useSearchParams();
-	const navigate = useNavigate();
 
-	const fromHistorial = searchParams.has("code");
-	const [showNotice, setShowNotice] = useState(fromHistorial);
-
-	const [resultMessage, setResultMessage] = useState<string | null>(null);
-	const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
-	const [expectedOutput, setExpectedOutput] = useState<string | undefined>(
-		expectedOutputProp,
-	);
-
-	// Normalizar espacios y saltos de línea
-	// Esto es para comparar el código del usuario con el resultado esperado
-	// sin importar espacios adicionales o saltos de línea
-	const normalize = (str: string) => str.replace(/\s+/g, "").toLowerCase();
-
+	// Al cambiar de reto, reiniciar el editor
 	useEffect(() => {
-		if (fromHistorial) {
-			const timer = setTimeout(() => setShowNotice(false), 3000);
-			return () => clearTimeout(timer);
+		setCode(starterCode ?? TEMPLATES[language]);
+		setResult(null);
+		setSaveMessage(null);
+	}, [starterCode, language, challengeId]);
+
+	// La vista previa se actualiza con un pequeño retardo para no recargar
+	// el iframe en cada pulsación.
+	const [previewCode, setPreviewCode] = useState(code);
+	useEffect(() => {
+		const t = setTimeout(() => setPreviewCode(code), 400);
+		return () => clearTimeout(t);
+	}, [code]);
+
+	const srcDoc = useMemo(() => {
+		if (language === "css")
+			return `<style>${previewCode}</style>${CSS_PREVIEW_HTML}`;
+		if (language === "javascript")
+			return `<pre id="out" style="font-family:monospace;white-space:pre-wrap"></pre><script>
+const out=document.getElementById('out');
+const log=(...a)=>{out.textContent+=a.map(x=>typeof x==='object'?JSON.stringify(x):String(x)).join(' ')+'\\n'};
+console.log=log;console.info=log;console.warn=log;console.error=log;
+window.onerror=(m)=>{log('Error: '+m)};
+</script><script>${previewCode.replace(/<\/script/gi, "<\\/script")}</script>`;
+		return previewCode;
+	}, [language, previewCode]);
+
+	const handleValidate = async () => {
+		if (!expectedOutput) return;
+		setValidating(true);
+		try {
+			const res = await validateChallenge(language, code, expectedOutput);
+			setResult(res);
+			if (res.ok) onSolved?.();
+		} finally {
+			setValidating(false);
 		}
-	}, [fromHistorial]);
+	};
 
 	const handleSave = async () => {
 		if (!isAuthenticated || !user) return;
-
-		const handleValidate = () => {
-			if (!expectedOutput) return;
-
-			const normalizedUserCode = code.trim().replace(/\s+/g, "");
-			const normalizedExpected = expectedOutput.trim().replace(/\s+/g, "");
-
-			if (normalizedUserCode === normalizedExpected) {
-				setIsCorrect(true);
-				setResultMessage("✅ ¡Código correcto!");
-			} else {
-				setIsCorrect(false);
-				setResultMessage("❌ El código no cumple con lo esperado.");
-			}
-		};
-
-		const entry = {
+		setSaving(true);
+		setSaveMessage(null);
+		const { error } = await supabase.from("envios_codigo").insert({
 			userId: user.id,
 			name: user.user_metadata?.full_name || "",
 			email: user.email || "",
 			language,
 			code,
+			category: language,
 			timestamp: new Date().toISOString(),
-		};
-
-		try {
-			const { error } = await supabase.from("envios_codigo").insert(entry);
-			if (error) throw error;
-			alert("Código guardado correctamente ✅");
-		} catch (error) {
-			console.error("Error al guardar código:", error);
-			alert("Hubo un error al guardar el código ❌");
-		}
+		});
+		setSaving(false);
+		setSaveMessage(
+			error
+				? `❌ No se pudo guardar: ${error.message}`
+				: "💾 Código guardado en tu historial"
+		);
 	};
 
-	const renderCode = () => {
-		if (language === "html") return code;
-		if (language === "css") return `<style>${code}</style>`;
-		if (language === "javascript") return `<script>${code}<\/script>`;
-		return "";
-	};
-
-	{
-		showNotice && (
-			<div className="fixed top-4 right-4 bg-blue-600 text-white px-4 py-2 rounded shadow-md z-50 animate-fade-in">
-				Código cargado desde historial 📝
-			</div>
-		);
-	}
-
-	function handleValidate(
-		event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-	): void {
-		event.preventDefault();
-		if (!expectedOutput) return;
-
-		const esCorrecto = validarHTML(code, expectedOutput);
-
-		console.log("Resultado de la validación:", esCorrecto);
-		// Renderiza el componente Evaluador basado en el resultado
-		const evaluador = (
-			<Evaluador
-				respuestaUsuario={code}
-				reto={{ title: "Validación HTML", expectedOutput }}
-			/>
-		);
-
-		console.log(evaluador);
-	}
 	return (
-		<div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6">
-			{" "}
-			{/* Contenedor principal más ancho */}
+		<div className="w-full">
 			<div className="grid gap-6 md:grid-cols-2">
-				{" "}
-				{/* Grid para editor y vista previa */}
-				{/* Columna Izquierda: Editor de Código */}
 				<div>
-					{/* Aquí podrías añadir un título como "Editor de Código" si quieres */}
+					<div className="mb-2 flex items-center justify-between">
+						<h3 className="text-xl font-semibold dark:text-slate-100">
+							Tu código ({language.toUpperCase()})
+						</h3>
+						<button
+							type="button"
+							onClick={() => {
+								setCode(starterCode ?? TEMPLATES[language]);
+								setResult(null);
+							}}
+							className="text-sm text-gray-600 underline hover:text-gray-900"
+						>
+							Restablecer
+						</button>
+					</div>
 					<SimpleCodeEditor
 						value={code}
 						onValueChange={setCode}
-						highlight={(code) =>
-							highlight(
-								code,
-								Prism.languages[
-									language === "javascript" ? "javascript" : language
-								],
-								language,
+						highlight={(c) =>
+							Prism.highlight(
+								c,
+								Prism.languages[language === "html" ? "markup" : language],
+								language
 							)
 						}
 						padding={10}
-						className="border rounded font-mono min-h-[300px] md:min-h-[calc(400px+theme(spacing.12)+theme(spacing.4))] text-sm bg-gray-100 dark:bg-slate-800 dark:text-slate-200 dark:border-slate-700"
-						// Ajuste de altura para igualar la vista previa
+						textareaId="challenge-code"
+						aria-label="Editor de código"
+						className="border rounded font-mono min-h-[300px] md:min-h-[400px] text-sm bg-gray-100 dark:bg-slate-800 dark:text-slate-200 dark:border-slate-700"
 					/>
 				</div>
-				{/* Columna Derecha: Vista Previa y Verificación */}
+
 				<div>
-					<div className="flex items-center justify-between mb-2">
-						<h3 className="text-xl font-semibold dark:text-slate-100">
-							Vista Previa
-						</h3>
-						{/* <button
-              onClick={handleValidate}
-              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
-              // Mantenemos el tamaño actual para "Verificar solución"
-            >
-              Verificar solución
-            </button> */}
-					</div>
+					<h3 className="mb-2 text-xl font-semibold dark:text-slate-100">
+						Vista previa
+					</h3>
+					{/* Sin allow-same-origin: el código del usuario no puede leer
+					    la sesión ni el almacenamiento de la app. */}
 					<iframe
-						title="preview"
-						className="w-full h-[400px] border dark:border-slate-700"
-						srcDoc={renderCode()}
-						sandbox="allow-scripts allow-same-origin"
+						title="Vista previa"
+						className="w-full h-[300px] md:h-[400px] border bg-white dark:border-slate-700"
+						srcDoc={srcDoc}
+						sandbox="allow-scripts allow-modals"
 					/>
-					{/* Mensaje de validación */}
-					<div className="mt-4 flex gap-3 items-center">
-						{resultMessage && (
-							<span
-								className={`${
-									isCorrect
-										? "text-green-600 dark:text-green-400"
-										: "text-red-600 dark:text-red-400"
-								} font-medium`}
-							>
-								{resultMessage}
-							</span>
+				</div>
+			</div>
+
+			<div className="mt-6 flex flex-col sm:flex-row justify-center items-center gap-3">
+				{expectedOutput && (
+					<button
+						type="button"
+						onClick={handleValidate}
+						disabled={validating}
+						className="w-full sm:w-auto bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700 transition disabled:opacity-60"
+					>
+						{validating ? "Comprobando..." : "Verificar solución"}
+					</button>
+				)}
+				{isAuthenticated && (
+					<button
+						type="button"
+						onClick={handleSave}
+						disabled={saving}
+						className="w-full sm:w-auto bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition disabled:opacity-60"
+					>
+						{saving ? "Guardando..." : "Guardar código"}
+					</button>
+				)}
+			</div>
+
+			<div aria-live="polite" className="mt-4 space-y-2 text-center">
+				{result && (
+					<div
+						className={`mx-auto max-w-2xl rounded-lg border p-3 text-left ${
+							result.ok
+								? "border-green-300 bg-green-50 text-green-800"
+								: "border-red-300 bg-red-50 text-red-800"
+						}`}
+					>
+						<p className="font-semibold">{result.message}</p>
+						{result.details.length > 0 && (
+							<ul className="mt-2 list-disc pl-5 text-sm">
+								{result.details.map((d) => (
+									<li key={d}>{d}</li>
+								))}
+							</ul>
 						)}
 					</div>
-				</div>
+				)}
+				{saveMessage && <p className="text-sm">{saveMessage}</p>}
 			</div>
-			{/* Sección de Botones Inferiores */}
-			<div className="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
-				{/* {isAuthenticated && (
-          <button
-            onClick={handleSave}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition w-full sm:w-auto"
-            // Botón "Guardar código" con el mismo padding que "Verificar"
-            // y responsive en ancho
-          >
-            Guardar código
-          </button>
-        )} Botón "Guardar código" comentado, puedes descomentar si es necesario*/}{" "}
-				{/* Botón "Volver al inicio" */}
-				{/*  <button
-          onClick={() => navigate("/")} // Asumo que quieres mantener el botón de volver
-          className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition w-full sm:w-auto"
-        >
-          Volver al inicio
-        </button> */}
-			</div>
-			{showNotice && (
-				<div className="fixed top-4 right-4 bg-blue-600 text-white px-4 py-2 rounded shadow-md z-50 animate-fade-in">
-					Código cargado desde historial 📝
-				</div>
-			)}
-			{/* Renderiza el componente Evaluador directamente en el JSX principal */}
-			{expectedOutput && (
-				<Evaluador
-					respuestaUsuario={code}
-					reto={{ title: "Validación HTML", expectedOutput }}
-					onNext={async () => {
-						const nextChallenge = await obtenerSiguienteReto(expectedOutput);
-						if (nextChallenge) {
-							setCode(nextChallenge.code); // Actualiza el código del editor con el nuevo reto
-							setExpectedOutput(nextChallenge.expectedOutput); // Actualiza el resultado esperado
-						} else {
-							console.log("No hay más retos disponibles.");
-						}
-					}}
-				/>
-			)}
 		</div>
 	);
-}
-
-// Función para obtener el siguiente reto desde Supabase
-async function obtenerSiguienteReto(currentExpectedOutput: string) {
-	try {
-		const { data, error } = await supabase
-			.from("challenges")
-			.select("*")
-			.neq("expectedOutput", currentExpectedOutput)
-			.order("expectedOutput")
-			.limit(1);
-
-		if (error) throw error;
-		if (data && data.length > 0) {
-			return data[0];
-		}
-
-		return null;
-	} catch (error) {
-		console.error("Error obteniendo el siguiente reto desde Supabase:", error);
-		return null;
-	}
 }

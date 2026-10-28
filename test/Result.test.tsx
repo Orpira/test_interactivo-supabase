@@ -1,73 +1,74 @@
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
+import userEvent from "@testing-library/user-event";
+import { describe, it, expect, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import Result from "../src/features/quiz/Result";
-import "@testing-library/jest-dom";
 
-describe("Result page", () => {
-  it("muestra el resultado correctamente", () => {
-    render(
-      <MemoryRouter
-        initialEntries={[
-          {
-            pathname: "/result",
-            state: {
-              score: 7,
-              total: 10,
-              category: "HTML",
-            },
-          } as any,
-        ]}
-      >
-        <Result />
-      </MemoryRouter>
-    );
+// Usuario anónimo: el resultado no se guarda ni se pide feedback.
+vi.mock("../src/services/auth", () => ({
+	useAuth: () => ({ user: null, isAuthenticated: false, isLoading: false }),
+}));
 
-    expect(screen.getByText(/Resultado del quiz/i)).toBeInTheDocument();
-    expect(
-      screen.getByText(/Has obtenido 7 de 10 puntos/i)
-    ).toBeInTheDocument();
-  });
+const summary = [
+	{
+		question: "¿Qué etiqueta crea un enlace?",
+		options: ["<a>", "<link>", "<p>"],
+		correctAnswer: "<a>",
+		selectedAnswer: "<a>",
+		shortExplanation: "La etiqueta <a> define hipervínculos.",
+		sourceUrl: "https://developer.mozilla.org/es/docs/Web/HTML/Element/a",
+		sourceName: "MDN",
+	},
+	{
+		question: "¿Qué propiedad cambia el color del texto?",
+		options: ["color", "font", "background"],
+		correctAnswer: "color",
+		selectedAnswer: "background",
+		shortExplanation: "",
+	},
+];
 
-  it("muestra mensaje si no hay datos", () => {
-    render(
-      <MemoryRouter initialEntries={["/result"]}>
-        <Result />
-      </MemoryRouter>
-    );
+function renderResult(state?: object) {
+	return render(
+		<MemoryRouter
+			initialEntries={[state ? { pathname: "/result", state } : "/result"]}
+		>
+			<Result />
+		</MemoryRouter>
+	);
+}
 
-    expect(screen.getByText(/No hay datos del resultado/i)).toBeInTheDocument();
-  });
+describe("<Result />", () => {
+	it("muestra la puntuación, el porcentaje y la categoría", () => {
+		renderResult({ score: 1, total: 2, category: "html", summary });
 
-  it("muestra la categoría correctamente", () => {
-    render(
-      <MemoryRouter
-        initialEntries={[
-          {
-            pathname: "/result",
-            state: {
-              score: 5,
-              total: 10,
-              category: "css",
-            },
-          } as any,
-        ]}
-      >
-        <Result />
-      </MemoryRouter>
-    );
+		expect(screen.getByText(/1 \/ 2/)).toBeInTheDocument();
+		expect(screen.getByText("(50%)")).toBeInTheDocument();
+		expect(screen.getByText("html")).toBeInTheDocument();
+	});
 
-    // Buscar el elemento exacto que contiene la categoría
-    const categoriaNode = screen
-      .getAllByText(
-        (content, node) => {
-          return (node?.textContent || "")
-            .toLowerCase()
-            .includes("categoría: css");
-        },
-        { exact: false }
-      )
-      .find((el) => el.textContent?.toLowerCase().includes("categoría: css"));
-    expect(categoriaNode).toBeInTheDocument();
-  });
+	it("muestra un aviso si no hay respuestas", () => {
+		renderResult();
+		expect(
+			screen.getByText(/No hay respuestas disponibles/i)
+		).toBeInTheDocument();
+	});
+
+	it("despliega la explicación y solo enlaza a la fuente si existe", async () => {
+		const user = userEvent.setup();
+		renderResult({ score: 1, total: 2, category: "html", summary });
+
+		await user.click(screen.getByText(summary[0].question));
+		const link = screen.getByRole("link", {
+			name: /explicación ampliada en MDN/i,
+		});
+		expect(link).toHaveAttribute("href", summary[0].sourceUrl);
+
+		await user.click(screen.getByText(summary[1].question));
+		expect(
+			screen.getAllByRole("link", { name: /explicación ampliada/i })
+		).toHaveLength(1);
+		// El comentario JSX que antes se colaba en la interfaz no debe aparecer
+		expect(screen.queryByText(/Mostrar texto por/i)).not.toBeInTheDocument();
+	});
 });

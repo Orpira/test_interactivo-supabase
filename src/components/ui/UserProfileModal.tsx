@@ -7,7 +7,7 @@ type UserProfileModalProps = {
 		name: string;
 		email: string;
 		picture?: string;
-		[key: string]: any;
+		[key: string]: unknown;
 	};
 };
 

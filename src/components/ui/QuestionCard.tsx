@@ -1,6 +1,3 @@
-import React from "react";
-import { useAuth } from "../../services/auth";
-
 type QuestionProps = {
 	category: string;
 	question: string;
@@ -11,7 +8,7 @@ type QuestionProps = {
 	showFeedback: boolean;
 	number?: number;
 	total?: number;
-	onPrev?: () => void;
+	onRestart?: () => void;
 };
 
 export const QuestionCard = ({
@@ -20,11 +17,10 @@ export const QuestionCard = ({
 	options,
 	selected,
 	onSelect,
-	correctAnswer,
 	showFeedback,
 	number,
 	total,
-	onPrev,
+	onRestart,
 }: QuestionProps) => {
 	// Letras para las opciones
 	const letters = ["A", "B", "C", "D", "E", "F", "G", "H"];
@@ -49,10 +45,37 @@ export const QuestionCard = ({
 		},
 	];
 
-	const { isAuthenticated } = useAuth();
+	const answered = selected !== null;
+	const progress =
+		typeof number === "number" && total
+			? Math.round(((number - 1) / total) * 100)
+			: 0;
 
 	return (
 		<div className="relative flex flex-col items-center justify-center min-h-[500px] py-8 px-2 md:px-0 w-full max-w-[1100px] mx-auto ">
+			{typeof number === "number" && total ? (
+				<div className="relative z-10 mb-6 w-full max-w-3xl">
+					<div className="mb-1 flex justify-between text-xs font-semibold text-blue-900">
+						<span>
+							Pregunta {number} de {total}
+						</span>
+						<span>{progress}%</span>
+					</div>
+					<div
+						className="h-2 w-full overflow-hidden rounded-full bg-blue-100"
+						role="progressbar"
+						aria-valuemin={0}
+						aria-valuemax={total}
+						aria-valuenow={number - 1}
+						aria-label="Progreso del quiz"
+					>
+						<div
+							className="h-full rounded-full bg-blue-600 transition-all duration-300"
+							style={{ width: `${progress}%` }}
+						/>
+					</div>
+				</div>
+			) : null}
 			{/* Contenedor pregunta + número */}
 			<div className="relative z-10 mb-8 flex w-full items-center justify-center sm:mb-12">
 				{/* Número de pregunta grande */}
@@ -92,13 +115,15 @@ export const QuestionCard = ({
 					return (
 						<button
 							key={idx}
+							type="button"
 							onClick={() => onSelect(option)}
+							aria-pressed={isSelected}
 							className={
 								`relative flex items-stretch rounded-xl shadow-xl transition duration-200 overflow-hidden group
                 w-full min-h-[70px] transform sm:skew-x-[-20deg] md:hover:scale-105 ` +
 								pressedClass
 							}
-							disabled={showFeedback}
+							disabled={showFeedback || answered}
 							style={{
 								background: "#f5faff",
 							}}
@@ -130,16 +155,13 @@ export const QuestionCard = ({
 				})}
 			</div>
 			{/* Botón de reinicio de quiz debajo de las preguntas SOLO si no está autenticado */}
-			{!isAuthenticated && (
+			{onRestart && (
 				<div className="w-full flex justify-end mt-6">
 					<button
-						onClick={() => {
-							if (typeof window !== "undefined") {
-								window.location.reload();
-							}
-							if (onPrev) onPrev();
-						}}
-						title="Reiniciar"
+						type="button"
+						onClick={onRestart}
+						title="Reiniciar quiz"
+						aria-label="Reiniciar quiz"
 						className="bg-blue-100 hover:bg-blue-200 rounded-full p-2 shadow transition flex items-center justify-center"
 						style={{ width: 40, height: 40 }}
 					>

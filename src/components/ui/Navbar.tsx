@@ -10,7 +10,15 @@ import {
 	upsertUserExperience,
 	type ExperienceLevel,
 } from "@/services/feedback";
-import { ChevronDown, Github, Lock, Mail, Menu, UserCircle, X } from "lucide-react";
+import {
+	ChevronDown,
+	Github,
+	Lock,
+	Mail,
+	Menu,
+	UserCircle,
+	X,
+} from "lucide-react";
 
 type SubcategoryOption = {
 	name: string;
@@ -64,8 +72,8 @@ export default function Navbar() {
 			});
 			if (error) setError(error.message);
 			else setShowLoginModal(false);
-		} catch (err: any) {
-			setError(err.message || "Error desconocido");
+		} catch (err) {
+			setError(errorMessage(err, "Error desconocido"));
 		} finally {
 			setLoading(false);
 		}
@@ -134,12 +142,12 @@ export default function Navbar() {
 			setSubcategories(mapped);
 			if (mapped.length === 0) {
 				setSubcategoriesError(
-					"No hay subcategorias disponibles en esta categoria.",
+					"No hay subcategorias disponibles en esta categoria."
 				);
 			}
-		} catch (err: any) {
+		} catch (err) {
 			setSubcategoriesError(
-				err?.message || "No se pudieron cargar las subcategorias.",
+				errorMessage(err, "No se pudieron cargar las subcategorías.")
 			);
 		} finally {
 			setSubcategoriesLoading(false);
@@ -149,7 +157,7 @@ export default function Navbar() {
 	function handleStartQuiz(subcat: string, count: number) {
 		setShowSubcategoryModal(false);
 		navigate(
-			`/quiz/${selectedCategory}/${encodeURIComponent(subcat)}?count=${count}`,
+			`/quiz/${selectedCategory}/${encodeURIComponent(subcat)}?count=${count}`
 		);
 	}
 
@@ -270,7 +278,8 @@ export default function Navbar() {
 						}`}
 						onClick={() => setMobileMenuOpen((prev) => !prev)}
 						aria-expanded={mobileMenuOpen}
-						aria-label="Abrir menu"
+						aria-controls="mobile-menu"
+						aria-label={mobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
 					>
 						{mobileMenuOpen ? (
 							<X className="h-5 w-5" aria-hidden="true" />
@@ -280,7 +289,11 @@ export default function Navbar() {
 					</button>
 
 					{mobileMenuOpen && (
-						<div className="mt-2 w-full border-t border-slate-700 pt-3 md:hidden">
+						<nav
+							id="mobile-menu"
+							aria-label="Menú móvil"
+							className="mt-2 w-full border-t border-slate-700 pt-3 md:hidden"
+						>
 							<div className="flex flex-col gap-2 text-sm">
 								<Link to="/" className="rounded px-2 py-2 hover:bg-slate-800">
 									Inicio
@@ -351,7 +364,7 @@ export default function Navbar() {
 									</button>
 								)}
 							</div>
-						</div>
+						</nav>
 					)}
 				</div>
 			</nav>
@@ -390,8 +403,8 @@ export default function Navbar() {
 										setError("");
 										try {
 											await loginWithGoogle();
-										} catch (e: any) {
-											setError(e.message);
+										} catch (e) {
+											setError(errorMessage(e, "No se pudo iniciar sesión"));
 										} finally {
 											setLoading(false);
 										}
@@ -428,8 +441,8 @@ export default function Navbar() {
 										setError("");
 										try {
 											await loginWithRedirect();
-										} catch (e: any) {
-											setError(e.message);
+										} catch (e) {
+											setError(errorMessage(e, "No se pudo iniciar sesión"));
 										} finally {
 											setLoading(false);
 										}
@@ -456,7 +469,10 @@ export default function Navbar() {
 										Correo electrónico
 									</span>
 									<div className="flex items-center rounded-lg border border-slate-200 bg-slate-50 px-3 transition focus-within:border-indigo-400 focus-within:ring-2 focus-within:ring-indigo-100">
-										<Mail className="h-4 w-4 text-slate-400" aria-hidden="true" />
+										<Mail
+											className="h-4 w-4 text-slate-400"
+											aria-hidden="true"
+										/>
 										<input
 											type="email"
 											className="min-h-11 w-full bg-transparent px-3 text-sm text-slate-900 outline-none placeholder:text-slate-400"
@@ -474,7 +490,10 @@ export default function Navbar() {
 										Contraseña
 									</span>
 									<div className="flex items-center rounded-lg border border-slate-200 bg-slate-50 px-3 transition focus-within:border-indigo-400 focus-within:ring-2 focus-within:ring-indigo-100">
-										<Lock className="h-4 w-4 text-slate-400" aria-hidden="true" />
+										<Lock
+											className="h-4 w-4 text-slate-400"
+											aria-hidden="true"
+										/>
 										<input
 											type="password"
 											className="min-h-11 w-full bg-transparent px-3 text-sm text-slate-900 outline-none placeholder:text-slate-400"
@@ -587,4 +606,8 @@ export default function Navbar() {
 			/>
 		</>
 	);
+}
+
+function errorMessage(error: unknown, fallback: string) {
+	return (error as { message?: string })?.message || fallback;
 }
