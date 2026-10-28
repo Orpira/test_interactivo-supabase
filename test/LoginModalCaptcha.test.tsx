@@ -13,15 +13,15 @@ vi.mock("../src/services/supabase", () => ({ supabase: { auth } }));
 vi.mock("../src/services/auth", () => ({
 	useAuth: () => ({ loginWithGoogle: vi.fn(), loginWithRedirect: vi.fn() }),
 }));
-// Sustituto del widget: un botón que simula resolver el captcha
-vi.mock("@hcaptcha/react-hcaptcha", async () => {
+// Sustituto del widget: un botón que simula superar la verificación
+vi.mock("@marsidev/react-turnstile", async () => {
 	const React = await import("react");
 	return {
-		default: React.forwardRef(
-			(props: { onVerify: (t: string) => void }, ref) => {
-				React.useImperativeHandle(ref, () => ({ resetCaptcha }));
+		Turnstile: React.forwardRef(
+			(props: { onSuccess: (t: string) => void }, ref) => {
+				React.useImperativeHandle(ref, () => ({ reset: resetCaptcha }));
 				return (
-					<button type="button" onClick={() => props.onVerify("token-123")}>
+					<button type="button" onClick={() => props.onSuccess("token-123")}>
 						Resolver captcha
 					</button>
 				);
@@ -31,7 +31,7 @@ vi.mock("@hcaptcha/react-hcaptcha", async () => {
 });
 
 async function renderWithCaptcha() {
-	vi.stubEnv("VITE_HCAPTCHA_SITE_KEY", "10000000-ffff-ffff-ffff-000000000001");
+	vi.stubEnv("VITE_TURNSTILE_SITE_KEY", "1x00000000000000000000AA");
 	vi.resetModules();
 	const { default: LoginModal } = await import(
 		"../src/components/ui/LoginModal"
@@ -40,13 +40,13 @@ async function renderWithCaptcha() {
 	return userEvent.setup();
 }
 
-describe("<LoginModal /> con hCaptcha", () => {
+describe("<LoginModal /> con Turnstile", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 		vi.unstubAllEnvs();
 	});
 
-	it("exige completar el captcha antes de enviar", async () => {
+	it("exige superar la verificación antes de enviar", async () => {
 		const user = await renderWithCaptcha();
 		await user.type(
 			screen.getByLabelText("Correo electrónico"),

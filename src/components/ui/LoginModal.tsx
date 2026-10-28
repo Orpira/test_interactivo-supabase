@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState } from "react";
-import HCaptcha from "@hcaptcha/react-hcaptcha";
+import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import {
 	ArrowLeft,
 	Eye,
@@ -20,9 +20,10 @@ export type LoginMode = "login" | "signup" | "forgot";
 
 const MIN_PASSWORD_LENGTH = 6;
 
-// Si el proyecto de Supabase tiene activada la protección CAPTCHA, todas las
-// peticiones con email (login, registro y recuperación) necesitan un token.
-const HCAPTCHA_SITE_KEY = import.meta.env.VITE_HCAPTCHA_SITE_KEY;
+// Si el proyecto de Supabase tiene activada la protección CAPTCHA (Cloudflare
+// Turnstile), las peticiones con email (login, registro y recuperación)
+// necesitan un token. Sin site key configurada el widget no se muestra.
+const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY;
 
 type Props = {
 	onClose: () => void;
@@ -59,12 +60,12 @@ export default function LoginModal({ onClose, initialMode = "login" }: Props) {
 	const [error, setError] = useState("");
 	const [notice, setNotice] = useState("");
 	const [captchaToken, setCaptchaToken] = useState<string | null>(null);
-	const captchaRef = useRef<HCaptcha>(null);
+	const captchaRef = useRef<TurnstileInstance>(undefined);
 
-	// Los tokens de hCaptcha son de un solo uso: se renuevan tras cada intento.
+	// Los tokens de Turnstile son de un solo uso: se renuevan tras cada intento.
 	const resetCaptcha = () => {
 		setCaptchaToken(null);
-		captchaRef.current?.resetCaptcha();
+		captchaRef.current?.reset();
 	};
 
 	useEffect(() => {
@@ -100,8 +101,10 @@ export default function LoginModal({ onClose, initialMode = "login" }: Props) {
 		const cleanEmail = email.trim();
 		const captcha = captchaToken ?? undefined;
 
-		if (HCAPTCHA_SITE_KEY && !captchaToken) {
-			setError("Completa la verificación de seguridad antes de continuar.");
+		if (TURNSTILE_SITE_KEY && !captchaToken) {
+			setError(
+				"Espera a que termine la verificación de seguridad y vuelve a intentarlo."
+			);
 			return;
 		}
 
@@ -385,13 +388,13 @@ export default function LoginModal({ onClose, initialMode = "login" }: Props) {
 							</Field>
 						)}
 
-						{HCAPTCHA_SITE_KEY && (
+						{TURNSTILE_SITE_KEY && (
 							<div className="flex justify-center">
-								<HCaptcha
+								<Turnstile
 									ref={captchaRef}
-									sitekey={HCAPTCHA_SITE_KEY}
-									languageOverride="es"
-									onVerify={(token) => {
+									siteKey={TURNSTILE_SITE_KEY}
+									options={{ language: "es", theme: "light" }}
+									onSuccess={(token) => {
 										setCaptchaToken(token);
 										setError("");
 									}}
@@ -399,7 +402,7 @@ export default function LoginModal({ onClose, initialMode = "login" }: Props) {
 									onError={() => {
 										setCaptchaToken(null);
 										setError(
-											"No se pudo cargar la verificación de seguridad. Recarga la página."
+											"No se pudo completar la verificación de seguridad. Recarga la página."
 										);
 									}}
 								/>
