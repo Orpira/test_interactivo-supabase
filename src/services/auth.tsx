@@ -11,6 +11,9 @@ type AuthContextType = {
 	session: Session | null;
 	isAuthenticated: boolean;
 	isLoading: boolean;
+	/** true tras abrir el enlace de "recuperar contraseña" del email */
+	passwordRecovery: boolean;
+	clearPasswordRecovery: () => void;
 	loginWithRedirect: () => Promise<void>;
 	loginWithGoogle: () => Promise<void>;
 	logout: (options?: { logoutParams?: { returnTo?: string } }) => Promise<void>;
@@ -21,6 +24,8 @@ const AuthContext = createContext<AuthContextType>({
 	session: null,
 	isAuthenticated: false,
 	isLoading: true,
+	passwordRecovery: false,
+	clearPasswordRecovery: () => {},
 	loginWithRedirect: async () => {},
 	loginWithGoogle: async () => {},
 	logout: async () => {},
@@ -30,6 +35,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const [user, setUser] = useState<User | null>(null);
 	const [session, setSession] = useState<Session | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
+	const [passwordRecovery, setPasswordRecovery] = useState(false);
 
 	useEffect(() => {
 		supabase.auth.getSession().then(({ data: { session } }) => {
@@ -40,7 +46,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 		const {
 			data: { subscription },
-		} = supabase.auth.onAuthStateChange((_event, session) => {
+		} = supabase.auth.onAuthStateChange((event, session) => {
+			// Supabase emite PASSWORD_RECOVERY al canjear el código del email de
+			// recuperación (web y Android), con el mismo /auth/callback.
+			if (event === "PASSWORD_RECOVERY") setPasswordRecovery(true);
+			if (event === "SIGNED_OUT") setPasswordRecovery(false);
 			setSession(session);
 			setUser(session?.user ?? null);
 			setIsLoading(false);
@@ -59,9 +69,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 				}
 
 				const callbackUrl = new URL(event.url);
-				const errorDescription = callbackUrl.searchParams.get(
-					"error_description",
-				);
+				const errorDescription =
+					callbackUrl.searchParams.get("error_description");
 				const code = callbackUrl.searchParams.get("code");
 
 				if (errorDescription) {
@@ -69,14 +78,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 					return;
 				}
 
+				window.history.replaceState({}, document.title, "/");
+
 				if (code) {
-					const { error } = await supabase.auth.exchangeCodeForSession(code);
+					const { data, error } = await supabase.auth.exchangeCodeForSession(
+						code
+					);
 					if (error) {
 						console.error("Could not exchange Supabase OAuth code:", error);
+					} else if (
+						(data as { redirectType?: string | null }).redirectType ===
+						"recovery"
+					) {
+						// En el canje manual (Android) Supabase solo emite SIGNED_IN
+						setPasswordRecovery(true);
 					}
 				}
-
-				window.history.replaceState({}, document.title, "/");
 			}).then((listener) => {
 				removeAppUrlOpenListener = () => {
 					void listener.remove();
@@ -127,6 +144,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 				session,
 				isAuthenticated: !!user,
 				isLoading,
+				passwordRecovery,
+				clearPasswordRecovery: () => setPasswordRecovery(false),
 				loginWithRedirect,
 				loginWithGoogle,
 				logout,

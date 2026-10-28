@@ -1,5 +1,14 @@
-import { lazy, Suspense } from "react";
-import { BrowserRouter, Link, Navigate, Routes, Route } from "react-router-dom";
+import { lazy, Suspense, useEffect } from "react";
+import {
+	BrowserRouter,
+	Link,
+	Navigate,
+	Routes,
+	Route,
+	useLocation,
+	useNavigate,
+} from "react-router-dom";
+import { useAuth } from "@/services/auth";
 import Hero from "@/features/hero/Hero";
 import PrivateRoute from "@/features/auth/PrivateRoute";
 import Footer from "@/components/ui/Footer";
@@ -17,9 +26,23 @@ const Dashboard = lazy(() => import("@/features/dashboard/Dashboard"));
 const ChallengeCategories = lazy(
 	() => import("@/features/challenges/pages/ChallengeCategories")
 );
+const ResetPassword = lazy(() => import("@/pages/ResetPassword"));
 const ChallengeEditorPage = lazy(
 	() => import("@/features/challenges/pages/ChallengeEditorPage")
 );
+
+/** Al abrir el enlace de recuperación, lleva al formulario de nueva contraseña. */
+function PasswordRecoveryRedirect() {
+	const { passwordRecovery } = useAuth();
+	const navigate = useNavigate();
+	const { pathname } = useLocation();
+	useEffect(() => {
+		if (passwordRecovery && pathname !== "/restablecer") {
+			navigate("/restablecer", { replace: true });
+		}
+	}, [passwordRecovery, pathname, navigate]);
+	return null;
+}
 
 function NotFound() {
 	return (
@@ -44,6 +67,7 @@ export type Category = { id: string; slug?: string; name?: string };
 export default function AppRouter() {
 	return (
 		<BrowserRouter>
+			<PasswordRecoveryRedirect />
 			<Navbar />
 			<Suspense fallback={<p className="p-6 text-center">Cargando...</p>}>
 				<Routes>
@@ -78,6 +102,7 @@ export default function AppRouter() {
 							</PrivateRoute>
 						}
 					/>
+					<Route path="/restablecer" element={<ResetPassword />} />
 					<Route path="/contacto" element={<ContactForm />} />
 					<Route path="/gracias" element={<Gracias />} />
 					<Route
