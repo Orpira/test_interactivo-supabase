@@ -35,6 +35,7 @@
 		"@capacitor/browser": "^8.0.3",
 		"@capacitor/core": "^8.4.0",
 		"@capacitor/splash-screen": "^8.0.1",
+		"@hcaptcha/react-hcaptcha": "^2.2.0",
 		"@radix-ui/react-slot": "^1.2.3",
 		"@supabase/auth-ui-react": "^0.4.7",
 		"@supabase/auth-ui-shared": "^0.1.8",

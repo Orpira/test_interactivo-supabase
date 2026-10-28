@@ -21,6 +21,8 @@ const BY_CODE: Record<string, string> = {
 	flow_state_not_found:
 		"El enlace ha caducado o se abrió en otro navegador. Solicita uno nuevo desde este dispositivo.",
 	flow_state_expired: "El enlace ha caducado. Solicita uno nuevo.",
+	captcha_failed:
+		"La verificación de seguridad ha fallado o ha caducado. Vuelve a completarla.",
 };
 
 const BY_MESSAGE: [RegExp, string][] = [
@@ -28,6 +30,7 @@ const BY_MESSAGE: [RegExp, string][] = [
 	[/email not confirmed/i, BY_CODE.email_not_confirmed],
 	[/already registered/i, BY_CODE.user_already_exists],
 	[/password should be at least/i, BY_CODE.weak_password],
+	[/captcha/i, BY_CODE.captcha_failed],
 	[/rate limit/i, BY_CODE.over_request_rate_limit],
 	[
 		/failed to fetch|network/i,

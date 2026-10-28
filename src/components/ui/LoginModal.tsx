@@ -1,4 +1,5 @@
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
+import HCaptcha from "@hcaptcha/react-hcaptcha";
 import {
 	ArrowLeft,
 	Eye,
@@ -18,6 +19,10 @@ import { translateAuthError } from "@/services/authErrors";
 export type LoginMode = "login" | "signup" | "forgot";
 
 const MIN_PASSWORD_LENGTH = 6;
+
+// Si el proyecto de Supabase tiene activada la protección CAPTCHA, todas las
+// peticiones con email (login, registro y recuperación) necesitan un token.
+const HCAPTCHA_SITE_KEY = import.meta.env.VITE_HCAPTCHA_SITE_KEY;
 
 type Props = {
 	onClose: () => void;
@@ -53,6 +58,14 @@ export default function LoginModal({ onClose, initialMode = "login" }: Props) {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
 	const [notice, setNotice] = useState("");
+	const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+	const captchaRef = useRef<HCaptcha>(null);
+
+	// Los tokens de hCaptcha son de un solo uso: se renuevan tras cada intento.
+	const resetCaptcha = () => {
+		setCaptchaToken(null);
+		captchaRef.current?.resetCaptcha();
+	};
 
 	useEffect(() => {
 		const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -62,6 +75,7 @@ export default function LoginModal({ onClose, initialMode = "login" }: Props) {
 
 	const switchMode = (next: LoginMode) => {
 		setMode(next);
+		resetCaptcha();
 		setError("");
 		setNotice("");
 		setPassword("");
@@ -84,12 +98,23 @@ export default function LoginModal({ onClose, initialMode = "login" }: Props) {
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 		const cleanEmail = email.trim();
+		const captcha = captchaToken ?? undefined;
+
+		if (HCAPTCHA_SITE_KEY && !captchaToken) {
+			setError("Completa la verificación de seguridad antes de continuar.");
+			return;
+		}
+
+		// Envuelve run() para renovar el captcha cuando termine el intento
+		const submit = (action: () => Promise<void>) =>
+			run(action).finally(resetCaptcha);
 
 		if (mode === "login") {
-			return run(async () => {
+			return submit(async () => {
 				const { error } = await supabase.auth.signInWithPassword({
 					email: cleanEmail,
 					password,
+					options: { captchaToken: captcha },
 				});
 				if (error) throw error;
 				onClose();
@@ -107,12 +132,13 @@ export default function LoginModal({ onClose, initialMode = "login" }: Props) {
 				setError("Las contraseñas no coinciden.");
 				return;
 			}
-			return run(async () => {
+			return submit(async () => {
 				const { data, error } = await supabase.auth.signUp({
 					email: cleanEmail,
 					password,
 					options: {
 						emailRedirectTo: getAuthRedirectUrl(),
+						captchaToken: captcha,
 						data: name.trim() ? { full_name: name.trim() } : undefined,
 					},
 				});
@@ -138,9 +164,10 @@ export default function LoginModal({ onClose, initialMode = "login" }: Props) {
 			});
 		}
 
-		return run(async () => {
+		return submit(async () => {
 			const { error } = await supabase.auth.resetPasswordForEmail(cleanEmail, {
 				redirectTo: getAuthRedirectUrl(),
+				captchaToken: captcha,
 			});
 			if (error) throw error;
 			setNotice(
@@ -356,6 +383,27 @@ export default function LoginModal({ onClose, initialMode = "login" }: Props) {
 									/>
 								)}
 							</Field>
+						)}
+
+						{HCAPTCHA_SITE_KEY && (
+							<div className="flex justify-center">
+								<HCaptcha
+									ref={captchaRef}
+									sitekey={HCAPTCHA_SITE_KEY}
+									languageOverride="es"
+									onVerify={(token) => {
+										setCaptchaToken(token);
+										setError("");
+									}}
+									onExpire={() => setCaptchaToken(null)}
+									onError={() => {
+										setCaptchaToken(null);
+										setError(
+											"No se pudo cargar la verificación de seguridad. Recarga la página."
+										);
+									}}
+								/>
+							</div>
 						)}
 
 						<div aria-live="polite">

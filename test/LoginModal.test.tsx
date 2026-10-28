@@ -36,6 +36,7 @@ describe("<LoginModal />", () => {
 		expect(auth.signInWithPassword).toHaveBeenCalledWith({
 			email: "ana@test.com",
 			password: "secreta1",
+			options: { captchaToken: undefined },
 		});
 		expect(onClose).toHaveBeenCalled();
 	});

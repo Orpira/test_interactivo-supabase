@@ -108,7 +108,11 @@ Crea un archivo `.env` en la raíz con:
 ```env
 VITE_SUPABASE_URL=...
 VITE_SUPABASE_ANON_KEY=...
+# Solo si Supabase tiene activada la protección CAPTCHA (Attack Protection → hCaptcha)
+VITE_HCAPTCHA_SITE_KEY=...
 ```
+
+> La site key de hCaptcha es pública (formato UUID). La **secret key** se configura únicamente en Supabase, nunca en el frontend. En el panel de hCaptcha añade los dominios donde se usa la app (`orpira.es`, el dominio de Vercel y `localhost` para el APK y desarrollo).
 
 ---
 
