@@ -225,3 +225,16 @@ async function runWorkerTests(appJs: string, tests: ChallengeTest[]): Promise<Te
 		}),
 	);
 }
+
+/**
+ * Ejecuta un fragmento (preguntas de predicción) en un Worker, en modo
+ * estricto, y devuelve lo que imprime. Un error se devuelve aparte.
+ */
+export async function runSnippet(code: string): Promise<{ lines: string[]; error?: string; timeout?: boolean }> {
+	const protectedJs = protectLoops(code);
+	if (!protectedJs.ok) return { lines: [], error: protectedJs.error };
+	const res = await runInWorker({ type: "console", code: `"use strict";\n${protectedJs.code}` });
+	if (res.timeout) return { lines: [], timeout: true, error: "Tiempo agotado" };
+	if (!res.ok) return { lines: [], error: res.message };
+	return { lines: (res.output ?? "").split("\n") };
+}

@@ -6,11 +6,15 @@ import { useNavigate, Link } from "react-router-dom";
 import { exportToCSV } from "../../utils/exportCSV";
 import Achievements from "@/components/ui/Achievements"; // Componente no encontrado, import eliminado
 import { calculateAchievements } from "../../utils/achievements";
+import { useLearning } from "@/features/learning/store";
+import { getClosedIncidents } from "@/features/incidents/session";
 
 export default function Dashboard() {
 	const { user } = useAuth();
 	const { history, loading, error: historyError } = useUserHistory();
 	const navigate = useNavigate();
+	const learningCards = useLearning((s) => s.cards);
+	const perfectCalibration = useLearning((s) => s.perfectCalibration);
 	const [historyFilter, setHistoryFilter] = useState("");
 
 	const totalTests = history.length;
@@ -94,7 +98,11 @@ export default function Dashboard() {
 		category: h.category,
 	}));
 
-	const userAchievements = calculateAchievements(testResults);
+	const userAchievements = calculateAchievements(testResults, {
+		dominated: Object.values(learningCards).filter((c) => c.state === "dominado").length,
+		incidentsClosed: Object.keys(getClosedIncidents()).length,
+		perfectCalibration,
+	});
 
 	if (loading) {
 		return <p className="p-6 text-center">Cargando tu dashboard...</p>;

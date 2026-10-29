@@ -9,7 +9,13 @@ export type Achievement = {
 const average = (values: number[]) =>
 	values.length ? values.reduce((a, b) => a + b, 0) / values.length : 0;
 
-export function calculateAchievements(results: TestResult[]): Achievement[] {
+/** Datos de la Fase 4 (habilidades) para los logros nuevos. */
+export type SkillStats = { dominated: number; incidentsClosed: number; perfectCalibration: boolean };
+
+export function calculateAchievements(
+	results: TestResult[],
+	skills: SkillStats = { dominated: 0, incidentsClosed: 0, perfectCalibration: false },
+): Achievement[] {
 	const valid = results.filter((r) => r.total > 0);
 
 	// Orden cronológico (más antiguo primero), independientemente de cómo
@@ -44,5 +50,8 @@ export function calculateAchievements(results: TestResult[]): Achievement[] {
 			unlocked: categories.size >= 3,
 		},
 		{ icon: "📈", title: "Mejora continua", unlocked: improved },
+		{ icon: "🧠", title: "Primer concepto dominado", unlocked: skills.dominated >= 1 },
+		{ icon: "🐞", title: "10 incidencias cerradas", unlocked: skills.incidentsClosed >= 10 },
+		{ icon: "🎯", title: "Calibración perfecta", unlocked: skills.perfectCalibration },
 	];
 }

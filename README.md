@@ -144,6 +144,26 @@ npx playwright test
 
 ## Cambios recientes
 
+### Fase 4: «Hoy», confianza, diagnóstico y repaso espaciado
+
+> ⚠️ **Supabase:** tras las de la Fase 3, ejecuta `20261031_fase4_aprendizaje.sql` y `20261031_fase4_aprendizaje_seed.sql`. Añaden `concepts`, `answers`, `concept_cards`, `streaks`, la función `weekly_league()`, un concepto por subcategoría de tus preguntas y 12 preguntas de predicción. Sin ellas la app funciona y guarda el progreso solo en el dispositivo.
+
+- **Confianza** antes de comprobar (Adivino / Creo que sí / Seguro). El feedback combina acierto y confianza («Fallo con confianza alta», «Acierto, pero adivinando»), muestra «Por qué era tentadora» y cuándo vuelve el concepto al repaso.
+- **Preguntas de predicción** («¿Qué imprime?») con botón **Ejecutar**, que muestra la salida real (Web Worker). Las 12 del seed se verifican ejecutándolas en `test/unit/predict.test.ts`.
+- **Repaso espaciado FSRS** (`ts-fsrs`) por **concepto**: fallo = Again, acierto adivinando = Hard, «Creo que sí» = Good, «Seguro» = Easy. `/repaso` reúne hasta 12 preguntas de los conceptos que vencen hoy.
+- **`/hoy`** (inicio con sesión):
+  - saludo y racha con protector semanal;
+  - Repaso de hoy, Incidencia del día y Continuar;
+  - mapa de habilidades por área en 4 estados.
+  - Navegación: barra lateral con atajos `G H`, `G P`, `G R`, `G M`, `G K` en escritorio y barra inferior de 5 pestañas en móvil. También `/practicar` y `/mapa`.
+- **Diagnóstico inicial** (`/diagnostico`, 8 preguntas de todas las áreas) que fija el nivel.
+- **Resultados como diagnóstico:** titular por conceptos, calibración por confianza, dominados / a reforzar, falladas desplegables y una única acción recomendada.
+- **Gamificación:** liga semanal (grupos de 20 por nivel; suben los 5 primeros) en Ranking y en la barra lateral, y logros nuevos («Primer concepto dominado», «10 incidencias cerradas», «Calibración perfecta»).
+
+#### Etiquetar el banco de preguntas con Claude (revisión humana)
+
+`scripts/label-questions.mjs propose` pide a Claude conceptos y metadatos de cada opción incorrecta y los guarda en un JSON para revisar. `scripts/label-questions.mjs sql <json>` genera el SQL solo con las preguntas marcadas como `"approved": true`. La clave de Claude solo se usa en tu máquina; nunca llega al cliente.
+
 ### Fase 3: Modo Incidencia
 
 > ⚠️ **Supabase:** ejecuta después de las de la Fase 1 `supabase/migrations/20261030_fase3_incidencias.sql` y `supabase/migrations/20261030_fase3_incidencias_seed.sql` (columna `score`, límites de la línea de tiempo y las 10 incidencias con `type = 'incident'`).

@@ -5,6 +5,11 @@ import { useAuth } from "../../services/auth";
 import { supabase } from "../../services/supabase";
 import { updateUserStats } from "../../services/userStats";
 import { m, AnimatePresence } from "framer-motion";
+import { ChevronDown } from "lucide-react";
+import { conceptsForQuestion, type ConceptRef } from "@/features/learning/concepts";
+import { CONFIDENCE_LABEL, returnsLabel, type Confidence } from "@/features/learning/fsrs";
+import { calibration, diagnosisHeadline, overconfidentCount, splitConcepts, type GradedAnswer } from "@/features/learning/diagnosis";
+import { useLearning } from "@/features/learning/store";
 import type { AnswerResume } from "@/types/TestResult";
 import ExperienceFeedbackModal from "@/components/ui/ExperienceFeedbackModal";
 import {
@@ -26,6 +31,8 @@ type SummaryEntry = {
 	shortExplanation?: string;
 	sourceUrl?: string;
 	sourceName?: string;
+	confidence?: Confidence;
+	concepts?: ConceptRef[];
 };
 
 export default function Result({ answers: answersProp }: Props) {
@@ -48,6 +55,9 @@ export default function Result({ answers: answersProp }: Props) {
 		() => getStoredExperienceLevel() ?? "junior"
 	);
 	const feedbackChecked = useRef(false);
+	const [showFailed, setShowFailed] = useState(false);
+	const learningCards = useLearning((st) => st.cards);
+	const markPerfectCalibration = useLearning((st) => st.markPerfectCalibration);
 
 	// Leer id desde query params (?id=xxx)
 	const searchParams = new URLSearchParams(location.search);
@@ -59,7 +69,15 @@ export default function Result({ answers: answersProp }: Props) {
 		category?: string;
 		subcategory?: string;
 		summary?: SummaryEntry[];
+		mode?: "quiz" | "repaso" | "diagnostico";
+		diagnosticLevel?: string;
 	} | null;
+
+	// Logro "Calibración perfecta": ≥5 respuestas "Seguro" en un quiz, todas acertadas
+	useEffect(() => {
+		const sure = (state?.summary ?? []).filter((a) => a.confidence === "seguro");
+		if (sure.length >= 5 && sure.every((a) => a.selectedAnswer === a.correctAnswer)) markPerfectCalibration();
+	}, [state?.summary, markPerfectCalibration]);
 
 	// Cargar resultado desde Supabase si viene con ?id=
 	useEffect(() => {
@@ -262,92 +280,160 @@ export default function Result({ answers: answersProp }: Props) {
 	const correctCount = answers.filter((a) => a.correct).length;
 	const scoreToShow = finalScore ?? correctCount;
 	const totalToShow = finalTotal ?? answers.length;
-	const percentage =
-		totalToShow > 0 ? Math.round((scoreToShow / totalToShow) * 100) : 0;
+	const percentage = totalToShow > 0 ? Math.round((scoreToShow / totalToShow) * 100) : 0;
 
-	const getMessage = (pct: number) => {
-		if (pct === 100)
-			return {
-				emoji: "🏆",
-				text: "¡Perfecto! Eres un crack, dominas este tema por completo.",
-			};
-		if (pct >= 80)
-			return {
-				emoji: "🌟",
-				text: "¡Excelente trabajo! Estás muy cerca de la perfección.",
-			};
-		if (pct >= 60)
-			return {
-				emoji: "💪",
-				text: "¡Buen resultado! Sigue practicando y lo dominarás.",
-			};
-		if (pct >= 40)
-			return {
-				emoji: "📚",
-				text: "¡No te rindas! Cada intento te acerca más al objetivo.",
-			};
-		return {
-			emoji: "🚀",
-			text: "¡El camino del aprendizaje empieza aquí! Vuelve a intentarlo, tú puedes.",
-		};
-	};
-
-	const message = getMessage(percentage);
-	const retryQuizLink = finalCategory
-		? `/?quizCategory=${encodeURIComponent(finalCategory)}`
-		: "/";
+	// Diagnóstico por conceptos y confianza (resultados antiguos: "Creo que sí")
+	const graded: GradedAnswer[] = (activeSummary ?? []).map((s) => ({
+		correct: s.selectedAnswer === s.correctAnswer,
+		confidence: s.confidence ?? "creo",
+		concepts: s.concepts?.length ? s.concepts : conceptsForQuestion({ category: finalCategory, subcategory: s.subcategory ?? finalSubcategory }),
+	}));
+	const split = splitConcepts(graded);
+	const overconfident = overconfidentCount(graded);
+	const calib = calibration(graded);
+	const seguro = calib[0];
+	const headline = diagnosisHeadline(split, overconfident);
+	const failed = answers.filter((a) => !a.correct);
+	const conceptIds = [...new Set(graded.flatMap((g) => g.concepts.map((c) => c.id)))];
+	const tomorrow = conceptIds.filter((id) => {
+		const card = learningCards[id];
+		return card && returnsLabel(card.due) === "mañana";
+	}).length;
+	const weakest = split.weak[0];
+	const recommended = weakest
+		? { label: `Repasar ${weakest.name}`, detail: "5 preguntas · unos 3 min", to: `/repaso?conceptos=${encodeURIComponent(weakest.id)}&count=5` }
+		: { label: "Abrir la incidencia del día", detail: "Depura un bug real · ~10 min", to: "/hoy" };
+	const modeLabel = state?.mode === "diagnostico" ? "DIAGNÓSTICO" : state?.mode === "repaso" ? "REPASO" : "QUIZ";
+	const area = (finalSubcategory ?? (state?.mode && state.mode !== "quiz" ? "" : finalCategory) ?? "").toUpperCase();
 
 	return (
 		<>
-			<section className="max-w-2xl mx-auto px-4 py-8 space-y-6">
-				<h1 className="text-3xl font-bold text-center mb-2">Resultados</h1>
-
-				{/* Resumen */}
-				<div className="text-center space-y-3 mb-6">
-					{saveError && (
-						<p className="text-sm text-warn bg-warn-soft border border-warn/40 rounded p-2">
-							{saveError}
+			<section className="mx-auto w-full max-w-2xl space-y-5 px-4 pb-48 pt-6 sm:px-6">
+				<div className="flex items-center justify-between gap-3">
+					<p className="font-mono text-xs font-semibold uppercase tracking-widest text-muted">
+						{modeLabel} COMPLETADO{area ? ` · ${area}` : ""}
+					</p>
+					<span className="rounded-full border border-line bg-surface2 px-2.5 py-0.5 font-mono text-sm font-semibold">
+						{scoreToShow}/{totalToShow}
+					</span>
+				</div>
+				{saveError && <p className="rounded border border-warn/40 bg-warn-soft p-2 text-sm text-warn">{saveError}</p>}
+				<div>
+					<h1 className="font-display text-2xl font-bold leading-tight sm:text-3xl">{headline}</h1>
+					<p className="mt-1 text-sm text-muted">
+						{scoreToShow} / {totalToShow} ({percentage}%){finalCategory && state?.mode !== "repaso" && state?.mode !== "diagnostico" ? ` · ${finalCategory}` : ""}
+					</p>
+					{state?.diagnosticLevel && (
+						<p className="mt-2 rounded-lg border border-accent/40 bg-accent-soft px-3 py-2 text-sm">
+							Tu nivel de partida: <strong>{LEVEL_NAME[state.diagnosticLevel] ?? state.diagnosticLevel}</strong>. Lo usaremos para elegir tus preguntas; puedes cambiarlo cuando quieras.
 						</p>
 					)}
-					<p className="text-6xl">{message.emoji}</p>
-					<p className="text-2xl font-bold">
-						{scoreToShow} / {totalToShow}{" "}
-						<span className="text-lg font-normal text-muted">
-							({percentage}%)
-						</span>
-					</p>
-					{finalCategory && (
-						<p className="text-sm text-muted">
-							Categoría: <strong>{finalCategory}</strong>
-						</p>
-					)}
-					<p className="text-lg text-muted">
-						{message.text}
-					</p>
-					<div className="flex justify-center gap-3 pt-2">
-						<Link
-							to={retryQuizLink}
-							className="px-4 py-2 bg-accent text-accent-fg rounded-lg hover:bg-accent/90 transition text-sm"
-						>
-							Intentar otro quiz
-						</Link>
-						{isAuthenticated && (
-							<Link
-								to="/dashboard"
-								className="px-4 py-2 bg-surface2 text-fg rounded-lg hover:bg-line transition text-sm"
-							>
-								Ver Dashboard
-							</Link>
-						)}
-					</div>
 				</div>
 
-				<h2 className="text-xl font-semibold">Detalle de respuestas</h2>
+				<section aria-labelledby="calibracion" className="rounded-xl border border-line bg-surface p-4">
+					<h2 id="calibracion" className="font-mono text-xs font-semibold uppercase tracking-widest text-muted">
+						Calibración
+					</h2>
+					<ul className="mt-3 space-y-2.5">
+						{calib.map((row) => {
+							const bad = row.confidence === "seguro" && row.correct < row.total;
+							return (
+								<li key={row.confidence} className="grid grid-cols-[6.5rem_1fr_3rem] items-center gap-3 text-sm">
+									<span className={bad ? "font-semibold text-warn" : ""}>{CONFIDENCE_LABEL[row.confidence]}</span>
+									<span
+										className="h-2 overflow-hidden rounded-full bg-surface2"
+										role="img"
+										aria-label={`${CONFIDENCE_LABEL[row.confidence]}: ${row.total ? `${row.pct}% de aciertos` : "sin respuestas"}`}
+									>
+										<span className={`block h-full rounded-full ${bad ? "bg-warn" : "bg-accent"}`} style={{ width: `${row.pct}%` }} />
+									</span>
+									<span className={`text-right font-mono ${bad ? "text-warn" : "text-muted"}`}>
+										{row.correct}/{row.total}
+									</span>
+								</li>
+							);
+						})}
+					</ul>
+					{overconfident > 0 && (
+						<p className="mt-3 text-sm text-warn">
+							Ojo: fallaste {overconfident} de las {seguro.total} que marcaste como «Seguro». Son las que más conviene repasar.
+						</p>
+					)}
+				</section>
 
-				{answers.map((ans) => (
-					<ResultItem key={ans.id} data={ans} />
-				))}
+				<div className="grid gap-3 sm:grid-cols-2">
+					<section aria-labelledby="dominados" className="rounded-xl border border-accent/40 bg-accent-softer p-4">
+						<h2 id="dominados" className="font-mono text-xs font-semibold uppercase tracking-widest text-accent">
+							Dominados
+						</h2>
+						<ul className="mt-2 space-y-1 font-mono text-sm">
+							{split.strong.length ? split.strong.map((c) => <li key={c.id}>{c.name}</li>) : <li className="text-muted">Aún ninguno</li>}
+						</ul>
+					</section>
+					<section aria-labelledby="reforzar" className="rounded-xl border border-warn/40 bg-warn-soft p-4">
+						<h2 id="reforzar" className="font-mono text-xs font-semibold uppercase tracking-widest text-warn">
+							A reforzar
+						</h2>
+						<ul className="mt-2 space-y-1 font-mono text-sm">
+							{split.weak.length ? split.weak.map((c) => <li key={c.id}>{c.name}</li>) : <li className="text-muted">Nada por ahora 🎉</li>}
+						</ul>
+					</section>
+				</div>
+
+				{failed.length > 0 && (
+					<section>
+						<button
+							type="button"
+							onClick={() => setShowFailed((v) => !v)}
+							aria-expanded={showFailed}
+							aria-controls="falladas"
+							className="flex min-h-touch w-full items-center justify-between rounded-xl border border-line bg-surface px-4 font-semibold hover:border-accent/60"
+						>
+							Revisar las {failed.length} falladas
+							<ChevronDown className={`h-5 w-5 transition-transform ${showFailed ? "rotate-180" : ""}`} aria-hidden="true" />
+						</button>
+						{showFailed && (
+							<div id="falladas" className="mt-3 space-y-3">
+								{failed.map((ans) => (
+									<ResultItem key={ans.id} data={ans} concept={conceptOf(ans.id)} />
+								))}
+							</div>
+						)}
+					</section>
+				)}
+
+				<details className="text-sm">
+					<summary className="min-h-8 cursor-pointer text-muted hover:text-fg">Ver todas las respuestas</summary>
+					<div className="mt-3 space-y-3">
+						{answers.map((ans) => (
+							<ResultItem key={ans.id} data={ans} concept={conceptOf(ans.id)} />
+						))}
+					</div>
+				</details>
 			</section>
+
+			{/* Pie fijo: una única acción recomendada */}
+			<div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-bg/95 px-4 py-3 backdrop-blur">
+				<div className="mx-auto flex w-full max-w-2xl flex-col gap-2 sm:flex-row sm:items-center">
+					<div className="min-w-0 flex-1">
+						<p className="font-mono text-xs font-semibold uppercase tracking-widest text-muted">Siguiente paso recomendado</p>
+						<p className="truncate font-semibold">
+							{recommended.label} <span className="font-normal text-muted">· {recommended.detail}</span>
+						</p>
+						{tomorrow > 0 && (
+							<p className="text-xs text-muted">
+								{tomorrow} {tomorrow === 1 ? "tarjeta añadida" : "tarjetas añadidas"} a tu repaso de mañana
+							</p>
+						)}
+					</div>
+					<Link
+						to={recommended.to}
+						className="inline-flex min-h-12 items-center justify-center rounded-lg bg-accent px-6 font-semibold text-accent-fg hover:bg-accent/90"
+					>
+						Empezar
+					</Link>
+				</div>
+			</div>
 			<ExperienceFeedbackModal
 				open={feedbackOpen}
 				experienceLevel={experienceLevel}
@@ -358,7 +444,13 @@ export default function Result({ answers: answersProp }: Props) {
 			/>
 		</>
 	);
+
+	function conceptOf(id: string) {
+		return graded[Number(id)]?.concepts[0]?.name;
+	}
 }
+
+const LEVEL_NAME: Record<string, string> = { junior: "Junior", semi_senior: "Semi senior", senior: "Senior" };
 
 function getPublicDisplayName(user: User) {
 	const fullName = user.user_metadata?.full_name || user.user_metadata?.name;
@@ -366,7 +458,7 @@ function getPublicDisplayName(user: User) {
 	return user.email ? user.email.split("@")[0] : "Anónimo";
 }
 
-function ResultItem({ data }: { data: AnswerResume }) {
+function ResultItem({ data, concept }: { data: AnswerResume; concept?: string }) {
 	const [open, setOpen] = useState(false);
 
 	return (
@@ -388,6 +480,7 @@ function ResultItem({ data }: { data: AnswerResume }) {
 				aria-expanded={open}
 			>
 				<div>
+					{concept && <p className={`font-mono text-xs ${data.correct ? "text-accent" : "text-warn"}`}>{concept}</p>}
 					<p className="font-semibold">{data.question}</p>
 					<p className="text-sm">
 						Tu respuesta:{" "}

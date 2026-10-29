@@ -1,10 +1,13 @@
 import {
 	BarChart3,
+	Sun,
 	Bug,
 	Code2,
 	FlaskConical,
 	History,
 	Home,
+	Map,
+	Target,
 	Mail,
 	Monitor,
 	Server,
@@ -52,11 +55,14 @@ export type NavPage = {
 	label: string;
 	icon: LucideIcon;
 	private?: boolean;
+	/** Solo sin sesión (con sesión el inicio es /hoy) */
+	publicOnly?: boolean;
 	keywords?: string;
 };
 
 export const NAV_PAGES: NavPage[] = [
-	{ to: "/", label: "Inicio", icon: Home, keywords: "portada home" },
+	{ to: "/", label: "Inicio", icon: Home, keywords: "portada home", publicOnly: true },
+	{ to: "/hoy", label: "Hoy", icon: Sun, private: true, keywords: "inicio plan repaso racha" },
 	{
 		to: "/editor",
 		label: "Retos",
@@ -70,6 +76,20 @@ export const NAV_PAGES: NavPage[] = [
 		icon: Bug,
 		private: true,
 		keywords: "bugs tickets depurar devtools arreglar",
+	},
+	{
+		to: "/mapa",
+		label: "Mapa de habilidades",
+		icon: Map,
+		private: true,
+		keywords: "conceptos dominados reforzar progreso",
+	},
+	{
+		to: "/practicar",
+		label: "Practicar",
+		icon: Target,
+		private: true,
+		keywords: "quiz repaso diagnostico preguntas",
 	},
 	{
 		to: "/ranking",

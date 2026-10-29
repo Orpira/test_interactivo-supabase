@@ -20,7 +20,7 @@ export async function updateUserStats(
 
 	let stats: UserStats;
 
-	if (existing) {
+	if (existing?.stats && typeof existing.stats === "object" && "categories" in existing.stats) {
 		stats = existing.stats as UserStats;
 	} else {
 		stats = {

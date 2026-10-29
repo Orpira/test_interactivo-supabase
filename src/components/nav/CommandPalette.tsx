@@ -77,7 +77,7 @@ export default function CommandPalette({
 		};
 		const theme = getStoredTheme();
 		const base: Item[] = [
-			...NAV_PAGES.filter((p) => !p.private || isAuthenticated).map((p) => ({
+			...NAV_PAGES.filter((p) => (!p.private || isAuthenticated) && !(p.publicOnly && isAuthenticated)).map((p) => ({
 				id: `page:${p.to}`,
 				group: "Ir a" as const,
 				label: p.label,
