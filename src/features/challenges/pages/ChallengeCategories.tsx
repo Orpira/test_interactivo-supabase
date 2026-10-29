@@ -11,9 +11,9 @@ const CATEGORIES = [
 ] as const;
 
 const DIFFICULTY_STYLES: Record<string, string> = {
-	principiante: "bg-green-100 text-green-800",
-	intermedio: "bg-yellow-100 text-yellow-800",
-	avanzado: "bg-red-100 text-red-800",
+	principiante: "bg-accent-soft text-accent",
+	intermedio: "bg-warn-soft text-warn",
+	avanzado: "bg-warn-soft text-warn",
 };
 
 /**
@@ -75,8 +75,8 @@ export default function ChallengeCategories() {
 							aria-pressed={active}
 							className={`rounded-xl p-6 text-left shadow-2xl transition-transform ${
 								active
-									? "bg-indigo-50 ring-2 ring-indigo-500"
-									: "bg-gray-50/80 hover:scale-105"
+									? "bg-accent-soft ring-2 ring-accent"
+									: "bg-surface2 hover:scale-105"
 							}`}
 						>
 							<img
@@ -85,7 +85,7 @@ export default function ChallengeCategories() {
 								className="mb-4 h-12"
 							/>
 							<h2 className="mb-2 text-xl font-bold">{cat.label}</h2>
-							<p className="text-sm text-slate-700">
+							<p className="text-sm text-muted">
 								{loading
 									? "Cargando retos..."
 									: `${count} ${count === 1 ? "reto" : "retos"} disponibles`}
@@ -96,7 +96,7 @@ export default function ChallengeCategories() {
 			</div>
 
 			{error && (
-				<p className="mt-6 rounded border border-red-200 bg-red-50 p-2 text-center text-red-600">
+				<p className="mt-6 rounded border border-warn/40 bg-warn-soft p-2 text-center text-warn">
 					No se pudieron cargar los retos: {error}
 				</p>
 			)}
@@ -116,22 +116,22 @@ export default function ChallengeCategories() {
 						/>
 					</div>
 					{list.length === 0 ? (
-						<p className="text-center text-gray-600">
+						<p className="text-center text-muted">
 							No hay retos para esta selección.
 						</p>
 					) : (
-						<ul className="divide-y rounded-lg border bg-white">
+						<ul className="divide-y rounded-lg border bg-surface">
 							{list.map((c) => (
 								<li key={c.id}>
 									<Link
 										to={`/editor/${c.category}/${c.id}`}
-										className="flex items-center justify-between gap-3 px-4 py-3 hover:bg-indigo-50"
+										className="flex items-center justify-between gap-3 px-4 py-3 hover:bg-accent-soft"
 									>
 										<span className="font-medium">{c.title}</span>
 										{c.difficulty && (
 											<span
 												className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-semibold ${
-													DIFFICULTY_STYLES[c.difficulty] ?? "bg-gray-100"
+													DIFFICULTY_STYLES[c.difficulty] ?? "bg-surface2"
 												}`}
 											>
 												{c.difficulty}

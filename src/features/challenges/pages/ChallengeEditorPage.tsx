@@ -23,7 +23,7 @@ export default function ChallengeEditorPage() {
 		return (
 			<div className="p-6 text-center space-y-3">
 				<p>Reto no encontrado.</p>
-				<Link to="/editor" className="text-indigo-600 underline">
+				<Link to="/editor" className="text-accent underline">
 					Ver todos los retos
 				</Link>
 			</div>
@@ -38,7 +38,7 @@ export default function ChallengeEditorPage() {
 
 	return (
 		<div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6">
-			<nav className="mb-3 text-sm text-gray-600" aria-label="Migas de pan">
+			<nav className="mb-3 text-sm text-muted" aria-label="Migas de pan">
 				<Link to="/editor" className="hover:underline">
 					Retos
 				</Link>{" "}
@@ -53,7 +53,7 @@ export default function ChallengeEditorPage() {
 			</nav>
 
 			<h1 className="mb-2 text-2xl font-bold">{challenge.title}</h1>
-			<p className="mb-4 whitespace-pre-line text-gray-700">
+			<p className="mb-4 whitespace-pre-line text-muted">
 				{challenge.instructions}
 			</p>
 
@@ -70,7 +70,7 @@ export default function ChallengeEditorPage() {
 					type="button"
 					onClick={() => goTo(prev)}
 					disabled={!prev}
-					className="rounded bg-gray-200 px-4 py-2 font-semibold text-gray-700 disabled:opacity-40"
+					className="rounded bg-surface2 px-4 py-2 font-semibold text-muted disabled:opacity-40"
 				>
 					← Anterior
 				</button>
@@ -78,8 +78,8 @@ export default function ChallengeEditorPage() {
 					type="button"
 					onClick={() => goTo(next)}
 					disabled={!next}
-					className={`rounded px-4 py-2 font-semibold text-white disabled:opacity-40 ${
-						solved ? "bg-indigo-600 animate-pulse" : "bg-indigo-500"
+					className={`rounded px-4 py-2 font-semibold text-fg disabled:opacity-40 ${
+						solved ? "bg-accent animate-pulse" : "bg-accent"
 					}`}
 				>
 					Siguiente reto →

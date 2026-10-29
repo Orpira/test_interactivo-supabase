@@ -84,13 +84,13 @@ export default function Historial() {
 				<h2 className="text-2xl font-bold mb-6">¿Qué historial deseas ver?</h2>
 				<div className="flex flex-col md:flex-row gap-4 justify-center">
 					<button
-						className="px-6 py-3 bg-blue-600 text-white rounded hover:bg-blue-700 font-semibold"
+						className="px-6 py-3 bg-accent text-accent-fg rounded hover:bg-accent/90 font-semibold"
 						onClick={() => setTipo("test")}
 					>
 						Historial de Quiz
 					</button>
 					<button
-						className="px-6 py-3 bg-green-600 text-white rounded hover:bg-green-700 font-semibold"
+						className="px-6 py-3 bg-accent text-accent-fg rounded hover:bg-accent/90 font-semibold"
 						onClick={() => setTipo("codigo")}
 					>
 						Historial de Código
@@ -108,7 +108,7 @@ export default function Historial() {
 				</h2>
 				<div className="flex justify-center mb-6">
 					<button
-						className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 text-gray-700 mr-2"
+						className="px-4 py-2 bg-surface2 rounded hover:bg-line text-muted mr-2"
 						onClick={() => setTipo(null)}
 					>
 						Cambiar tipo de historial
@@ -170,24 +170,24 @@ export default function Historial() {
 							{filteredEnvios
 								.slice((testPage - 1) * testsPerPage, testPage * testsPerPage)
 								.map((e, i) => (
-									<li key={i} className="border p-4 rounded bg-gray-50">
+									<li key={i} className="border p-4 rounded bg-surface2">
 										<div
 											className="cursor-pointer flex justify-between items-center"
 											onClick={() =>
 												setExpandedEnvio(expandedEnvio === i ? null : i)
 											}
 										>
-											<p className="text-sm text-gray-500">
+											<p className="text-sm text-muted">
 												{new Date(e.timestamp).toLocaleString()} —{" "}
 												{e.language?.toUpperCase()}
 											</p>
-											<span className="text-blue-600 underline text-sm hover:text-blue-800">
+											<span className="text-accent underline text-sm hover:text-accent/80">
 												{expandedEnvio === i ? "Cerrar" : "Abrir"}
 											</span>
 										</div>
 										{expandedEnvio === i && (
 											<div className="mt-2">
-												<pre className="bg-white p-2 rounded text-sm overflow-auto max-h-40">
+												<pre className="bg-surface p-2 rounded text-sm overflow-auto max-h-40">
 													{e.code}
 												</pre>
 												<div className="mt-2 text-right">
@@ -195,7 +195,7 @@ export default function Historial() {
 														to={`/editor?language=${encodeURIComponent(
 															e.language
 														)}&code=${encodeURIComponent(e.code)}`}
-														className="text-blue-600 underline text-sm hover:text-blue-800"
+														className="text-accent underline text-sm hover:text-accent/80"
 													>
 														Abrir en editor
 													</Link>
@@ -213,8 +213,8 @@ export default function Historial() {
 						{filteredTests
 							.slice((testPage - 1) * testsPerPage, testPage * testsPerPage)
 							.map((t, i) => (
-								<li key={i} className="border p-4 rounded bg-gray-50">
-									<p className="text-sm text-gray-500 mb-1">
+								<li key={i} className="border p-4 rounded bg-surface2">
+									<p className="text-sm text-muted mb-1">
 										{new Date(t.timestamp).toLocaleString()}
 									</p>
 									<div className="flex flex-col md:flex-row md:justify-between md:items-center">
@@ -233,7 +233,7 @@ export default function Historial() {
 				{tipo === "test" && testTotalPages > 1 && (
 					<div className="flex justify-center gap-2 mt-4">
 						<button
-							className="px-3 py-1 rounded bg-gray-200 text-gray-700 font-bold disabled:opacity-50"
+							className="px-3 py-1 rounded bg-surface2 text-muted font-bold disabled:opacity-50"
 							onClick={() => setTestPage((p) => Math.max(1, p - 1))}
 							disabled={testPage === 1}
 						>
@@ -243,7 +243,7 @@ export default function Historial() {
 							Página {testPage} de {testTotalPages}
 						</span>
 						<button
-							className="px-3 py-1 rounded bg-gray-200 text-gray-700 font-bold disabled:opacity-50"
+							className="px-3 py-1 rounded bg-surface2 text-muted font-bold disabled:opacity-50"
 							onClick={() =>
 								setTestPage((p) => Math.min(testTotalPages, p + 1))
 							}
@@ -257,7 +257,7 @@ export default function Historial() {
 				{tipo === "codigo" && filteredEnvios.length > testsPerPage && (
 					<div className="flex justify-center gap-2 mt-4">
 						<button
-							className="px-3 py-1 rounded bg-gray-200 text-gray-700 font-bold disabled:opacity-50"
+							className="px-3 py-1 rounded bg-surface2 text-muted font-bold disabled:opacity-50"
 							onClick={() => setTestPage((p) => Math.max(1, p - 1))}
 							disabled={testPage === 1}
 						>
@@ -268,7 +268,7 @@ export default function Historial() {
 							{Math.ceil(filteredEnvios.length / testsPerPage)}
 						</span>
 						<button
-							className="px-3 py-1 rounded bg-gray-200 text-gray-700 font-bold disabled:opacity-50"
+							className="px-3 py-1 rounded bg-surface2 text-muted font-bold disabled:opacity-50"
 							onClick={() =>
 								setTestPage((p) =>
 									Math.min(

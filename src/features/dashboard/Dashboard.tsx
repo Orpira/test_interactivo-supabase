@@ -103,7 +103,7 @@ export default function Dashboard() {
 	return (
 		<div className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6">
 			{historyError && (
-				<p className="mb-4 text-center text-red-600 bg-red-50 border border-red-200 rounded p-2">
+				<p className="mb-4 text-center text-warn bg-warn-soft border border-warn/40 rounded p-2">
 					{historyError}
 				</p>
 			)}
@@ -117,20 +117,20 @@ export default function Dashboard() {
 						{user?.user_metadata?.full_name || user?.email || "usuario"}
 					</strong>
 				</p>
-				<p className="text-sm text-gray-500">{user?.email}</p>
+				<p className="text-sm text-muted">{user?.email}</p>
 			</div>
 
 			{/* Enlaces a Historial y Ranking */}
 			<div className="flex justify-center gap-4 mb-6">
 				<Link
 					to="/historial"
-					className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+					className="px-4 py-2 bg-accent text-accent-fg rounded hover:bg-accent/90 transition"
 				>
 					Historial
 				</Link>
 				<Link
 					to="/ranking"
-					className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+					className="px-4 py-2 bg-accent text-accent-fg rounded hover:bg-accent/90 transition"
 				>
 					Ranking
 				</Link>
@@ -158,7 +158,7 @@ export default function Dashboard() {
 					<h2 className="text-xl font-bold text-center">
 						Rendimiento por Categoría
 					</h2>
-					<p className="text-sm text-slate-500 text-center mb-3">
+					<p className="text-sm text-muted text-center mb-3">
 						Promedio de aciertos (0–10) agrupado por categoría principal
 					</p>
 					<PerformanceChart
@@ -171,7 +171,7 @@ export default function Dashboard() {
 					<h2 className="text-xl font-bold text-center">
 						Rendimiento por Subcategoría
 					</h2>
-					<p className="text-sm text-slate-500 text-center mb-3">
+					<p className="text-sm text-muted text-center mb-3">
 						Promedio de aciertos (0–10) desglosado por tema específico
 					</p>
 					<PerformanceChart
@@ -184,25 +184,25 @@ export default function Dashboard() {
 
 			{/* Escala de referencia compartida para ambos gráficos */}
 			<div className="mb-8 flex flex-wrap justify-center gap-2 text-xs">
-				<span className="text-slate-500 font-medium self-center mr-1">
+				<span className="text-muted font-medium self-center mr-1">
 					Escala:
 				</span>
-				<span className="flex items-center gap-1 rounded-full bg-red-100 px-3 py-1 text-red-700 font-medium">
+				<span className="flex items-center gap-1 rounded-full bg-warn-soft px-3 py-1 text-warn font-medium">
 					🔴 0–4 Bajo
 				</span>
-				<span className="flex items-center gap-1 rounded-full bg-yellow-100 px-3 py-1 text-yellow-700 font-medium">
+				<span className="flex items-center gap-1 rounded-full bg-warn-soft px-3 py-1 text-warn font-medium">
 					🟡 5–6 Regular
 				</span>
-				<span className="flex items-center gap-1 rounded-full bg-green-100 px-3 py-1 text-green-700 font-medium">
+				<span className="flex items-center gap-1 rounded-full bg-accent-soft px-3 py-1 text-accent font-medium">
 					🟢 7–8 Bueno
 				</span>
-				<span className="flex items-center gap-1 rounded-full bg-indigo-100 px-3 py-1 text-indigo-700 font-medium">
+				<span className="flex items-center gap-1 rounded-full bg-accent-soft px-3 py-1 text-accent font-medium">
 					🌟 9–10 Excelente
 				</span>
 			</div>
 
 			{/* Últimos 5 quiz */}
-			<section className="bg-white rounded shadow p-4">
+			<section className="bg-surface rounded shadow p-4">
 				<div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-2">
 					<h3 className="text-lg font-semibold">🕒 Últimos 5 quiz</h3>
 					<input
@@ -226,7 +226,7 @@ export default function Dashboard() {
 						</thead>
 						<tbody>
 							{lastFive.map((entry, i) => (
-								<tr key={i} className="border-b hover:bg-gray-50">
+								<tr key={i} className="border-b hover:bg-surface2">
 									<td className="p-2">{entry.category}</td>
 									<td className="p-2">{getEntrySubcategory(entry)}</td>
 									<td className="whitespace-nowrap p-2">
@@ -237,7 +237,7 @@ export default function Dashboard() {
 									</td>
 									<td className="p-2">
 										<button
-											className="text-blue-600 hover:underline text-sm"
+											className="text-accent hover:underline text-sm"
 											onClick={() => navigate(`/result?id=${entry.id}`)}
 										>
 											Ver
@@ -266,7 +266,7 @@ export default function Dashboard() {
 						"historial_test"
 					)
 				}
-				className="mt-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+				className="mt-4 px-4 py-2 bg-accent text-accent-fg rounded hover:bg-accent/90"
 			>
 				Exportar historial (.CSV)
 			</button>

@@ -35,7 +35,9 @@ export function useQuestions(
 	count: number = 10,
 	subcategory?: string,
 	difficulty?: ExperienceLevel,
-	reloadKey: number = 0
+	reloadKey: number = 0,
+	/** false: no consulta (p. ej. al retomar un quiz guardado) */
+	enabled: boolean = true,
 ) {
 	const [state, setState] = useState<QuestionsState>({
 		questions: [],
@@ -44,7 +46,7 @@ export function useQuestions(
 	});
 
 	useEffect(() => {
-		if (!category) {
+		if (!category || !enabled) {
 			setState({ questions: [], loading: false, error: null });
 			return;
 		}
@@ -101,7 +103,7 @@ export function useQuestions(
 		return () => {
 			cancelled = true;
 		};
-	}, [category, count, subcategory, difficulty, reloadKey]);
+	}, [category, count, subcategory, difficulty, reloadKey, enabled]);
 
 	return state;
 }

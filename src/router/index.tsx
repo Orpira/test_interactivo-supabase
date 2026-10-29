@@ -48,8 +48,8 @@ function AuthCallback() {
 			<section className="mx-auto max-w-md px-4 py-16 text-center space-y-4">
 				<p className="text-5xl">⚠️</p>
 				<h1 className="text-2xl font-bold">No se pudo iniciar sesión</h1>
-				<p className="text-gray-600">{error}</p>
-				<Link to="/" className="text-indigo-600 underline">
+				<p className="text-muted">{error}</p>
+				<Link to="/" className="text-accent underline">
 					Volver al inicio
 				</Link>
 			</section>
@@ -81,12 +81,12 @@ function NotFound() {
 		<section className="mx-auto max-w-xl px-4 py-16 text-center space-y-4">
 			<p className="text-6xl">🧭</p>
 			<h1 className="text-2xl font-bold">Página no encontrada</h1>
-			<p className="text-gray-600">
+			<p className="text-muted">
 				La ruta que buscas no existe o ha cambiado.
 			</p>
 			<Link
 				to="/"
-				className="inline-block px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700"
+				className="inline-block px-4 py-2 rounded-lg bg-accent text-accent-fg hover:bg-accent/90"
 			>
 				Volver al inicio
 			</Link>

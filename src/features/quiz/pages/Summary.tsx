@@ -56,22 +56,22 @@ export default function Summary() {
               key={index}
               className={`border rounded p-4 ${
                 isCorrect
-                  ? "border-green-500 bg-green-50"
-                  : "border-red-500 bg-red-50"
+                  ? "border-accent bg-accent-soft"
+                  : "border-warn bg-warn-soft"
               }`}
             >
               <p className="font-semibold mb-2">Pregunta {index + 1}:</p>
               <p className="mb-1">{item.question}</p>
               <p>
                 <strong>Tu respuesta:</strong>{" "}
-                <span className={isCorrect ? "text-green-600" : "text-red-600"}>
+                <span className={isCorrect ? "text-accent" : "text-warn"}>
                   {String(userAnswerText)}
                 </span>
               </p>
               {!isCorrect && (
                 <p>
                   <strong>Respuesta correcta:</strong>{" "}
-                  <span className="text-green-700">
+                  <span className="text-accent">
                     {String(correctAnswerText)}
                   </span>
                 </p>
@@ -84,7 +84,7 @@ export default function Summary() {
       <div className="text-center mt-8">
         <button
           onClick={() => navigate(-1)}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          className="px-4 py-2 bg-accent text-accent-fg rounded hover:bg-accent/90"
         >
           Volver
         </button>

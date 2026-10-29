@@ -112,7 +112,7 @@ window.onerror=(m)=>{log('Error: '+m)};
 			<div className="grid gap-6 md:grid-cols-2">
 				<div>
 					<div className="mb-2 flex items-center justify-between">
-						<h3 className="text-xl font-semibold dark:text-slate-100">
+						<h3 className="text-xl font-semibold">
 							Tu código ({language.toUpperCase()})
 						</h3>
 						<button
@@ -121,7 +121,7 @@ window.onerror=(m)=>{log('Error: '+m)};
 								setCode(starterCode ?? TEMPLATES[language]);
 								setResult(null);
 							}}
-							className="text-sm text-gray-600 underline hover:text-gray-900"
+							className="text-sm text-muted underline hover:text-fg"
 						>
 							Restablecer
 						</button>
@@ -139,19 +139,19 @@ window.onerror=(m)=>{log('Error: '+m)};
 						padding={10}
 						textareaId="challenge-code"
 						aria-label="Editor de código"
-						className="border rounded font-mono min-h-[300px] md:min-h-[400px] text-sm bg-gray-100 dark:bg-slate-800 dark:text-slate-200 dark:border-slate-700"
+						className="border rounded font-mono min-h-[300px] md:min-h-[400px] text-sm bg-surface2"
 					/>
 				</div>
 
 				<div>
-					<h3 className="mb-2 text-xl font-semibold dark:text-slate-100">
+					<h3 className="mb-2 text-xl font-semibold">
 						Vista previa
 					</h3>
 					{/* Sin allow-same-origin: el código del usuario no puede leer
 					    la sesión ni el almacenamiento de la app. */}
 					<iframe
 						title="Vista previa"
-						className="w-full h-[300px] md:h-[400px] border bg-white dark:border-slate-700"
+						className="w-full h-[300px] md:h-[400px] border bg-surface"
 						srcDoc={srcDoc}
 						sandbox="allow-scripts allow-modals"
 					/>
@@ -164,7 +164,7 @@ window.onerror=(m)=>{log('Error: '+m)};
 						type="button"
 						onClick={handleValidate}
 						disabled={validating}
-						className="w-full sm:w-auto bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700 transition disabled:opacity-60"
+						className="w-full sm:w-auto bg-accent text-accent-fg px-5 py-2 rounded hover:bg-accent/90 transition disabled:opacity-60"
 					>
 						{validating ? "Comprobando..." : "Verificar solución"}
 					</button>
@@ -174,7 +174,7 @@ window.onerror=(m)=>{log('Error: '+m)};
 						type="button"
 						onClick={handleSave}
 						disabled={saving}
-						className="w-full sm:w-auto bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition disabled:opacity-60"
+						className="w-full sm:w-auto bg-accent text-accent-fg px-5 py-2 rounded hover:bg-accent/90 transition disabled:opacity-60"
 					>
 						{saving ? "Guardando..." : "Guardar código"}
 					</button>
@@ -186,8 +186,8 @@ window.onerror=(m)=>{log('Error: '+m)};
 					<div
 						className={`mx-auto max-w-2xl rounded-lg border p-3 text-left ${
 							result.ok
-								? "border-green-300 bg-green-50 text-green-800"
-								: "border-red-300 bg-red-50 text-red-800"
+								? "border-accent/50 bg-accent-soft text-accent"
+								: "border-warn/50 bg-warn-soft text-warn"
 						}`}
 					>
 						<p className="font-semibold">{result.message}</p>

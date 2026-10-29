@@ -1,68 +1,66 @@
 @import "./glide-utilities.css";
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Sistema de diseño WebWiz (Fase 1).
+ * Los colores se definen como canales RGB para poder usar opacidad en Tailwind
+ * (p. ej. bg-accent/20). Tema oscuro por defecto; el claro se activa quitando
+ * la clase .dark del <html> (ver src/services/theme.ts).
+ * Estados: azul (accent) = correcto/dominado, naranja (warn) = fallo/a reforzar.
+ * Nunca rojo/verde solos (daltonismo).
+ */
 @layer base {
 	:root {
-		--background: 0 0% 100%;
-		--foreground: 0 0% 3.9%;
-		--card: 0 0% 100%;
-		--card-foreground: 0 0% 3.9%;
-		--popover: 0 0% 100%;
-		--popover-foreground: 0 0% 3.9%;
-		--primary: 0 0% 9%;
-		--primary-foreground: 0 0% 98%;
-		--secondary: 0 0% 96.1%;
-		--secondary-foreground: 0 0% 9%;
-		--muted: 0 0% 96.1%;
-		--muted-foreground: 0 0% 45.1%;
-		--accent: 0 0% 96.1%;
-		--accent-foreground: 0 0% 9%;
-		--destructive: 0 84.2% 60.2%;
-		--destructive-foreground: 0 0% 98%;
-		--border: 0 0% 89.8%;
-		--input: 0 0% 89.8%;
-		--ring: 0 0% 3.9%;
-		--chart-1: 12 76% 61%;
-		--chart-2: 173 58% 39%;
-		--chart-3: 197 37% 24%;
-		--chart-4: 43 74% 66%;
-		--chart-5: 27 87% 67%;
-		--radius: 0.5rem;
+		/* Tema claro (contraste AA verificado sobre bg, surface y surface-2) */
+		--bg: 246 248 250; /* #F6F8FA */
+		--surface: 255 255 255; /* #FFFFFF */
+		--surface-2: 238 241 245; /* #EEF1F5 */
+		--border: 208 215 222; /* #D0D7DE */
+		--text: 31 35 40; /* #1F2328 */
+		--muted: 87 96 106; /* #57606A · 6.4:1 */
+		--accent: 47 91 211; /* #2F5BD3 · 5.9:1 */
+		--accent-fg: 255 255 255;
+		--accent-soft: 232 238 255; /* seleccionada */
+		--accent-softer: 238 243 255; /* correcta */
+		--warn: 168 75 0; /* #A84B00 · 5.7:1 */
+		--warn-fg: 255 255 255;
+		--warn-soft: 255 241 229;
+		--chart-1: 47 91 211;
+		--chart-2: 168 75 0;
+		--chart-3: 0 122 122;
+		--chart-4: 130 80 223;
+		--chart-5: 87 96 106;
+		--radius: 0.75rem;
+		color-scheme: light;
 	}
 	.dark {
-		--background: 0 0% 3.9%;
-		--foreground: 0 0% 98%;
-		--card: 0 0% 3.9%;
-		--card-foreground: 0 0% 98%;
-		--popover: 0 0% 3.9%;
-		--popover-foreground: 0 0% 98%;
-		--primary: 0 0% 98%;
-		--primary-foreground: 0 0% 9%;
-		--secondary: 0 0% 14.9%;
-		--secondary-foreground: 0 0% 98%;
-		--muted: 0 0% 14.9%;
-		--muted-foreground: 0 0% 63.9%;
-		--accent: 0 0% 14.9%;
-		--accent-foreground: 0 0% 98%;
-		--destructive: 0 62.8% 30.6%;
-		--destructive-foreground: 0 0% 98%;
-		--border: 0 0% 14.9%;
-		--input: 0 0% 14.9%;
-		--ring: 0 0% 83.1%;
-		--chart-1: 220 70% 50%;
-		--chart-2: 160 60% 45%;
-		--chart-3: 30 80% 55%;
-		--chart-4: 280 65% 60%;
-		--chart-5: 340 75% 55%;
+		--bg: 13 17 23; /* #0D1117 */
+		--surface: 22 27 34; /* #161B22 */
+		--surface-2: 31 38 48; /* #1F2630 */
+		--border: 42 51 64; /* #2A3340 */
+		--text: 230 237 243; /* #E6EDF3 */
+		--muted: 163 174 189; /* #A3AEBD · 7.7:1 */
+		--accent: 122 162 255; /* #7AA2FF · 7:1 */
+		--accent-fg: 13 17 23;
+		--accent-soft: 26 34 51; /* #1A2233 */
+		--accent-softer: 24 35 58; /* #18233A */
+		--warn: 255 166 87; /* #FFA657 */
+		--warn-fg: 13 17 23;
+		--warn-soft: 43 33 23; /* #2B2117 */
+		--chart-1: 122 162 255;
+		--chart-2: 255 166 87;
+		--chart-3: 86 211 200;
+		--chart-4: 210 168 255;
+		--chart-5: 163 174 189;
+		color-scheme: dark;
 	}
 }
 
 @layer base {
 	* {
-		@apply border-border;
+		@apply border-line;
 	}
 	html,
 	body,
@@ -72,7 +70,36 @@
 		overflow-x: hidden;
 	}
 	body {
-		@apply bg-background text-foreground;
+		@apply bg-bg font-sans text-fg antialiased;
+	}
+	h1,
+	h2,
+	h3 {
+		@apply font-display;
+	}
+	/* Foco visible en todo elemento interactivo */
+	:focus-visible {
+		outline: 2px solid rgb(var(--accent));
+		outline-offset: 2px;
+	}
+	code,
+	kbd,
+	pre {
+		@apply font-mono;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+	.particle {
+		display: none;
 	}
 }
 
@@ -81,7 +108,7 @@
 	position: absolute;
 	width: 0.5rem;
 	height: 0.5rem;
-	background-color: #3b82f6; /* Azul */
+	background-color: rgb(var(--accent));
 	border-radius: 50%;
 }
 
@@ -137,12 +164,12 @@
 		}
 		30% {
 			opacity: 1;
-			box-shadow: -100px 0 20px rgba(255, 255, 255, 0.4);
+			box-shadow: -100px 0 20px rgb(var(--accent) / 0.4);
 		}
 		100% {
 			transform: translateX(100vw);
 			opacity: 0;
-			box-shadow: 100px 0 60px rgba(255, 255, 255, 0);
+			box-shadow: 100px 0 60px rgb(var(--accent) / 0);
 		}
 	}
 
@@ -153,12 +180,12 @@
 		}
 		30% {
 			opacity: 1;
-			box-shadow: 100px 0 20px rgba(255, 255, 255, 0.4);
+			box-shadow: 100px 0 20px rgb(var(--accent) / 0.4);
 		}
 		100% {
 			transform: translateX(-100vw);
 			opacity: 0;
-			box-shadow: -100px 0 60px rgba(255, 255, 255, 0);
+			box-shadow: -100px 0 60px rgb(var(--accent) / 0);
 		}
 	}
 
@@ -176,4 +203,30 @@
 	.particle {
 		filter: blur(2px);
 	}
+}
+
+/* Shiki: colores de los dos temas como variables; se elige según .dark */
+.shiki,
+.shiki span {
+	color: var(--shiki-light);
+	background-color: transparent !important;
+}
+.dark .shiki,
+.dark .shiki span {
+	color: var(--shiki-dark);
+}
+.shiki {
+	margin: 0;
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+/* Código sin ligaduras: "=>" o "!==" se ven tal cual se escriben */
+code,
+kbd,
+pre,
+.font-mono,
+.shiki {
+	font-variant-ligatures: none;
+	font-feature-settings: "liga" 0, "calt" 0;
 }

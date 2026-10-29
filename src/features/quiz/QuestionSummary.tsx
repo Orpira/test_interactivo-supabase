@@ -22,7 +22,7 @@ export default function QuestionSummary() {
       <div className="p-6 text-center">
         <p>No hay resumen disponible.</p>
         <button
-          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded"
+          className="mt-4 px-4 py-2 bg-accent text-accent-fg rounded"
           onClick={() => navigate(-1)}
         >
           Volver
@@ -44,10 +44,10 @@ export default function QuestionSummary() {
               </p>
               <div className="space-y-1">
                 {item.options.map((option, i) => {
-                  let bg = "bg-white";
-                  if (option === item.correctAnswer) bg = "bg-green-100";
+                  let bg = "bg-surface";
+                  if (option === item.correctAnswer) bg = "bg-accent-soft";
                   if (option === item.selectedAnswer && !isCorrect)
-                    bg = "bg-red-100";
+                    bg = "bg-warn-soft";
 
                   return (
                     <div key={i} className={`px-3 py-1 rounded ${bg} border`}>
@@ -64,7 +64,7 @@ export default function QuestionSummary() {
       </ul>
       <div className="mt-6 text-center">
         <button
-          className="px-6 py-2 bg-blue-600 text-white rounded"
+          className="px-6 py-2 bg-accent text-accent-fg rounded"
           onClick={() => navigate(-1)}
         >
           Volver

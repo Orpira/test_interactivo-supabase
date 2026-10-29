@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/services/supabase";
 import QuizCategoryModal from "./QuizCategoryModal";
 import LoginModal from "./LoginModal";
+import ThemeToggle from "./ThemeToggle";
 import { getCategoryVariants } from "@/utils/categoryVariants";
 import {
 	getStoredExperienceLevel,
@@ -28,11 +29,11 @@ const PRIVATE_LINKS = [
 ];
 
 const desktopLinkClass = ({ isActive }: { isActive: boolean }) =>
-	isActive ? "text-indigo-300 font-semibold" : "hover:text-indigo-300";
+	isActive ? "text-accent font-semibold" : "hover:text-accent";
 
 const mobileLinkClass = ({ isActive }: { isActive: boolean }) =>
 	`rounded px-2 py-2 ${
-		isActive ? "bg-slate-800 text-indigo-300" : "hover:bg-slate-800"
+		isActive ? "bg-surface2 text-accent" : "hover:bg-surface2"
 	}`;
 
 export default function Navbar() {
@@ -183,33 +184,33 @@ export default function Navbar() {
 
 	return (
 		<>
-			<nav className="sticky top-0 z-50 bg-slate-900 text-white px-4 py-3 shadow-md backdrop-blur-md">
+			<nav className="sticky top-0 z-50 border-b border-line bg-surface/95 px-4 py-3 text-fg backdrop-blur-md">
 				<div className="mx-auto flex w-full max-w-7xl flex-wrap items-center gap-3">
 					<Link
 						to="/"
-						className="flex items-center gap-2 font-bold text-lg sm:text-xl"
+						className="flex items-center gap-2 font-display text-lg font-bold sm:text-xl"
 					>
 						<img src="/logo.png" alt="Logo" className="w-10 h-10" />
 						<span className="hidden sm:inline">WebWiz Quiz</span>
 					</Link>
 
 					<div className="ml-auto hidden items-center gap-4 lg:flex xl:gap-5">
-						<Link to="/" className="hover:text-indigo-300">
+						<Link to="/" className="hover:text-accent">
 							Inicio
 						</Link>
 						<div className="relative group">
-							<button className="hover:text-indigo-300 focus:outline-none flex items-center gap-1">
+							<button className="hover:text-accent focus:outline-none flex items-center gap-1">
 								Quizzes
 								<ChevronDown className="h-4 w-4" aria-hidden="true" />
 							</button>
-							<div className="absolute left-0 mt-2 w-48 bg-white text-slate-900 rounded shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto transition-opacity z-40">
+							<div className="absolute left-0 mt-2 w-48 bg-surface text-fg rounded shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto transition-opacity z-40">
 								{MAIN_CATEGORIES.map((cat) => (
 									<button
 										key={cat.key}
 										onClick={() => {
 											requestCategory(cat.key);
 										}}
-										className="w-full text-left px-4 py-2 hover:bg-indigo-100"
+										className="w-full text-left px-4 py-2 hover:bg-accent-soft"
 									>
 										{cat.label}
 									</button>
@@ -226,16 +227,17 @@ export default function Navbar() {
 									{link.label}
 								</NavLink>
 							))}
-						<Link to="/contacto" className="hover:text-indigo-300">
+						<Link to="/contacto" className="hover:text-accent">
 							Contacto
 						</Link>
+						<ThemeToggle />
 						{isAuthenticated ? (
 							<>
 								<span
-									className="flex max-w-[12rem] shrink-0 items-center gap-2 font-semibold text-indigo-200"
+									className="flex max-w-[12rem] shrink-0 items-center gap-2 font-semibold text-accent"
 									title={`${userDisplayName} (${user?.email ?? ""})`}
 								>
-									<span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-indigo-500 text-xs font-bold text-white">
+									<span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent text-xs font-bold text-accent-fg">
 										{userInitial}
 									</span>
 									<span className="hidden truncate xl:inline">
@@ -243,16 +245,18 @@ export default function Navbar() {
 									</span>
 								</span>
 								<button
+									type="button"
 									onClick={() => void logout()}
-									className="bg-orange-600 hover:bg-orange-500 text-white px-4 py-2 rounded transition"
+									className="min-h-touch rounded-md border border-line bg-surface2 px-4 py-2 font-medium text-fg transition hover:border-accent/60"
 								>
 									Cerrar sesión
 								</button>
 							</>
 						) : (
 							<button
+								type="button"
 								onClick={() => setShowLoginModal(true)}
-								className="bg-indigo-400 hover:bg-indigo-300 text-white px-4 py-2 rounded transition"
+								className="min-h-touch rounded-md bg-accent px-4 py-2 font-semibold text-accent-fg transition hover:bg-accent/90"
 							>
 								Iniciar sesión
 							</button>
@@ -260,8 +264,8 @@ export default function Navbar() {
 					</div>
 
 					{isAuthenticated && (
-						<div className="ml-auto flex min-w-0 max-w-[42vw] items-center gap-2 rounded-full border border-indigo-400/30 bg-slate-800 px-2.5 py-1 text-indigo-100 shadow-sm lg:hidden">
-							<span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-indigo-500 text-xs font-bold text-white">
+						<div className="ml-auto flex min-w-0 max-w-[42vw] items-center gap-2 rounded-full border border-accent/30 bg-surface2 px-2.5 py-1 text-fg shadow-sm lg:hidden">
+							<span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent text-xs font-bold text-accent-fg">
 								{userInitial}
 							</span>
 							<span className="truncate text-xs font-semibold">
@@ -270,11 +274,12 @@ export default function Navbar() {
 						</div>
 					)}
 
+					<ThemeToggle
+						className={`lg:hidden ${isAuthenticated ? "" : "ml-auto"}`}
+					/>
 					<button
 						type="button"
-						className={`inline-flex items-center justify-center rounded-md border border-slate-700 p-2 text-white lg:hidden ${
-							isAuthenticated ? "" : "ml-auto"
-						}`}
+						className="inline-flex min-h-touch min-w-touch items-center justify-center rounded-md border border-line text-fg lg:hidden"
 						onClick={() => setMobileMenuOpen((prev) => !prev)}
 						aria-expanded={mobileMenuOpen}
 						aria-controls="mobile-menu"
@@ -291,16 +296,16 @@ export default function Navbar() {
 						<nav
 							id="mobile-menu"
 							aria-label="Menú móvil"
-							className="mt-2 w-full border-t border-slate-700 pt-3 lg:hidden"
+							className="mt-2 w-full border-t border-line pt-3 lg:hidden"
 						>
 							<div className="flex flex-col gap-2 text-sm">
-								<Link to="/" className="rounded px-2 py-2 hover:bg-slate-800">
+								<Link to="/" className="rounded px-2 py-2 hover:bg-surface2">
 									Inicio
 								</Link>
 								<button
 									type="button"
 									onClick={() => setMobileQuizOpen((prev) => !prev)}
-									className="flex items-center justify-between rounded px-2 py-2 hover:bg-slate-800"
+									className="flex items-center justify-between rounded px-2 py-2 hover:bg-surface2"
 								>
 									<span>Quizzes</span>
 									<ChevronDown
@@ -311,7 +316,7 @@ export default function Navbar() {
 									/>
 								</button>
 								{mobileQuizOpen && (
-									<div className="ml-2 flex flex-col rounded bg-slate-800/70 p-2">
+									<div className="ml-2 flex flex-col rounded bg-surface2 p-2">
 										{MAIN_CATEGORIES.map((cat) => (
 											<button
 												key={cat.key}
@@ -319,7 +324,7 @@ export default function Navbar() {
 												onClick={() => {
 													void handleCategoryClickFromMenu(cat.key);
 												}}
-												className="rounded px-2 py-2 text-left hover:bg-slate-700"
+												className="rounded px-2 py-2 text-left hover:bg-surface2"
 											>
 												{cat.label}
 											</button>
@@ -338,19 +343,19 @@ export default function Navbar() {
 									))}
 								<Link
 									to="/contacto"
-									className="rounded px-2 py-2 hover:bg-slate-800"
+									className="rounded px-2 py-2 hover:bg-surface2"
 								>
 									Contacto
 								</Link>
 								{isAuthenticated ? (
 									<>
-										<span className="truncate rounded bg-slate-800 px-2 py-2 text-indigo-200">
+										<span className="truncate rounded bg-surface2 px-2 py-2 text-accent">
 											{userDisplayName}
 										</span>
 										<button
 											type="button"
 											onClick={() => void logout()}
-											className="rounded bg-orange-600 px-3 py-2 text-left hover:bg-orange-500"
+											className="rounded bg-warn px-3 py-2 text-left hover:bg-warn/90"
 										>
 											Cerrar sesión
 										</button>
@@ -359,7 +364,7 @@ export default function Navbar() {
 									<button
 										type="button"
 										onClick={() => setShowLoginModal(true)}
-										className="rounded bg-indigo-500 px-3 py-2 text-left hover:bg-indigo-400"
+										className="rounded bg-accent px-3 py-2 text-left hover:bg-accent/90"
 									>
 										Iniciar sesión
 									</button>
@@ -373,12 +378,12 @@ export default function Navbar() {
 				<LoginModal onClose={() => setShowLoginModal(false)} />
 			)}
 			{showExperiencePicker && (
-				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-					<div className="w-full max-w-sm rounded-xl bg-white p-6 shadow-2xl">
-						<h3 className="text-xl font-bold text-slate-900 text-center mb-2">
+				<div className="fixed inset-0 z-50 flex items-center justify-center bg-bg/80 px-4">
+					<div className="w-full max-w-sm rounded-xl bg-surface p-6 shadow-2xl">
+						<h3 className="text-xl font-bold text-fg text-center mb-2">
 							Selecciona tu nivel
 						</h3>
-						<p className="text-sm text-slate-600 text-center mb-5">
+						<p className="text-sm text-muted text-center mb-5">
 							Las preguntas se adaptarán a tu experiencia
 						</p>
 						<div className="flex flex-col gap-3">
@@ -408,19 +413,19 @@ export default function Navbar() {
 										onClick={() => void handleExperienceSelect(opt.value)}
 										className={`w-full rounded-lg border px-4 py-3 text-left transition ${
 											isActive
-												? "border-indigo-600 bg-indigo-50 ring-2 ring-indigo-600"
-												: "border-slate-200 hover:border-indigo-500 hover:bg-indigo-50"
+												? "border-accent bg-accent-soft ring-2 ring-accent"
+												: "border-line hover:border-accent hover:bg-accent-soft"
 										}`}
 									>
-										<span className="block font-semibold text-slate-900">
+										<span className="block font-semibold text-fg">
 											{opt.label}
 											{isActive && (
-												<span className="ml-2 text-xs font-normal text-indigo-600">
+												<span className="ml-2 text-xs font-normal text-accent">
 													(actual)
 												</span>
 											)}
 										</span>
-										<span className="block text-sm text-slate-500">
+										<span className="block text-sm text-muted">
 											{opt.desc}
 										</span>
 									</button>
@@ -433,7 +438,7 @@ export default function Navbar() {
 								setShowExperiencePicker(false);
 								setPendingCategory(null);
 							}}
-							className="mt-4 w-full text-center text-sm text-slate-500 hover:text-slate-700"
+							className="mt-4 w-full text-center text-sm text-muted hover:text-fg"
 						>
 							Cancelar
 						</button>

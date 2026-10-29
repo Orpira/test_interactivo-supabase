@@ -188,31 +188,31 @@ export default function LoginModal({ onClose, initialMode = "login" }: Props) {
 
 	return (
 		<div
-			className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-slate-950/75 px-4 py-6 backdrop-blur-sm"
+			className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-bg/80 px-4 py-6 backdrop-blur-sm"
 			onMouseDown={(e) => e.target === e.currentTarget && onClose()}
 		>
 			<div
 				role="dialog"
 				aria-modal="true"
 				aria-labelledby="login-modal-title"
-				className="relative w-full max-w-md overflow-hidden rounded-2xl border border-white/10 bg-white shadow-2xl"
+				className="relative w-full max-w-md overflow-hidden rounded-2xl border border-line bg-surface shadow-2xl"
 			>
-				<div className="bg-slate-950 px-6 py-6 text-white">
+				<div className="bg-bg px-6 py-6 text-fg">
 					<div className="flex items-start justify-between gap-4">
 						<div>
-							<div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-500/20 ring-1 ring-indigo-300/30">
+							<div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-accent/20 ring-1 ring-accent/30">
 								<img src="/logo.png" alt="" className="h-9 w-9" />
 							</div>
 							<h2 id="login-modal-title" className="text-2xl font-bold">
 								{title}
 							</h2>
-							<p className="mt-2 text-sm leading-6 text-slate-300">
+							<p className="mt-2 text-sm leading-6 text-muted">
 								{subtitle}
 							</p>
 						</div>
 						<button
 							type="button"
-							className="rounded-full p-2 text-slate-300 transition hover:bg-white/10 hover:text-white"
+							className="rounded-full p-2 text-muted transition hover:bg-fg/10 hover:text-fg"
 							onClick={onClose}
 							aria-label="Cerrar"
 						>
@@ -222,7 +222,7 @@ export default function LoginModal({ onClose, initialMode = "login" }: Props) {
 
 					{mode !== "forgot" && (
 						<div
-							className="mt-5 grid grid-cols-2 rounded-lg bg-white/10 p-1 text-sm font-semibold"
+							className="mt-5 grid grid-cols-2 rounded-lg bg-fg/10 p-1 text-sm font-semibold"
 							role="tablist"
 						>
 							{(["login", "signup"] as const).map((m) => (
@@ -234,8 +234,8 @@ export default function LoginModal({ onClose, initialMode = "login" }: Props) {
 									onClick={() => switchMode(m)}
 									className={`rounded-md px-3 py-2 transition ${
 										mode === m
-											? "bg-white text-slate-900 shadow"
-											: "text-slate-300 hover:text-white"
+											? "bg-surface text-fg shadow"
+											: "text-muted hover:text-fg"
 									}`}
 								>
 									{m === "login" ? "Entrar" : "Crear cuenta"}
@@ -252,7 +252,7 @@ export default function LoginModal({ onClose, initialMode = "login" }: Props) {
 								<button
 									type="button"
 									onClick={() => run(loginWithGoogle)}
-									className="flex min-h-11 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:border-indigo-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+									className="flex min-h-11 items-center justify-center gap-2 rounded-lg border border-line bg-surface px-4 py-2.5 text-sm font-semibold text-fg shadow-sm transition hover:border-accent/60 hover:bg-surface2 disabled:cursor-not-allowed disabled:opacity-60"
 									disabled={loading}
 								>
 									<GoogleIcon />
@@ -261,7 +261,7 @@ export default function LoginModal({ onClose, initialMode = "login" }: Props) {
 								<button
 									type="button"
 									onClick={() => run(loginWithRedirect)}
-									className="flex min-h-11 items-center justify-center gap-2 rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+									className="flex min-h-11 items-center justify-center gap-2 rounded-lg bg-surface px-4 py-2.5 text-sm font-semibold text-fg shadow-sm transition hover:bg-surface2 disabled:cursor-not-allowed disabled:opacity-60"
 									disabled={loading}
 								>
 									<Github className="h-5 w-5" aria-hidden="true" />
@@ -270,11 +270,11 @@ export default function LoginModal({ onClose, initialMode = "login" }: Props) {
 							</div>
 
 							<div className="flex items-center gap-3">
-								<div className="h-px flex-1 bg-slate-200" />
-								<span className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+								<div className="h-px flex-1 bg-surface2" />
+								<span className="text-xs font-semibold uppercase tracking-wide text-muted">
 									o con email
 								</span>
-								<div className="h-px flex-1 bg-slate-200" />
+								<div className="h-px flex-1 bg-surface2" />
 							</div>
 						</>
 					)}
@@ -322,7 +322,7 @@ export default function LoginModal({ onClose, initialMode = "login" }: Props) {
 										<button
 											type="button"
 											onClick={() => switchMode("forgot")}
-											className="text-xs font-semibold text-indigo-600 hover:text-indigo-500"
+											className="text-xs font-semibold text-accent hover:text-accent/80"
 										>
 											¿Olvidaste tu contraseña?
 										</button>
@@ -353,7 +353,7 @@ export default function LoginModal({ onClose, initialMode = "login" }: Props) {
 										<button
 											type="button"
 											onClick={() => setShowPassword((v) => !v)}
-											className="p-1 text-slate-400 hover:text-slate-600"
+											className="p-1 text-muted hover:text-fg"
 											aria-label={
 												showPassword
 													? "Ocultar contraseña"
@@ -411,12 +411,12 @@ export default function LoginModal({ onClose, initialMode = "login" }: Props) {
 
 						<div aria-live="polite">
 							{error && (
-								<div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+								<div className="rounded-lg border border-warn/40 bg-warn-soft px-3 py-2 text-sm text-warn">
 									{error}
 								</div>
 							)}
 							{notice && (
-								<div className="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-800">
+								<div className="rounded-lg border border-accent/40 bg-accent-soft px-3 py-2 text-sm text-accent">
 									{notice}
 								</div>
 							)}
@@ -424,7 +424,7 @@ export default function LoginModal({ onClose, initialMode = "login" }: Props) {
 
 						<button
 							type="submit"
-							className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-60"
+							className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-accent-fg shadow-sm transition hover:bg-accent/90 disabled:cursor-not-allowed disabled:opacity-60"
 							disabled={loading}
 						>
 							<UserCircle className="h-5 w-5" aria-hidden="true" />
@@ -435,7 +435,7 @@ export default function LoginModal({ onClose, initialMode = "login" }: Props) {
 							<button
 								type="button"
 								onClick={() => switchMode("login")}
-								className="flex w-full items-center justify-center gap-1 text-sm font-semibold text-slate-600 hover:text-slate-900"
+								className="flex w-full items-center justify-center gap-1 text-sm font-semibold text-muted hover:text-fg"
 							>
 								<ArrowLeft className="h-4 w-4" aria-hidden="true" />
 								Volver a iniciar sesión
@@ -449,7 +449,7 @@ export default function LoginModal({ onClose, initialMode = "login" }: Props) {
 }
 
 const INPUT =
-	"min-h-11 w-full bg-transparent px-3 text-sm text-slate-900 outline-none placeholder:text-slate-400";
+	"min-h-11 w-full bg-transparent px-3 text-sm text-fg outline-none placeholder:text-muted";
 
 function Field({
 	label,
@@ -467,13 +467,13 @@ function Field({
 	return (
 		<div>
 			<div className="mb-1.5 flex items-center justify-between">
-				<label htmlFor={id} className="text-sm font-medium text-slate-700">
+				<label htmlFor={id} className="text-sm font-medium text-muted">
 					{label}
 				</label>
 				{action}
 			</div>
-			<div className="flex items-center rounded-lg border border-slate-200 bg-slate-50 px-3 transition focus-within:border-indigo-400 focus-within:ring-2 focus-within:ring-indigo-100">
-				<Icon className="h-4 w-4 shrink-0 text-slate-400" aria-hidden="true" />
+			<div className="flex items-center rounded-lg border border-line bg-surface2 px-3 transition focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/20">
+				<Icon className="h-4 w-4 shrink-0 text-muted" aria-hidden="true" />
 				{children(id)}
 			</div>
 		</div>
@@ -481,24 +481,6 @@ function Field({
 }
 
 function GoogleIcon() {
-	return (
-		<svg className="h-5 w-5 shrink-0" viewBox="0 0 48 48" aria-hidden="true">
-			<path
-				fill="#4285F4"
-				d="M44.5 20H24v8.5h11.7C34.7 33.1 29.9 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c2.7 0 5.2.9 7.2 2.4l6.4-6.4C33.5 5.1 28.1 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21c10.5 0 20-8.1 20-21 0-1.3-.1-2.1-.3-3z"
-			/>
-			<path
-				fill="#34A853"
-				d="M6.3 14.7l7 5.1C15.1 17.1 19.2 14 24 14c2.7 0 5.2.9 7.2 2.4l6.4-6.4C33.5 5.1 28.1 3 24 3c-7.2 0-13.4 3.1-17.7 8.1z"
-			/>
-			<path
-				fill="#FBBC05"
-				d="M24 44c5.9 0 10.7-1.9 14.3-5.1l-6.6-5.4C29.7 35.1 27 36 24 36c-5.8 0-10.7-3.9-12.5-9.3l-7 5.4C7.9 41.1 15.4 44 24 44z"
-			/>
-			<path
-				fill="#EA4335"
-				d="M44.5 20H24v8.5h11.7c-1.6 4.1-6.1 7.5-11.7 7.5-6.6 0-12-5.4-12-12s5.4-12 12-12c2.7 0 5.2.9 7.2 2.4l6.4-6.4C33.5 5.1 28.1 3 24 3c-7.2 0-13.4 3.1-17.7 8.1z"
-			/>
-		</svg>
-	);
+	// Logo oficial de Google: sus colores de marca viven en el SVG, no en el componente
+	return <img src="/icons/google.svg" alt="" className="h-5 w-5 shrink-0" />;
 }
