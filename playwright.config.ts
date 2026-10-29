@@ -29,5 +29,5 @@ export default defineConfig({
 		{ name: "firefox", use: { ...devices["Desktop Firefox"] } },
 		{ name: "webkit", use: { ...devices["Desktop Safari"] } },
 	],
-	reporter: process.env.CI ? [["list"], ["html", { open: "never" }]] : [["list"]],
+	reporter: process.env.CI ? [["list"], ["github"], ["html", { open: "never" }]] : [["list"]],
 });
