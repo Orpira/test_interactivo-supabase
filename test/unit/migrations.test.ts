@@ -6,6 +6,9 @@ import { PGlite } from "@electric-sql/pglite";
 import { challengeCatalog } from "../../src/content/challenges";
 import { challengesToSql, incidentsToSql } from "../../src/content/challenges/toSql";
 import { INCIDENTS } from "../../src/content/incidents";
+import { PREDICT_QUESTIONS } from "../../src/content/questions/predict";
+import { learningSeedSql } from "../../src/content/questions/toSql";
+import { areaFor, conceptsForQuestion, slugify } from "../../src/features/learning/concepts";
 
 const dir = join(__dirname, "../../supabase");
 
@@ -25,6 +28,17 @@ describe("esquema y migraciones de Supabase", () => {
 		await db.exec(
 			`INSERT INTO challenges (id, title, instructions, category) VALUES ('html-01', 'Reto antiguo', 'x', 'html');`,
 		);
+		// Preguntas "antiguas" para comprobar la derivación de conceptos
+		const legacy: [string, string | null][] = [
+			["frontend", "Flexbox"],
+			["frontend", "Árboles DOM & Eventos"],
+			["devops", "CI/CD"],
+			["backend", null],
+			["css", null],
+		];
+		for (const [cat, sub] of legacy) {
+			await db.query(`INSERT INTO questions (question, options, "correctAnswer", category, subcategory) VALUES ('q', '["a","b"]', 'a', $1, $2)`, [cat, sub]);
+		}
 		const files = readdirSync(join(dir, "migrations")).sort();
 		for (let pass = 0; pass < 2; pass++) {
 			for (const f of files) await db.exec(readFileSync(join(dir, "migrations", f), "utf8"));
@@ -41,6 +55,39 @@ describe("esquema y migraciones de Supabase", () => {
 			{ type: "challenge", n: challengeCatalog.length },
 			{ type: "incident", n: INCIDENTS.length },
 		]);
+		// Fase 4: los conceptos derivados en SQL coinciden con los del cliente
+		const derived = await db.query<{ category: string; subcategory: string | null; concepts: string[]; name: string; area: string }>(
+			`SELECT q.category, q.subcategory, q.concepts, c.name, c.area FROM questions q JOIN concepts c ON c.id = q.concepts[1] WHERE q.kind = 'choice'`,
+		);
+		expect(derived.rows).toHaveLength(legacy.length);
+		for (const r of derived.rows) {
+			const [mine] = conceptsForQuestion({ category: r.category, subcategory: r.subcategory });
+			expect(r.concepts).toEqual([mine.id]);
+			expect({ name: r.name, area: r.area }).toEqual({ name: mine.name, area: mine.area });
+		}
+		for (const text of ["Árboles DOM & Eventos", "  CI/CD  ", "Ñandú Çà", "Docker y Kubernetes", "SQL avanzado", "Pruebas E2E"]) {
+			const { rows: sl } = await db.query<{ s: string; a: string }>(`SELECT webwiz_slug($1) AS s, webwiz_area($1, 'frontend') AS a`, [text]);
+			expect(sl[0]).toEqual({ s: slugify(text), a: areaFor(text, "frontend") });
+		}
+		const predict = await db.query<{ n: number }>(`SELECT count(*)::int AS n FROM questions WHERE kind = 'predict' AND option_meta IS NOT NULL`);
+		expect(predict.rows[0].n).toBe(PREDICT_QUESTIONS.length);
+
+		// Liga semanal: solo el grupo de quien consulta, ordenado por puntos
+		const ids = ["00000000-0000-0000-0000-00000000000a", "00000000-0000-0000-0000-00000000000b", "00000000-0000-0000-0000-00000000000c"];
+		for (const [i, id] of ids.entries()) {
+			await db.exec(`INSERT INTO auth.users (id) VALUES ('${id}');`);
+			await db.exec(`INSERT INTO resultados (name, "userId", score, total, category) VALUES ('U${i}', '${id}', ${3 + i}, 10, 'frontend');`);
+		}
+		await db.exec(`INSERT INTO user_experience (user_id, level) VALUES ('${ids[2]}', 'senior');`);
+		await db.exec(`CREATE OR REPLACE FUNCTION auth.uid() RETURNS UUID LANGUAGE sql AS $$ SELECT '${ids[0]}'::uuid $$;`);
+		const league = await db.query<{ name: string; points: number; position: number; is_me: boolean; level: string }>(
+			`SELECT name, points, "position", is_me, level FROM weekly_league()`,
+		);
+		expect(league.rows).toEqual([
+			{ name: "U1", points: 4, position: 1, is_me: false, level: "junior" },
+			{ name: "U0", points: 3, position: 2, is_me: true, level: "junior" },
+		]);
+
 		// Intento de incidencia con línea de tiempo y puntuación
 		await db.exec(`INSERT INTO auth.users (id) VALUES ('00000000-0000-0000-0000-000000000001');`);
 		await db.exec(`INSERT INTO challenge_attempts (user_id, challenge_id, code, results, passed, score, timeline)
@@ -57,5 +104,7 @@ describe("esquema y migraciones de Supabase", () => {
 		expect(committed).toBe(challengesToSql(challengeCatalog));
 		const incidents = readFileSync(join(dir, "migrations/20261030_fase3_incidencias_seed.sql"), "utf8");
 		expect(incidents).toBe(incidentsToSql(INCIDENTS));
+		const learning = readFileSync(join(dir, "migrations/20261031_fase4_aprendizaje_seed.sql"), "utf8");
+		expect(learning).toBe(learningSeedSql(PREDICT_QUESTIONS));
 	});
 });

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../services/supabase";
 import { useAuth } from "../../services/auth";
+import LeagueTable from "./LeagueTable";
 
 type Resultado = {
 	id?: string;
@@ -117,6 +118,8 @@ export default function Ranking() {
 						{queryError}
 					</p>
 				)}
+				<h1 className="sr-only">Ranking</h1>
+				<LeagueTable />
 				<h2 className="text-2xl font-bold mb-4 text-center">Ranking general</h2>
 				<h3 className="text-lg font-semibold mb-2 text-center">
 					🏆 Mejores puntajes
@@ -155,7 +158,7 @@ export default function Ranking() {
 				{loading ? (
 					<p className="text-center">Cargando...</p>
 				) : (
-					<div className="-mx-4 mb-8 overflow-x-auto sm:mx-0">
+					<div className="-mx-4 mb-8 overflow-x-auto sm:mx-0" tabIndex={0} role="region" aria-label="Tabla de mejores puntajes (desplazable)">
 						<table className="w-full min-w-[40rem] table-auto border">
 							<thead>
 								<tr className="bg-surface2 text-left">
@@ -221,7 +224,7 @@ export default function Ranking() {
 					<p className="text-center">Cargando...</p>
 				) : (
 					<>
-						<div className="-mx-4 overflow-x-auto sm:mx-0">
+						<div className="-mx-4 overflow-x-auto sm:mx-0" tabIndex={0} role="region" aria-label="Tabla de resultados recientes (desplazable)">
 							<table className="w-full min-w-[40rem] table-auto border">
 								<thead>
 									<tr className="bg-surface2 text-left">

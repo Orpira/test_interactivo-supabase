@@ -27,6 +27,10 @@ const ChallengeCategories = lazy(
 	() => import("@/features/challenges/pages/ChallengeCategories")
 );
 const ResetPassword = lazy(() => import("@/pages/ResetPassword"));
+const LearningSync = lazy(() => import("@/features/learning/LearningSync"));
+const HoyPage = lazy(() => import("@/features/hoy/HoyPage"));
+const PracticarPage = lazy(() => import("@/features/hoy/PracticarPage"));
+const MapaPage = lazy(() => import("@/features/hoy/MapaPage"));
 const IncidentList = lazy(() => import("@/features/incidents/IncidentList"));
 const IncidentPage = lazy(() => import("@/features/incidents/IncidentPage"));
 const ChallengeEditorPage = lazy(
@@ -62,7 +66,15 @@ function AuthCallback() {
 		return <p className="p-6 text-center">Iniciando sesión...</p>;
 	}
 
-	return <Navigate to={isAuthenticated ? "/dashboard" : "/"} replace />;
+	return <Navigate to={isAuthenticated ? "/hoy" : "/"} replace />;
+}
+
+/** Portada pública; con sesión, el inicio es /hoy (salvo enlaces con parámetros). */
+function HomeGate() {
+	const { isAuthenticated, isLoading } = useAuth();
+	const { search } = useLocation();
+	if (!isLoading && isAuthenticated && !search) return <Navigate to="/hoy" replace />;
+	return <Hero />;
 }
 
 /** Al abrir el enlace de recuperación, lleva al formulario de nueva contraseña. */
@@ -81,7 +93,7 @@ function PasswordRecoveryRedirect() {
 /** Sin footer en pantallas de trabajo a pantalla completa (quiz y retos). */
 function FooterGate() {
 	const { pathname } = useLocation();
-	if (/^\/quiz\//.test(pathname) || /^\/editor\/[^/]+\/[^/]+/.test(pathname) || /^\/incidencias\/[^/]+/.test(pathname)) return null;
+	if (/^\/(quiz\/|repaso|diagnostico)/.test(pathname) || /^\/editor\/[^/]+\/[^/]+/.test(pathname) || /^\/incidencias\/[^/]+/.test(pathname)) return null;
 	return <Footer />;
 }
 
@@ -107,17 +119,46 @@ export default function AppRouter() {
 	return (
 		<BrowserRouter>
 			<PasswordRecoveryRedirect />
+			<Suspense fallback={null}>
+				<LearningSync />
+			</Suspense>
 			<Navbar />
 			<main id="contenido" tabIndex={-1} className="outline-none">
 				<Suspense fallback={<p className="p-6 text-center">Cargando...</p>}>
 					<Routes>
-						<Route path="/" element={<Hero />} />
+						<Route path="/" element={<HomeGate />} />
 						<Route path="/auth/callback" element={<AuthCallback />} />
 						<Route path="/quiz/:category" element={<QuizRunner />} />
 						<Route
 							path="/quiz/:category/:subcategory"
 							element={<QuizRunner />}
 						/>
+						<Route
+							path="/hoy"
+							element={
+								<PrivateRoute>
+									<HoyPage />
+								</PrivateRoute>
+							}
+						/>
+						<Route
+							path="/practicar"
+							element={
+								<PrivateRoute>
+									<PracticarPage />
+								</PrivateRoute>
+							}
+						/>
+						<Route
+							path="/mapa"
+							element={
+								<PrivateRoute>
+									<MapaPage />
+								</PrivateRoute>
+							}
+						/>
+						<Route path="/repaso" element={<QuizRunner mode="repaso" />} />
+						<Route path="/diagnostico" element={<QuizRunner mode="diagnostico" />} />
 						<Route path="/result" element={<Result />} />
 						<Route path="/summary" element={<Summary />} />
 						<Route path="/ranking" element={<Ranking />} />

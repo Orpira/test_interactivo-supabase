@@ -212,8 +212,8 @@ export default function Navbar() {
 	const visiblePages = NAV_PAGES.filter(
 		(p) =>
 			(!p.private || isAuthenticated) &&
-			p.to !== "/dashboard" &&
-			p.to !== "/historial"
+			!(p.publicOnly && isAuthenticated) &&
+			!["/dashboard", "/historial", "/mapa", "/practicar"].includes(p.to)
 	);
 	const isActive = (to: string) =>
 		to === "/" ? location.pathname === "/" : location.pathname.startsWith(to);
@@ -361,7 +361,7 @@ export default function Navbar() {
 								</div>
 							)}
 							<ul className="grid gap-1">
-								{NAV_PAGES.filter((p) => !p.private || isAuthenticated).map(
+								{NAV_PAGES.filter((p) => (!p.private || isAuthenticated) && !(p.publicOnly && isAuthenticated)).map(
 									({ to, label, icon: Icon }) => (
 										<li key={to}>
 											<NavLink

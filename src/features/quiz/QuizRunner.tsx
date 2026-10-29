@@ -1,13 +1,22 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { AnimatePresence, m, useReducedMotion } from "framer-motion";
-import { BookOpen, ExternalLink, Flame, X } from "lucide-react";
+import { BookOpen, ExternalLink, Flame, Loader2, Play, Repeat, X } from "lucide-react";
 import { useQuestions } from "@/hooks/useQuestions";
+import { useAuth } from "@/services/auth";
+import { pushAnswer } from "@/services/learningSync";
+import { conceptsForQuestion } from "@/features/learning/concepts";
+import { CONFIDENCE_LABEL, verdictFor, type Confidence } from "@/features/learning/fsrs";
+import { dueConcepts, useLearning } from "@/features/learning/store";
+import { useConceptQuestions, useDiagnosticQuestions } from "@/features/learning/useConceptQuestions";
+import ConfidencePicker from "@/features/learning/ConfidencePicker";
+import { DIAGNOSTIC_DONE_KEY, levelFromDiagnostic } from "@/features/learning/diagnosis";
+import { runSnippet } from "@/features/challenges/engine/runner";
 import QuestionCard from "@/components/ui/QuestionCard";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import { InlineCode } from "@/components/quiz/RichText";
 import { langFromTopic, OPTION_LETTERS } from "@/components/quiz/richText";
-import { getStoredExperienceLevel } from "@/services/feedback";
+import { getStoredExperienceLevel, setStoredExperienceLevel, upsertUserExperience } from "@/services/feedback";
 import { hapticFeedback } from "@/services/haptics";
 import { quizKey, useQuizSession } from "@/store/quizSession";
 
@@ -17,18 +26,37 @@ const LEVEL_LABEL: Record<string, string> = {
 	senior: "Senior",
 };
 
-export default function QuizRunner() {
-	const { category = "", subcategory } = useParams();
+export type QuizMode = "quiz" | "repaso" | "diagnostico";
+
+const MODE_LABEL: Record<QuizMode, string> = { quiz: "", repaso: "Repaso", diagnostico: "Diagnóstico" };
+
+export default function QuizRunner({ mode = "quiz" }: { mode?: QuizMode }) {
+	const params = useParams();
+	const subcategory = mode === "quiz" ? params.subcategory : undefined;
+	const category = mode === "quiz" ? (params.category ?? "") : mode;
+	const { user } = useAuth();
 	const [searchParams] = useSearchParams();
 	const navigate = useNavigate();
 	const reduceMotion = useReducedMotion();
 
 	const requested = Number(searchParams.get("count"));
+	const defaultCount = mode === "repaso" ? 12 : mode === "diagnostico" ? 8 : 5;
 	const count =
-		Number.isFinite(requested) && requested > 0 ? Math.min(requested, 50) : 5;
+		Number.isFinite(requested) && requested > 0 ? Math.min(requested, 50) : defaultCount;
 	const level = getStoredExperienceLevel() ?? "junior";
 	const decodedSubcategory = subcategory ? safeDecode(subcategory) : undefined;
-	const key = quizKey(category, decodedSubcategory, count, level);
+
+	// Repaso: conceptos pedidos (?conceptos=a,b) o los que vencen hoy
+	const cards = useLearning((s) => s.cards);
+	const [reviewIds] = useState<string[]>(() => {
+		const asked = searchParams.get("conceptos");
+		if (asked) return asked.split(",").filter(Boolean);
+		return dueConcepts(cards).slice(0, 6).map((c) => c.conceptId);
+	});
+	const key =
+		mode === "quiz"
+			? quizKey(category, decodedSubcategory, count, level)
+			: [mode, reviewIds.join(","), count, new Date().toDateString()].join("|");
 
 	const session = useQuizSession();
 	const resumable =
@@ -37,25 +65,32 @@ export default function QuizRunner() {
 		session.index < session.questions.length;
 
 	const [reloadKey, setReloadKey] = useState(0);
-	const { questions, loading, error } = useQuestions(
-		category,
+	// Al terminar se limpia la sesión: no hay que arrancar otra antes de salir
+	const finished = useRef(false);
+	const byCategory = useQuestions(
+		mode === "quiz" ? category : undefined,
 		count,
 		subcategory,
 		level,
 		reloadKey,
-		!resumable,
+		mode === "quiz" && !resumable && !finished.current,
 	);
+	const byConcept = useConceptQuestions(reviewIds, count, mode === "repaso" && !resumable, reloadKey);
+	const diagnostic = useDiagnosticQuestions(count, mode === "diagnostico" && !resumable, reloadKey);
+	const { questions, loading, error } = mode === "repaso" ? byConcept : mode === "diagnostico" ? diagnostic : byCategory;
 
 	// Arranca una sesión nueva cuando llegan preguntas frescas
 	useEffect(() => {
-		if (!resumable && questions.length > 0) {
+		if (!resumable && questions.length > 0 && !finished.current) {
 			session.start(key, { category, subcategory: decodedSubcategory }, questions);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps -- solo al recibir preguntas
 	}, [questions]);
 
 	const [selected, setSelected] = useState<string | null>(null);
-	const [showExplanation, setShowExplanation] = useState(false);
+	const [confidence, setConfidence] = useState<Confidence>("creo");
+	const [showExplanation, setShowExplanation] = useState(true);
+	const [run, setRun] = useState<{ running: boolean; lines?: string[]; error?: string } | null>(null);
 	const [confirmExit, setConfirmExit] = useState(false);
 
 	const current = resumable ? session.questions[session.index] : undefined;
@@ -66,32 +101,59 @@ export default function QuizRunner() {
 	const isCorrect = answer ? answer.selectedAnswer === answer.correctAnswer : false;
 	const isLast = session.index + 1 >= total;
 	const lang = useMemo(
-		() => langFromTopic(decodedSubcategory, category),
-		[decodedSubcategory, category],
+		() => (current?.kind === "predict" ? "javascript" : langFromTopic(current?.subcategory ?? decodedSubcategory, current?.category ?? category)),
+		[current, decodedSubcategory, category],
+	);
+	const concepts = useMemo(
+		() =>
+			current
+				? conceptsForQuestion({
+						concepts: current.concepts,
+						category: current.category ?? category,
+						subcategory: current.subcategory ?? decodedSubcategory,
+					})
+				: [],
+		[current, category, decodedSubcategory],
 	);
 
 	// Al cambiar de pregunta, limpiar la selección local
 	useEffect(() => {
 		setSelected(null);
-		setShowExplanation(false);
+		setConfidence("creo");
+		setShowExplanation(true);
+		setRun(null);
 	}, [session.index, session.key]);
 
 	const check = useCallback(() => {
 		if (!current || !selected || checked) return;
 		const correct = selected === current.correctAnswer;
+		// Repaso espaciado: cada respuesta actualiza la tarjeta de sus conceptos
+		const record = { questionId: current.id, chosen: selected, correct, confidence, concepts };
+		const learned = useLearning.getState().recordAnswer(record);
+		if (user) void pushAnswer(user.id, record, learned.cards, useLearning.getState().streak);
 		session.answer({
 			question: current.question,
 			options: current.options,
 			correctAnswer: current.correctAnswer,
 			selectedAnswer: selected,
-			subcategory: decodedSubcategory,
+			subcategory: current.subcategory ?? decodedSubcategory,
 			shortExplanation: current.shortExplanation,
 			sourceUrl: current.sourceUrl,
 			sourceName: current.sourceName,
+			questionId: current.id,
+			confidence,
+			concepts,
+			returns: learned.returns,
 		});
 		void hapticFeedback(correct ? "success" : "error");
-		if (!correct && current.shortExplanation) setShowExplanation(true);
-	}, [current, selected, checked, session, decodedSubcategory]);
+	}, [current, selected, checked, session, decodedSubcategory, confidence, concepts, user]);
+
+	const execute = useCallback(async () => {
+		if (!current?.code) return;
+		setRun({ running: true });
+		const res = await runSnippet(current.code);
+		setRun({ running: false, lines: res.lines, error: res.error });
+	}, [current]);
 
 	const goNext = useCallback(() => {
 		if (!checked) return;
@@ -101,6 +163,19 @@ export default function QuizRunner() {
 		}
 		const summary = session.answers;
 		const score = summary.filter((a) => a.selectedAnswer === a.correctAnswer).length;
+		let diagnosticLevel: string | undefined;
+		if (mode === "diagnostico") {
+			const lvl = levelFromDiagnostic(score, summary.length);
+			diagnosticLevel = lvl;
+			setStoredExperienceLevel(lvl);
+			try {
+				localStorage.setItem(DIAGNOSTIC_DONE_KEY, new Date().toISOString());
+			} catch {
+				// sin almacenamiento
+			}
+			if (user) void upsertUserExperience(user.id, lvl).catch((e) => console.warn("No se pudo guardar el nivel:", e));
+		}
+		finished.current = true;
 		navigate("/result", {
 			state: {
 				score,
@@ -109,10 +184,12 @@ export default function QuizRunner() {
 				subcategory: decodedSubcategory,
 				summary,
 				bestStreak: session.bestStreak,
+				mode,
+				diagnosticLevel,
 			},
 		});
 		session.reset();
-	}, [checked, isLast, session, navigate, category, decodedSubcategory]);
+	}, [checked, isLast, session, navigate, category, decodedSubcategory, mode, user]);
 
 	// Atajos de teclado, solo mientras esta pantalla está montada
 	useEffect(() => {
@@ -148,6 +225,14 @@ export default function QuizRunner() {
 	}, [current, checked, check, goNext, confirmExit]);
 
 	if (!category) return <p className="p-6 text-center">Categoría no especificada.</p>;
+	if (mode === "repaso" && reviewIds.length === 0 && !resumable) {
+		return (
+			<section className="mx-auto max-w-md space-y-3 px-4 py-16 text-center">
+				<h1 className="font-display text-2xl font-bold">No tienes repasos pendientes</h1>
+				<p className="text-muted">Responde algún quiz: los conceptos que falles o adivines volverán aquí cuando toque.</p>
+			</section>
+		);
+	}
 
 	if (!resumable && (loading || questions.length > 0)) {
 		return <p className="p-6 text-center text-muted">Cargando preguntas...</p>;
@@ -170,8 +255,8 @@ export default function QuizRunner() {
 
 	const progress = Math.round(((session.index + (checked ? 1 : 0)) / total) * 100);
 	const context = [
-		capitalize(category),
-		decodedSubcategory,
+		mode === "quiz" ? capitalize(category) : MODE_LABEL[mode],
+		concepts.length ? concepts.map((c) => c.name).join(", ") : decodedSubcategory,
 		LEVEL_LABEL[current.difficulty ?? level] ?? undefined,
 	]
 		.filter(Boolean)
@@ -219,6 +304,7 @@ export default function QuizRunner() {
 			<div className="mt-4">
 				<QuestionCard
 					question={current.question}
+					code={current.code}
 					options={current.options}
 					lang={lang}
 					selected={chosen}
@@ -228,40 +314,51 @@ export default function QuizRunner() {
 				/>
 			</div>
 
-			{/* Panel de feedback tras comprobar */}
+			{/* Confianza (antes de comprobar) o feedback (después) */}
+			{!checked && (
+				<div className="mt-5">
+					<ConfidencePicker value={confidence} onChange={setConfidence} />
+				</div>
+			)}
 			<div aria-live="polite" className="mt-5">
 				<AnimatePresence>
-					{checked && (
+					{checked && answer && (
 						<m.section
 							initial={reduceMotion ? false : { opacity: 0, y: 8 }}
 							animate={{ opacity: 1, y: 0 }}
-							className={`rounded-xl border p-4 ${isCorrect ? "border-accent/50 bg-accent-softer" : "border-warn/50 bg-warn-soft"}`}
+							className={`space-y-3 rounded-xl border p-4 ${isCorrect ? "border-accent/50 bg-accent-softer" : "border-warn/50 bg-warn-soft"}`}
 						>
-							<p className={`font-display text-lg font-bold ${isCorrect ? "text-accent" : "text-warn"}`}>
-								{isCorrect ? "¡Correcto!" : "No es correcta"}
-							</p>
-							{!isCorrect && (
-								<p className="mt-1 text-sm">
-									La respuesta correcta es la{" "}
-									<strong>
-										{OPTION_LETTERS[current.options.indexOf(current.correctAnswer)]}
-									</strong>
-									.
+							<div>
+								<p className={`font-display text-lg font-bold ${isCorrect ? "text-accent" : "text-warn"}`}>
+									{verdictFor(isCorrect, answer.confidence ?? "creo").text}
+								</p>
+								<p className="text-sm text-muted">
+									Tu confianza: {CONFIDENCE_LABEL[answer.confidence ?? "creo"]}
+									{!isCorrect && (
+										<>
+											{" "}
+											· La correcta es la{" "}
+											<strong className="text-fg">{OPTION_LETTERS[current.options.indexOf(current.correctAnswer)]}</strong>
+										</>
+									)}
+								</p>
+							</div>
+							{!isCorrect && current.optionMeta?.[answer.selectedAnswer]?.whyTempting && (
+								<p className="text-sm">
+									<strong>Por qué era tentadora:</strong> {current.optionMeta[answer.selectedAnswer]?.whyTempting}
 								</p>
 							)}
 							{current.shortExplanation && (
-								<>
+								<div>
 									<button
 										type="button"
 										onClick={() => setShowExplanation((v) => !v)}
 										aria-expanded={showExplanation}
-										className="mt-3 inline-flex min-h-touch items-center gap-2 text-sm font-semibold text-accent hover:text-accent/80"
+										className="inline-flex min-h-touch items-center gap-2 text-sm font-semibold text-accent hover:text-accent/80"
 									>
 										<BookOpen className="h-4 w-4" aria-hidden="true" />
 										{showExplanation ? "Ocultar explicación" : "Ver explicación"}
-										<kbd className="rounded border border-line bg-surface px-1.5 font-mono text-[0.7rem] text-muted">
-											E
-										</kbd>
+										<kbd className="rounded border border-line bg-surface px-1.5 font-mono text-[0.7rem] text-muted">E</kbd>
 									</button>
 									{showExplanation && (
 										<div className="mt-1 space-y-2 text-sm leading-relaxed">
@@ -281,7 +378,31 @@ export default function QuizRunner() {
 											)}
 										</div>
 									)}
-								</>
+								</div>
+							)}
+							{run && (
+								<div className="rounded-lg border border-line bg-surface p-3 font-mono text-sm" aria-label="Salida real">
+									<p className="mb-1 text-xs font-semibold uppercase tracking-widest text-muted">Consola</p>
+									{run.running ? (
+										<p className="text-muted">Ejecutando…</p>
+									) : (
+										<>
+											{run.lines?.filter((l, i, all) => l !== "" || all.length > 1).map((l, i) => (
+												<p key={i}>
+													<span className="text-muted" aria-hidden="true">› </span>
+													{l === "" ? <span className="text-muted">(vacío)</span> : l}
+												</p>
+											))}
+											{run.error && <p className="text-warn">{run.error}</p>}
+										</>
+									)}
+								</div>
+							)}
+							{answer.returns && answer.concepts && answer.concepts.length > 0 && (
+								<p className="flex items-center gap-1.5 text-sm text-muted">
+									<Repeat className="h-4 w-4 shrink-0" aria-hidden="true" />
+									{answer.concepts.map((c) => c.name).join(", ")} vuelve a tu repaso {answer.returns}.
+								</p>
 							)}
 						</m.section>
 					)}
@@ -301,11 +422,22 @@ export default function QuizRunner() {
 							</>
 						)}
 					</p>
+					{checked && current.kind === "predict" && current.code && (
+						<button
+							type="button"
+							onClick={() => void execute()}
+							disabled={run?.running}
+							className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg border border-line bg-surface2 px-4 font-semibold hover:border-accent/60 disabled:opacity-60 sm:ml-auto"
+						>
+							{run?.running ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Play className="h-4 w-4" aria-hidden="true" />}
+							Ejecutar
+						</button>
+					)}
 					<button
 						type="button"
 						onClick={checked ? goNext : check}
 						disabled={!checked && !selected}
-						className="ml-auto inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-accent px-6 font-semibold text-accent-fg transition hover:bg-accent/90 disabled:cursor-not-allowed disabled:bg-surface2 disabled:text-muted sm:w-auto"
+						className={`${checked && current.kind === "predict" ? "" : "ml-auto"} inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-lg bg-accent px-6 font-semibold text-accent-fg transition hover:bg-accent/90 disabled:cursor-not-allowed disabled:bg-surface2 disabled:text-muted sm:flex-none`}
 					>
 						{checked ? (isLast ? "Ver resultados" : "Siguiente") : "Comprobar"}
 						<kbd aria-hidden="true" className="hidden rounded border border-current px-1.5 font-mono text-[0.7rem] sm:inline">

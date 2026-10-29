@@ -44,4 +44,15 @@ describe("calculateAchievements", () => {
 	it("desbloquea la puntuación perfecta", () => {
 		expect(unlocked([r("2026-10-01", 10)])["Puntuación perfecta"]).toBe(true);
 	});
+
+	it("logros de habilidades (Fase 4)", () => {
+		const titles = (skills: Parameters<typeof calculateAchievements>[1]) =>
+			calculateAchievements([], skills).filter((a) => a.unlocked).map((a) => a.title);
+		expect(titles({ dominated: 0, incidentsClosed: 9, perfectCalibration: false })).toEqual([]);
+		expect(titles({ dominated: 1, incidentsClosed: 10, perfectCalibration: true })).toEqual([
+			"Primer concepto dominado",
+			"10 incidencias cerradas",
+			"Calibración perfecta",
+		]);
+	});
 });

@@ -42,9 +42,28 @@ describe("<Result />", () => {
 	it("muestra la puntuación, el porcentaje y la categoría", () => {
 		renderResult({ score: 1, total: 2, category: "html", summary });
 
-		expect(screen.getByText(/1 \/ 2/)).toBeInTheDocument();
-		expect(screen.getByText("(50%)")).toBeInTheDocument();
-		expect(screen.getByText("html")).toBeInTheDocument();
+		expect(screen.getByText("QUIZ COMPLETADO · HTML")).toBeInTheDocument();
+		expect(screen.getByText(/1 \/ 2 \(50%\) · html/)).toBeInTheDocument();
+	});
+
+	it("diagnóstico: titular, calibración y una única acción recomendada", async () => {
+		const user = userEvent.setup();
+		const withConfidence = [
+			{ ...summary[0], confidence: "seguro", concepts: [{ id: "enlaces", name: "Enlaces", area: "HTML" }] },
+			{ ...summary[1], confidence: "seguro", concepts: [{ id: "color", name: "Color", area: "CSS" }] },
+		];
+		renderResult({ score: 1, total: 2, category: "frontend", summary: withConfidence });
+
+		expect(screen.getByRole("heading", { level: 1, name: "Dominas Enlaces. Color todavía te engaña." })).toBeInTheDocument();
+		expect(screen.getByRole("img", { name: "Seguro: 50% de aciertos" })).toBeInTheDocument();
+		expect(screen.getByText(/fallaste 1 de las 2 que marcaste como «Seguro»/)).toBeInTheDocument();
+		expect(screen.getByText("Siguiente paso recomendado")).toBeInTheDocument();
+		expect(screen.getByRole("link", { name: "Empezar" })).toHaveAttribute("href", "/repaso?conceptos=color&count=5");
+
+		const toggle = screen.getByRole("button", { name: /Revisar las 1 falladas/ });
+		expect(toggle).toHaveAttribute("aria-expanded", "false");
+		await user.click(toggle);
+		expect(toggle).toHaveAttribute("aria-expanded", "true");
 	});
 
 	it("muestra un aviso si no hay respuestas", () => {
@@ -58,6 +77,7 @@ describe("<Result />", () => {
 		const user = userEvent.setup();
 		renderResult({ score: 1, total: 2, category: "html", summary });
 
+		await user.click(screen.getByText("Ver todas las respuestas"));
 		await user.click(screen.getByText(summary[0].question));
 		const link = screen.getByRole("link", {
 			name: /explicación ampliada en MDN/i,

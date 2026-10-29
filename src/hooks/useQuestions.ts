@@ -13,7 +13,33 @@ export type QuizQuestion = {
 	shortExplanation?: string;
 	sourceUrl?: string;
 	sourceName?: string;
+	/** Fase 4 (columnas opcionales: sin la migración llegan vacías) */
+	category?: string;
+	subcategory?: string;
+	concepts?: string[];
+	kind?: "choice" | "predict" | "explain";
+	code?: string;
+	optionMeta?: Record<string, { misconception?: string; whyTempting?: string }>;
 };
+
+const BASE_COLUMNS = "id, question, options, correctAnswer, difficulty, shortExplanation, sourceUrl, sourceName, category, subcategory";
+const FULL_COLUMNS = `${BASE_COLUMNS}, concepts, kind, code, option_meta`;
+
+type QuestionQuery = ReturnType<ReturnType<typeof supabase.from>["select"]>;
+type Filter = (q: QuestionQuery) => QuestionQuery;
+
+/**
+ * SELECT con las columnas de la Fase 4; si la migración aún no se ha
+ * aplicado (columna inexistente), repite la consulta con las básicas.
+ */
+export async function selectQuestions(filter: Filter): Promise<QuizQuestion[]> {
+	const full = await filter(supabase.from("questions").select(FULL_COLUMNS));
+	if (!full.error) return (full.data ?? []).map((r) => normalizeQuestion(r as Record<string, unknown>));
+	if (!/column|42703/i.test(`${full.error.code} ${full.error.message}`)) throw full.error;
+	const basic = await filter(supabase.from("questions").select(BASE_COLUMNS));
+	if (basic.error) throw basic.error;
+	return (basic.data ?? []).map((r) => normalizeQuestion(r as Record<string, unknown>));
+}
 
 type QuestionsState = {
 	questions: QuizQuestion[];
@@ -56,21 +82,11 @@ export function useQuestions(
 
 		const load = async () => {
 			try {
-				let query = supabase
-					.from("questions")
-					.select(
-						"id, question, options, correctAnswer, difficulty, shortExplanation, sourceUrl, sourceName"
-					)
-					.in("category", getCategoryVariants(category));
-
-				if (subcategory) {
-					query = query.eq("subcategory", safeDecode(subcategory));
-				}
-
-				const { data, error } = await query;
-				if (error) throw error;
-
-				const all = (data ?? []).map(normalizeQuestion);
+				const all = await selectQuestions((q) => {
+					let query = q.in("category", getCategoryVariants(category));
+					if (subcategory) query = query.eq("subcategory", safeDecode(subcategory));
+					return query;
+				});
 				const preferred = difficulty
 					? all.filter((q) => q.difficulty === difficulty)
 					: all;
@@ -148,5 +164,11 @@ function normalizeQuestion(row: Record<string, unknown>): QuizQuestion {
 		shortExplanation: (row.shortExplanation as string) ?? undefined,
 		sourceUrl: (row.sourceUrl as string) ?? undefined,
 		sourceName: (row.sourceName as string) ?? undefined,
+		category: (row.category as string) ?? undefined,
+		subcategory: (row.subcategory as string) ?? undefined,
+		concepts: Array.isArray(row.concepts) ? (row.concepts as string[]) : undefined,
+		kind: (row.kind as QuizQuestion["kind"]) ?? "choice",
+		code: (row.code as string) ?? undefined,
+		optionMeta: (row.option_meta as QuizQuestion["optionMeta"]) ?? undefined,
 	};
 }

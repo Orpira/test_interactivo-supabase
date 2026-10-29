@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import type { QuizQuestion } from "@/hooks/useQuestions";
+import type { ConceptRef } from "@/features/learning/concepts";
+import type { Confidence } from "@/features/learning/fsrs";
 
 export type QuizAnswer = {
 	question: string;
@@ -11,6 +13,12 @@ export type QuizAnswer = {
 	shortExplanation?: string;
 	sourceUrl?: string;
 	sourceName?: string;
+	/** Fase 4 */
+	questionId?: string;
+	confidence?: Confidence;
+	concepts?: ConceptRef[];
+	/** Cuándo vuelve el concepto al repaso ("mañana", "en 3 días") */
+	returns?: string;
 };
 
 type QuizSessionState = {
