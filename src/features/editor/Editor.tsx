@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "../../services/auth";
 import { supabase } from "../../services/supabase";
-import CodeEditor from "./CodeEditor";
+import CodeMirrorEditor from "./CodeMirrorEditor";
 import type { EditorLanguage } from "./languages";
 import { buildDocument } from "@/features/challenges/engine/buildDocument";
 import { SANDBOX } from "@/features/challenges/engine/runner";
@@ -62,10 +62,8 @@ export default function Editor({
 		<div className="w-full">
 			<div className="grid gap-6 md:grid-cols-2">
 				<div>
-					<label htmlFor="free-code" className="mb-2 block font-display text-lg font-semibold">
-						Tu código ({language.toUpperCase()})
-					</label>
-					<CodeEditor id="free-code" label="Editor de código" value={code} onChange={setCode} language={language} />
+					<h2 className="mb-2 font-display text-lg font-semibold">Tu código ({language.toUpperCase()})</h2>
+					<CodeMirrorEditor label="Editor de código" value={code} onChange={setCode} language={language} minHeight="18rem" />
 				</div>
 				<div>
 					<h2 className="mb-2 font-display text-lg font-semibold">Vista previa</h2>

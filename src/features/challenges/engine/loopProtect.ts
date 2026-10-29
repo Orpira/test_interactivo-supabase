@@ -36,6 +36,19 @@ export function loopGuardPrelude(limitMs = 1000) {
 })();\n`;
 }
 
+/** Mensajes de error de sintaxis de acorn en español. */
+export function translateAcorn(msg: string) {
+	return msg
+		.replace(/^Unexpected token$/, "símbolo inesperado")
+		.replace(/^Unexpected character '(.+)'$/, "carácter inesperado «$1»")
+		.replace(/^Unterminated string constant$/, "cadena sin cerrar")
+		.replace(/^Unterminated template$/, "plantilla sin cerrar")
+		.replace(/^Unterminated comment$/, "comentario sin cerrar")
+		.replace(/^Identifier '(.+)' has already been declared$/, "«$1» ya está declarado")
+		.replace(/^Unexpected keyword '(.+)'$/, "palabra reservada inesperada «$1»")
+		.replace(/^Assigning to rvalue$/, "no se puede asignar a esta expresión");
+}
+
 export type ProtectResult =
 	| { ok: true; code: string }
 	| { ok: false; error: string; line?: number };
@@ -57,7 +70,7 @@ export function protectLoops(source: string): ProtectResult {
 		const e = err as { message?: string; loc?: { line: number } };
 		return {
 			ok: false,
-			error: `Error de sintaxis: ${(e.message ?? "").replace(/\s*\(\d+:\d+\)$/, "")}`,
+			error: `Error de sintaxis: ${translateAcorn((e.message ?? "").replace(/\s*\(\d+:\d+\)$/, ""))}`,
 			line: e.loc?.line,
 		};
 	}
