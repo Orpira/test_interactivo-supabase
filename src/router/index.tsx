@@ -31,6 +31,38 @@ const ChallengeEditorPage = lazy(
 	() => import("@/features/challenges/pages/ChallengeEditorPage")
 );
 
+/**
+ * Vuelta del login con Google/GitHub y de los enlaces de email.
+ * Hay que esperar a que Supabase canjee el ?code= de la URL antes de salir de
+ * aquí: si se redirige al instante, el código se pierde y no hay sesión.
+ */
+function AuthCallback() {
+	const { isLoading, isAuthenticated } = useAuth();
+	const params = new URLSearchParams(window.location.search);
+	const hash = new URLSearchParams(window.location.hash.slice(1));
+	const error =
+		params.get("error_description") ?? hash.get("error_description");
+
+	if (error) {
+		return (
+			<section className="mx-auto max-w-md px-4 py-16 text-center space-y-4">
+				<p className="text-5xl">⚠️</p>
+				<h1 className="text-2xl font-bold">No se pudo iniciar sesión</h1>
+				<p className="text-gray-600">{error}</p>
+				<Link to="/" className="text-indigo-600 underline">
+					Volver al inicio
+				</Link>
+			</section>
+		);
+	}
+
+	if (isLoading) {
+		return <p className="p-6 text-center">Iniciando sesión...</p>;
+	}
+
+	return <Navigate to={isAuthenticated ? "/dashboard" : "/"} replace />;
+}
+
 /** Al abrir el enlace de recuperación, lleva al formulario de nueva contraseña. */
 function PasswordRecoveryRedirect() {
 	const { passwordRecovery } = useAuth();
@@ -72,7 +104,7 @@ export default function AppRouter() {
 			<Suspense fallback={<p className="p-6 text-center">Cargando...</p>}>
 				<Routes>
 					<Route path="/" element={<Hero />} />
-					<Route path="/auth/callback" element={<Navigate to="/" replace />} />
+					<Route path="/auth/callback" element={<AuthCallback />} />
 					<Route path="/quiz/:category" element={<QuizRunner />} />
 					<Route path="/quiz/:category/:subcategory" element={<QuizRunner />} />
 					<Route path="/result" element={<Result />} />
