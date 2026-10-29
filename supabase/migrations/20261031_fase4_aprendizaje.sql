@@ -4,6 +4,17 @@
 -- 20261031_fase4_aprendizaje_seed.sql. Aditiva e idempotente.
 -- =============================================================
 
+-- 0. Niveles antiguos ("principiante", "intermedio"…): la restricción
+--    questions_difficulty_check solo admite junior/semi_senior/senior y
+--    cualquier UPDATE posterior sobre esas filas fallaría.
+UPDATE questions SET difficulty = CASE
+    WHEN lower(trim(difficulty)) IN ('principiante', 'basico', 'básico', 'facil', 'fácil', 'beginner', 'easy', 'junior') THEN 'junior'
+    WHEN lower(trim(difficulty)) IN ('intermedio', 'medio', 'intermediate', 'medium', 'semi_senior', 'semi-senior', 'semisenior', 'semi senior') THEN 'semi_senior'
+    WHEN lower(trim(difficulty)) IN ('avanzado', 'dificil', 'difícil', 'advanced', 'hard', 'experto', 'senior') THEN 'senior'
+    ELSE 'junior'
+  END
+WHERE difficulty IS NULL OR difficulty NOT IN ('junior', 'semi_senior', 'senior');
+
 -- 1. Preguntas: conceptos, tipo, código y metadatos de opciones
 ALTER TABLE questions
   ADD COLUMN IF NOT EXISTS concepts TEXT[] NOT NULL DEFAULT '{}',
