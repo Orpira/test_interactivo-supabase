@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../services/auth";
 import { supabase } from "../services/supabase";
 import { Link } from "react-router-dom";
+import IncidentHistory from "@/features/incidents/IncidentHistory";
 
 // Tipos para ambos historiales
 
@@ -23,7 +24,7 @@ export default function Historial() {
 	const [loading, setLoading] = useState(false);
 	const [envios, setEnvios] = useState<Envio[]>([]);
 	const [tests, setTests] = useState<Test[]>([]);
-	const [tipo, setTipo] = useState<"test" | "codigo" | null>(null);
+	const [tipo, setTipo] = useState<"test" | "codigo" | "incidencias" | null>(null);
 	const [testPage, setTestPage] = useState(1);
 	const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 	const [expandedEnvio, setExpandedEnvio] = useState<number | null>(null);
@@ -95,6 +96,12 @@ export default function Historial() {
 					>
 						Historial de Código
 					</button>
+					<button
+						className="px-6 py-3 bg-accent text-accent-fg rounded hover:bg-accent/90 font-semibold"
+						onClick={() => setTipo("incidencias")}
+					>
+						Incidencias cerradas
+					</button>
 				</div>
 			</section>
 		);
@@ -104,7 +111,7 @@ export default function Historial() {
 		<>
 			<section className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-6">
 				<h2 className="text-2xl font-bold mb-4 text-center">
-					{tipo === "test" ? "Historial de Quizzes" : "Historial de Código"}
+					{tipo === "test" ? "Historial de Quizzes" : tipo === "codigo" ? "Historial de Código" : "Incidencias cerradas"}
 				</h2>
 				<div className="flex justify-center mb-6">
 					<button
@@ -160,7 +167,9 @@ export default function Historial() {
 						</select>
 					</div>
 				)}
-				{loading ? (
+				{tipo === "incidencias" && user ? (
+					<IncidentHistory userId={user.id} />
+				) : loading ? (
 					<p className="text-center">Cargando...</p>
 				) : tipo === "codigo" ? (
 					filteredEnvios.length === 0 ? (

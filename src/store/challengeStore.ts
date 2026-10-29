@@ -30,6 +30,7 @@ export const useChallengeStore = create<ChallengeStore>((set, get) => ({
 				.from("challenges")
 				.select("id, spec")
 				.eq("legacy", false)
+				.eq("type", "challenge")
 				.not("spec", "is", null);
 			if (error) throw error;
 			const known = new Set(challengeCatalog.map((c) => c.id));

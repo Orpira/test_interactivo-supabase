@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { runChallengeTests } from "../engine/runner";
-import type { ChallengeFiles, ChallengeTest, TestResult } from "../engine/types";
+import type { ChallengeFiles, ChallengeTest, RunOptions, TestResult } from "../engine/types";
 
 export const LIVE_TESTS_DEBOUNCE_MS = 600;
 
@@ -8,7 +8,7 @@ export const LIVE_TESTS_DEBOUNCE_MS = 600;
  * Ejecuta los tests automáticamente 600 ms después de dejar de escribir.
  * Ignora resultados de ejecuciones antiguas si llega una más reciente.
  */
-export function useLiveTests(files: ChallengeFiles, tests: ChallengeTest[]) {
+export function useLiveTests(files: ChallengeFiles, tests: ChallengeTest[], options?: RunOptions) {
 	const [results, setResults] = useState<TestResult[] | null>(null);
 	const [running, setRunning] = useState(false);
 	const [runs, setRuns] = useState(0);
@@ -17,14 +17,14 @@ export function useLiveTests(files: ChallengeFiles, tests: ChallengeTest[]) {
 	const runNow = useCallback(async (): Promise<TestResult[]> => {
 		const mine = ++version.current;
 		setRunning(true);
-		const res = await runChallengeTests(files, tests);
+		const res = await runChallengeTests(files, tests, options);
 		if (mine === version.current) {
 			setResults(res);
 			setRunning(false);
 			setRuns((n) => n + 1);
 		}
 		return res;
-	}, [files, tests]);
+	}, [files, tests, options]);
 
 	useEffect(() => {
 		const t = setTimeout(() => void runNow(), LIVE_TESTS_DEBOUNCE_MS);

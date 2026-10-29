@@ -34,4 +34,4 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       # Verifica los 30 retos en un navegador real: solución pasa, inicial falla
-      - run: npm run test:e2e -- tests/e2e/challenges.spec.ts
+      - run: npm run test:e2e -- tests/e2e/challenges.spec.ts tests/e2e/incidents.spec.ts

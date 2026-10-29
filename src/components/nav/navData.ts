@@ -1,5 +1,6 @@
 import {
 	BarChart3,
+	Bug,
 	Code2,
 	FlaskConical,
 	History,
@@ -62,6 +63,13 @@ export const NAV_PAGES: NavPage[] = [
 		icon: Code2,
 		private: true,
 		keywords: "editor codigo practicar",
+	},
+	{
+		to: "/incidencias",
+		label: "Incidencias",
+		icon: Bug,
+		private: true,
+		keywords: "bugs tickets depurar devtools arreglar",
 	},
 	{
 		to: "/ranking",

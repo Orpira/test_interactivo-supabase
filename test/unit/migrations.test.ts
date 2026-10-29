@@ -4,7 +4,8 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { PGlite } from "@electric-sql/pglite";
 import { challengeCatalog } from "../../src/content/challenges";
-import { challengesToSql } from "../../src/content/challenges/toSql";
+import { challengesToSql, incidentsToSql } from "../../src/content/challenges/toSql";
+import { INCIDENTS } from "../../src/content/incidents";
 
 const dir = join(__dirname, "../../supabase");
 
@@ -32,12 +33,29 @@ describe("esquema y migraciones de Supabase", () => {
 			`SELECT count(*) FILTER (WHERE NOT legacy)::int AS visibles,
 			        count(*) FILTER (WHERE legacy)::int AS legacy FROM challenges`,
 		);
-		expect(rows[0]).toEqual({ visibles: challengeCatalog.length, legacy: 1 });
+		expect(rows[0]).toEqual({ visibles: challengeCatalog.length + INCIDENTS.length, legacy: 1 });
+		const types = await db.query<{ type: string; n: number }>(
+			`SELECT type, count(*)::int AS n FROM challenges WHERE NOT legacy GROUP BY type ORDER BY type`,
+		);
+		expect(types.rows).toEqual([
+			{ type: "challenge", n: challengeCatalog.length },
+			{ type: "incident", n: INCIDENTS.length },
+		]);
+		// Intento de incidencia con línea de tiempo y puntuación
+		await db.exec(`INSERT INTO auth.users (id) VALUES ('00000000-0000-0000-0000-000000000001');`);
+		await db.exec(`INSERT INTO challenge_attempts (user_id, challenge_id, code, results, passed, score, timeline)
+			VALUES ('00000000-0000-0000-0000-000000000001', 'inc-482', '{}', '[]', true, 1450, '[{"t":0,"kind":"start","label":"Abrió el ticket"}]');`);
+		await expect(
+			db.exec(`INSERT INTO challenge_attempts (user_id, challenge_id, code, results, passed, score)
+				VALUES ('00000000-0000-0000-0000-000000000001', 'inc-482', '{}', '[]', true, -5);`),
+		).rejects.toThrow();
 		await db.close();
 	}, 60_000);
 
 	it("el SQL de los retos está sincronizado con el catálogo (npm run db:challenges-seed)", () => {
 		const committed = readFileSync(join(dir, "migrations/20261029_fase1_retos_seed.sql"), "utf8");
 		expect(committed).toBe(challengesToSql(challengeCatalog));
+		const incidents = readFileSync(join(dir, "migrations/20261030_fase3_incidencias_seed.sql"), "utf8");
+		expect(incidents).toBe(incidentsToSql(INCIDENTS));
 	});
 });

@@ -3,7 +3,9 @@ import { TEST_TIMEOUT_MS } from "./types";
 /**
  * Arnés que corre dentro del iframe aislado. Recibe los tests "dom" por
  * postMessage, los ejecuta tras la carga y devuelve { name, passed, message }.
- * Los tests disponen de utilidades: $, $$, style, rect, text, click, wait.
+ * Los tests disponen de utilidades: $, $$, style, rect, text, click, wait,
+ * near, requests (peticiones de la red simulada), hits (¿el elemento recibe
+ * el clic o lo tapa otro?) y type (escribe en un campo y lanza input/change).
  */
 export const DOM_HARNESS = `
 (function () {
@@ -16,7 +18,10 @@ export const DOM_HARNESS = `
     text: function (s) { var el = document.querySelector(s); return el ? el.textContent.trim() : null; },
     click: function (s) { var el = typeof s === "string" ? document.querySelector(s) : s; if (!el) throw new Error("No existe el elemento " + s); el.click(); },
     wait: function (ms) { return new Promise(function (r) { setTimeout(r, ms || 0); }); },
-    near: function (a, b, tol) { return Math.abs(a - b) <= (tol == null ? 2 : tol); }
+    near: function (a, b, tol) { return Math.abs(a - b) <= (tol == null ? 2 : tol); },
+    requests: function () { return (window.__wwRequests || []).slice(); },
+    hits: function (sel) { var el = document.querySelector(sel); if (!el) throw new Error("No existe el elemento " + sel); var r = el.getBoundingClientRect(); var top = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2); return !!top && (top === el || el.contains(top)); },
+    type: function (sel, value) { var el = document.querySelector(sel); if (!el) throw new Error("No existe el elemento " + sel); el.value = value; el.dispatchEvent(new Event("input", { bubbles: true })); el.dispatchEvent(new Event("change", { bubbles: true })); }
   };
   var AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 
@@ -31,8 +36,8 @@ export const DOM_HARNESS = `
         resolve({ name: test.name, passed: passed, message: message });
       };
       try {
-        var fn = new AsyncFunction("$", "$$", "style", "rect", "text", "click", "wait", "near", test.code);
-        fn(helpers.$, helpers.$$, helpers.style, helpers.rect, helpers.text, helpers.click, helpers.wait, helpers.near)
+        var fn = new AsyncFunction("$", "$$", "style", "rect", "text", "click", "wait", "near", "requests", "hits", "type", test.code);
+        fn(helpers.$, helpers.$$, helpers.style, helpers.rect, helpers.text, helpers.click, helpers.wait, helpers.near, helpers.requests, helpers.hits, helpers.type)
           .then(function (out) {
             if (out === true) return finish(true, "Correcto");
             if (out && typeof out === "object" && "pass" in out) return finish(!!out.pass, out.message || (out.pass ? "Correcto" : test.message || "No se cumple"));

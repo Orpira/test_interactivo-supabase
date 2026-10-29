@@ -144,6 +144,23 @@ npx playwright test
 
 ## Cambios recientes
 
+### Fase 3: Modo Incidencia
+
+> ⚠️ **Supabase:** ejecuta después de las de la Fase 1 `supabase/migrations/20261030_fase3_incidencias.sql` y `supabase/migrations/20261030_fase3_incidencias_seed.sql` (columna `score`, límites de la línea de tiempo y las 10 incidencias con `type = 'incident'`).
+
+- **10 tickets** en `src/content/incidents` (4 CSS, 3 JavaScript, 2 accesibilidad, 1 XSS). Cada uno trae una mini-app rota, un ticket (pasos, esperado/real, dispositivo), red simulada, tests de **aceptación ocultos** y tests de **regresión** visibles.
+- **Espacio de trabajo** en `/incidencias/:id`: ticket, editor, vista previa con selector 390/768/1280 px y DevTools simuladas: **Elementos** (árbol del DOM y estilos calculados, propiedades sospechosas en naranja), **Consola** (con número de línea de `app.js`), **Red** (peticiones capturadas y aviso «Ninguna petición a …») y **Regresión**.
+- **Contadores en vivo** «Aceptación (ocultos) x/y» y «Regresión x/y», cronómetro y pistas. **Enviar arreglo** (`Ctrl/⌘ + Enter`) cierra el ticket solo si pasan los dos grupos.
+- **Cierre:** modal «TICKET #N CERRADO» con tiempo, envíos, líneas cambiadas frente a la solución de referencia, causa raíz, línea de tiempo del diagnóstico y tarjeta PNG para compartir.
+- **Puntuación** (`src/features/incidents/scoring.ts`): 1000 base, hasta +300 por tiempo, −75 por envío fallido, −100 por pista, −150 por regresión introducida, +200/+100 por diff mínimo.
+- La línea de tiempo y la puntuación se guardan en `challenge_attempts` y se ven en **Historial → Incidencias cerradas**.
+
+#### Añadir o cambiar incidencias
+
+1. Edita `src/content/incidents/*.ts` (tipado con `IncidentSpec`).
+2. `npm run db:challenges-seed` regenera también `20261030_fase3_incidencias_seed.sql`.
+3. `npm run test:e2e -- tests/e2e/incidents.spec.ts` comprueba que el fallo se reproduce (aceptación falla, regresión pasa) y que la solución pasa ambos.
+
 ### Fase 1: sistema de diseño, pantalla de quiz y motor de tests
 
 > ⚠️ **Supabase:** ejecuta en orden `supabase/migrations/20261029_fase1_retos.sql` y `supabase/migrations/20261029_fase1_retos_seed.sql`. La app funciona sin ellas (usa los retos del repo), pero los intentos no se guardan hasta aplicarlas.

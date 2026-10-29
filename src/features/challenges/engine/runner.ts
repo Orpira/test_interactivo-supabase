@@ -5,6 +5,7 @@ import {
 	TEST_TIMEOUT_MS,
 	type ChallengeFiles,
 	type ChallengeTest,
+	type RunOptions,
 	type TestResult,
 } from "./types";
 
@@ -19,12 +20,13 @@ export const SANDBOX = "allow-scripts allow-forms allow-modals";
 export async function runChallengeTests(
 	files: ChallengeFiles,
 	tests: ChallengeTest[],
+	options: RunOptions = {},
 ): Promise<TestResult[]> {
 	const domTests = tests.filter((t) => t.type === "dom");
 	const workerTests = tests.filter((t) => t.type !== "dom");
 
 	const [domResults, workerResults] = await Promise.all([
-		domTests.length ? runDomTests(files, domTests) : Promise.resolve([]),
+		domTests.length ? runDomTests(files, domTests, options) : Promise.resolve([]),
 		workerTests.length ? runWorkerTests(files["app.js"], workerTests) : Promise.resolve([]),
 	]);
 
@@ -36,7 +38,11 @@ export async function runChallengeTests(
 
 // ------------------------------------------------------------------ DOM
 
-function runDomTests(files: ChallengeFiles, tests: ChallengeTest[]): Promise<TestResult[]> {
+function runDomTests(
+	files: ChallengeFiles,
+	tests: ChallengeTest[],
+	options: RunOptions,
+): Promise<TestResult[]> {
 	return new Promise((resolve) => {
 		const iframe = document.createElement("iframe");
 		// Sin allow-same-origin: el código del usuario no accede a la app.
@@ -50,8 +56,8 @@ function runDomTests(files: ChallengeFiles, tests: ChallengeTest[]): Promise<Tes
 			position: "fixed",
 			left: "0",
 			top: "0",
-			width: "1024px",
-			height: "768px",
+			width: `${options.width ?? 1024}px`,
+			height: `${options.height ?? 768}px`,
 			border: "0",
 			opacity: "0",
 			pointerEvents: "none",
@@ -100,7 +106,7 @@ function runDomTests(files: ChallengeFiles, tests: ChallengeTest[]): Promise<Tes
 		);
 
 		window.addEventListener("message", onMessage);
-		iframe.srcdoc = buildDocument(files, { harness: DOM_HARNESS });
+		iframe.srcdoc = buildDocument(files, { harness: DOM_HARNESS, network: options.network });
 		document.body.appendChild(iframe);
 	});
 }

@@ -21,6 +21,7 @@ const LOOPS = new Set([
  * durante más de `limitMs` sin pausa, lanza un error en lugar de colgar la
  * página. Así un `while (true) {}` no bloquea la app.
  */
+/** En una sola línea (sin salto final) para que los errores de app.js conserven su número de línea. */
 export function loopGuardPrelude(limitMs = 1000) {
 	return `var __wwLoop = (function () {
   var first = {}, last = {};
@@ -33,7 +34,7 @@ export function loopGuardPrelude(limitMs = 1000) {
       throw new RangeError("Posible bucle infinito: un bucle lleva más de ${limitMs / 1000} s ejecutándose.");
     }
   };
-})();\n`;
+})();`.replace(/\n\s*/g, " ");
 }
 
 /** Mensajes de error de sintaxis de acorn en español. */

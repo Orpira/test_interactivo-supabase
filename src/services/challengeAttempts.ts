@@ -8,6 +8,9 @@ export type AttemptInput = {
 	results: TestResult[];
 	hintsUsed: number;
 	durationMs: number;
+	/** Modo Incidencia: eventos del diagnóstico y puntuación */
+	timeline?: unknown[];
+	score?: number;
 };
 
 /**
@@ -23,6 +26,8 @@ export async function saveAttempt(input: AttemptInput) {
 		passed: input.results.length > 0 && input.results.every((r) => r.passed),
 		hints_used: input.hintsUsed,
 		duration_ms: Math.round(input.durationMs),
+		...(input.timeline ? { timeline: input.timeline } : {}),
+		...(input.score != null ? { score: input.score } : {}),
 	});
 	if (error) console.warn("No se pudo guardar el intento:", error.message);
 }
