@@ -185,7 +185,7 @@ function ChallengeWorkspace({ challenge, all }: { challenge: ChallengeSpec; all:
 						>
 							<Play className="h-4 w-4" aria-hidden="true" />
 							{running ? "Ejecutando…" : "Ejecutar tests"}
-							<kbd className="hidden font-mono text-[0.7rem] opacity-70 sm:inline">Ctrl+Enter</kbd>
+							<kbd aria-hidden="true" className="hidden rounded border border-current px-1 font-mono text-[0.7rem] sm:inline">Ctrl+Enter</kbd>
 						</button>
 						<button
 							type="button"

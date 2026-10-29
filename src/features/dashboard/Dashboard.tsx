@@ -139,7 +139,7 @@ export default function Dashboard() {
 			{/* Métricas principales */}
 			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-10">
 				<Card title="Quiz Realizados" value={totalTests} color="indigo" />
-				<Card title="Promedio" value={`${averageScore} pts`} color="green" />
+				<Card title="Aciertos medios" value={`${Math.round(Number(averageScore) * 100)}%`} color="green" />
 				<Card
 					title="Último Quiz"
 					value={lastTest?.category ?? "—"}

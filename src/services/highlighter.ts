@@ -27,7 +27,24 @@ const LANG_ALIASES: Record<string, string> = {
 	py: "python",
 };
 
+// Cada gramática se descarga solo cuando aparece código en ese lenguaje
+const LANG_LOADERS: Record<string, () => Promise<unknown>> = {
+	javascript: () => import("@shikijs/langs/javascript"),
+	typescript: () => import("@shikijs/langs/typescript"),
+	jsx: () => import("@shikijs/langs/jsx"),
+	tsx: () => import("@shikijs/langs/tsx"),
+	html: () => import("@shikijs/langs/html"),
+	css: () => import("@shikijs/langs/css"),
+	json: () => import("@shikijs/langs/json"),
+	sql: () => import("@shikijs/langs/sql"),
+	bash: () => import("@shikijs/langs/bash"),
+	yaml: () => import("@shikijs/langs/yaml"),
+	dockerfile: () => import("@shikijs/langs/dockerfile"),
+	python: () => import("@shikijs/langs/python"),
+};
+
 let highlighterPromise: Promise<HighlighterCore> | null = null;
+const langPromises = new Map<string, Promise<void>>();
 
 function getHighlighter() {
 	highlighterPromise ??= (async () => {
@@ -42,23 +59,26 @@ function getHighlighter() {
 				import("@shikijs/themes/github-light"),
 				import("@shikijs/themes/github-dark-default"),
 			],
-			langs: [
-				import("@shikijs/langs/javascript"),
-				import("@shikijs/langs/typescript"),
-				import("@shikijs/langs/jsx"),
-				import("@shikijs/langs/tsx"),
-				import("@shikijs/langs/html"),
-				import("@shikijs/langs/css"),
-				import("@shikijs/langs/json"),
-				import("@shikijs/langs/sql"),
-				import("@shikijs/langs/bash"),
-				import("@shikijs/langs/yaml"),
-				import("@shikijs/langs/dockerfile"),
-				import("@shikijs/langs/python"),
-			],
+			langs: [],
 		});
 	})();
 	return highlighterPromise;
+}
+
+async function ensureLang(highlighter: HighlighterCore, lang: string) {
+	if (!langPromises.has(lang)) {
+		const loader = LANG_LOADERS[lang];
+		if (!loader) throw new Error(`Lenguaje no soportado: ${lang}`);
+		langPromises.set(
+			lang,
+			loader().then((mod) =>
+				highlighter.loadLanguage(
+					(mod as { default: Parameters<HighlighterCore["loadLanguage"]>[0] }).default,
+				),
+			),
+		);
+	}
+	await langPromises.get(lang);
 }
 
 export function normalizeLang(lang?: string | null): string | null {
@@ -69,6 +89,7 @@ export function normalizeLang(lang?: string | null): string | null {
 /** HTML resaltado (Shiki escapa el código). Tema claro/oscuro vía variables CSS. */
 export async function highlight(code: string, lang: string): Promise<string> {
 	const highlighter = await getHighlighter();
+	await ensureLang(highlighter, lang);
 	return highlighter.codeToHtml(code, {
 		lang,
 		themes: { light: "github-light", dark: "github-dark-default" },

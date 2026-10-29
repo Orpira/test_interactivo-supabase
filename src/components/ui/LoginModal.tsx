@@ -20,7 +20,7 @@ import { useAuth } from "@/services/auth";
 import { getAuthRedirectUrl } from "@/services/authRedirect";
 import { translateAuthError } from "@/services/authErrors";
 import { getStoredTheme } from "@/services/theme";
-import { motion, useReducedMotion } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 
 export type LoginMode = "login" | "signup" | "forgot";
 
@@ -195,10 +195,12 @@ export default function LoginModal({ onClose, initialMode = "login" }: Props) {
 
 	return (
 		<div
+			role="region"
+			aria-label="Acceso"
 			className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-bg/80 px-4 py-6 backdrop-blur-md"
 			onMouseDown={(e) => e.target === e.currentTarget && onClose()}
 		>
-			<motion.div
+			<m.div
 				role="dialog"
 				aria-modal="true"
 				aria-labelledby="login-modal-title"
@@ -221,7 +223,7 @@ export default function LoginModal({ onClose, initialMode = "login" }: Props) {
 
 					<div className="px-6 pb-2 pt-7 sm:px-8">
 						<div className="mb-4 flex items-center gap-2 md:hidden">
-							<img src="/logo.png" alt="" className="h-8 w-8" />
+							<img src="/logo-96.webp" alt="" width="32" height="32" className="h-8 w-8" />
 							<span className="font-display text-lg font-bold">WebWiz</span>
 						</div>
 						<h2
@@ -237,19 +239,19 @@ export default function LoginModal({ onClose, initialMode = "login" }: Props) {
 								className="relative mt-5 grid grid-cols-2 rounded-xl border border-line bg-surface2 p-1 text-sm font-semibold"
 								role="tablist"
 							>
-								{(["login", "signup"] as const).map((m) => (
+								{(["login", "signup"] as const).map((tab) => (
 									<button
-										key={m}
+										key={tab}
 										type="button"
 										role="tab"
-										aria-selected={mode === m}
-										onClick={() => switchMode(m)}
+										aria-selected={mode === tab}
+										onClick={() => switchMode(tab)}
 										className={`relative min-h-10 rounded-lg px-3 py-2 transition-colors ${
-											mode === m ? "text-fg" : "text-muted hover:text-fg"
+											mode === tab ? "text-fg" : "text-muted hover:text-fg"
 										}`}
 									>
-										{mode === m && (
-											<motion.span
+										{mode === tab && (
+											<m.span
 												layoutId="login-tab"
 												className="absolute inset-0 rounded-lg border border-line bg-surface shadow-sm"
 												transition={{
@@ -260,7 +262,7 @@ export default function LoginModal({ onClose, initialMode = "login" }: Props) {
 											/>
 										)}
 										<span className="relative">
-											{m === "login" ? "Entrar" : "Crear cuenta"}
+											{tab === "login" ? "Entrar" : "Crear cuenta"}
 										</span>
 									</button>
 								))}
@@ -467,7 +469,7 @@ export default function LoginModal({ onClose, initialMode = "login" }: Props) {
 						</form>
 					</div>
 				</div>
-			</motion.div>
+			</m.div>
 		</div>
 	);
 }
@@ -550,7 +552,7 @@ function BrandPanel({
 
 			<div className="relative">
 				<div className="flex items-center gap-2">
-					<img src="/logo.png" alt="" className="h-9 w-9" />
+					<img src="/logo-96.webp" alt="" width="36" height="36" className="h-9 w-9" />
 					<span className="font-display text-xl font-bold">WebWiz</span>
 					<span className="rounded-md border border-accent/40 px-1.5 font-mono text-[0.65rem] uppercase tracking-widest text-accent">
 						quiz
@@ -584,19 +586,19 @@ function BrandPanel({
 			<div className="relative mt-10 rounded-xl border border-line bg-surface/80 p-4 font-mono text-xs backdrop-blur">
 				<div className="mb-3 flex items-center justify-between text-muted">
 					<span>styles.css · tests</span>
-					<motion.span
+					<m.span
 						initial={reduceMotion ? false : { opacity: 0 }}
 						animate={{ opacity: 1 }}
 						transition={{ delay: reduceMotion ? 0 : 1.6 }}
 						className="font-semibold text-accent"
 					>
 						3/3
-					</motion.span>
+					</m.span>
 				</div>
 				<ul className="space-y-2">
 					{DEMO_TESTS.map((t, i) => (
 						<li key={t} className="flex items-center gap-2">
-							<motion.span
+							<m.span
 								initial={reduceMotion ? false : { scale: 0, opacity: 0 }}
 								animate={{ scale: 1, opacity: 1 }}
 								transition={{
@@ -608,7 +610,7 @@ function BrandPanel({
 								className="flex h-4 w-4 items-center justify-center rounded-full bg-accent text-accent-fg"
 							>
 								<Check className="h-3 w-3" strokeWidth={3} />
-							</motion.span>
+							</m.span>
 							<span className="text-fg">{t}</span>
 						</li>
 					))}

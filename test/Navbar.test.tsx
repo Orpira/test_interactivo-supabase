@@ -109,7 +109,7 @@ describe("<Navbar />", () => {
 		expect(screen.getByRole("link", { name: "Ranking" })).toHaveAttribute("href", "/ranking");
 
 		// Dashboard e Historial viven en el menú de la cuenta
-		await user.click(screen.getByRole("button", { name: /Menú de Ada/ }));
+		await user.click(screen.getByRole("button", { name: /Ada.*menú de cuenta/ }));
 		expect(screen.getByRole("menuitem", { name: /Dashboard/ })).toHaveAttribute("href", "/dashboard");
 		expect(screen.getByRole("menuitem", { name: /Historial/ })).toHaveAttribute("href", "/historial");
 	});

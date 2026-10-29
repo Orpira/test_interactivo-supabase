@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -68,12 +68,12 @@ export default function Hero() {
 				style={{
 					// Capa del color de fondo del tema sobre la imagen: legible en claro y oscuro
 					backgroundImage:
-						"linear-gradient(rgb(var(--bg) / 0.82), rgb(var(--bg) / 0.82)), url('/fondo.png')",
+						"linear-gradient(rgb(var(--bg) / 0.82), rgb(var(--bg) / 0.82)), url('/fondo.webp')",
 					backgroundSize: "cover",
 					backgroundPosition: "center",
 				}}
 			>
-				<h2 className="text-2xl sm:text-4xl md:text-6xl font-bold mb-2 text-fg text-center">
+				<h1 className="text-2xl sm:text-4xl md:text-6xl font-bold mb-2 text-fg text-center">
 					Quizzes interactivos <br />
 					<strong>
 						<span className="text-warn">HTML, </span>
@@ -81,7 +81,7 @@ export default function Hero() {
 						<span className="text-warn">JavaScript</span>
 						<span className="text-accent"> y mucho más</span>
 					</strong>
-				</h2>
+				</h1>
 
 				<div className="flex w-full max-w-6xl flex-col items-center justify-between gap-6 sm:flex-row sm:gap-10">
 					<div className="flex flex-col items-center sm:items-start">
@@ -102,7 +102,7 @@ export default function Hero() {
 							onClick={handleStartNow}
 						>
 							¡Empieza ahora!
-							<motion.div
+							<m.div
 								animate={{
 									x: [0, 3, 0],
 								}}
@@ -115,12 +115,16 @@ export default function Hero() {
 								className="inline-block"
 							>
 								<ArrowRight className="ml-2" />
-							</motion.div>
+							</m.div>
 						</button>
 					</div>
 
-					<motion.img
-						src="/logo.png"
+					<m.img
+						src="/logo-640.webp"
+						srcSet="/logo-192.webp 192w, /logo-640.webp 640w"
+						sizes="(min-width: 1024px) 320px, (min-width: 768px) 256px, 160px"
+						width={320}
+						height={320}
 						alt="WebWiz Quiz Logo"
 						className="h-auto w-28 sm:w-40 md:w-64 lg:w-80"
 						initial={{ opacity: 0, scale: 0.7 }}
@@ -197,8 +201,10 @@ export default function Hero() {
 						</div>
 					</div>
 				)}
-				<motion.img
-					src="/languajes.png"
+				<m.img
+					src="/languajes-1000.webp"
+					srcSet="/languajes-500.webp 500w, /languajes-1000.webp 1000w"
+					sizes="(min-width: 1280px) 500px, 40vw"
 					alt="Lenguajes de Programación"
 					className="hidden sm:block w-40 sm:w-64 md:w-80 lg:w-96 xl:w-[500px] h-auto object-contain mt-2"
 					initial={{ opacity: 0, y: -20 }}

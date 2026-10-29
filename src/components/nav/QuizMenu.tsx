@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, m, useReducedMotion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { QUIZ_CATEGORIES } from "./navData";
 import { useDismiss } from "./useDismiss";
@@ -39,7 +39,7 @@ export default function QuizMenu({
 			</button>
 			<AnimatePresence>
 				{open && (
-					<motion.div
+					<m.div
 						id="quiz-menu"
 						initial={reduceMotion ? false : { opacity: 0, y: -6 }}
 						animate={{ opacity: 1, y: 0 }}
@@ -76,7 +76,7 @@ export default function QuizMenu({
 								</li>
 							))}
 						</ul>
-					</motion.div>
+					</m.div>
 				)}
 			</AnimatePresence>
 		</div>
@@ -86,7 +86,7 @@ export default function QuizMenu({
 /** Píldora que se desliza hasta el enlace activo (layoutId compartido). */
 export function ActivePill() {
 	return (
-		<motion.span
+		<m.span
 			layoutId="nav-active-pill"
 			className="absolute inset-0 rounded-full border border-accent/30 bg-accent-soft"
 			transition={{ type: "spring", stiffness: 420, damping: 34 }}

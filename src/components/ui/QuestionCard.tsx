@@ -1,4 +1,4 @@
-import { motion, useReducedMotion } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 import RichText from "@/components/quiz/RichText";
 import CodeBlock from "@/components/quiz/CodeBlock";
 import {
@@ -104,7 +104,7 @@ export default function QuestionCard({
 									: undefined;
 
 					return (
-						<motion.button
+						<m.button
 							key={option}
 							type="button"
 							role="radio"
@@ -156,7 +156,7 @@ export default function QuestionCard({
 									Tu respuesta
 								</span>
 							)}
-						</motion.button>
+						</m.button>
 					);
 				})}
 			</div>

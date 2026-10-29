@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, m, useReducedMotion } from "framer-motion";
 import {
 	CornerDownLeft,
 	LogIn,
@@ -165,8 +165,8 @@ export default function CommandPalette({
 
 	useEffect(() => {
 		listRef.current
-			?.querySelector(`[data-index="${active}"]`)
-			?.scrollIntoView({ block: "nearest" });
+			?.querySelector<HTMLElement>(`[data-index="${active}"]`)
+			?.scrollIntoView?.({ block: "nearest" });
 	}, [active]);
 
 	const onKeyDown = (e: React.KeyboardEvent) => {
@@ -190,14 +190,16 @@ export default function CommandPalette({
 	return (
 		<AnimatePresence>
 			{open && (
-				<motion.div
+				<m.div
+					role="region"
+					aria-label="Búsqueda"
 					className="fixed inset-0 z-[70] flex items-start justify-center bg-bg/70 px-4 pt-[12vh] backdrop-blur-sm"
 					initial={reduceMotion ? false : { opacity: 0 }}
 					animate={{ opacity: 1 }}
 					exit={{ opacity: 0 }}
 					onMouseDown={(e) => e.target === e.currentTarget && onClose()}
 				>
-					<motion.div
+					<m.div
 						role="dialog"
 						aria-modal="true"
 						aria-label="Buscar y navegar"
@@ -214,6 +216,7 @@ export default function CommandPalette({
 							/>
 							<input
 								ref={inputRef}
+								autoFocus
 								value={query}
 								onChange={(e) => setQuery(e.target.value)}
 								onKeyDown={onKeyDown}
@@ -299,8 +302,8 @@ export default function CommandPalette({
 							<span>Enter abrir</span>
 							<span className="ml-auto">Ctrl K</span>
 						</div>
-					</motion.div>
-				</motion.div>
+					</m.div>
+				</m.div>
 			)}
 		</AnimatePresence>
 	);

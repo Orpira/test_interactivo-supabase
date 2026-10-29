@@ -1,12 +1,10 @@
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, m, useReducedMotion } from "framer-motion";
 import { useAuth } from "../../services/auth";
-import { useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { supabase } from "@/services/supabase";
 import QuizCategoryModal from "./QuizCategoryModal";
-import LoginModal from "./LoginModal";
 import ThemeToggle from "./ThemeToggle";
-import CommandPalette from "../nav/CommandPalette";
 import UserMenu, { Avatar } from "../nav/UserMenu";
 import QuizMenu, { ActivePill } from "../nav/QuizMenu";
 import { NAV_PAGES, QUIZ_CATEGORIES } from "../nav/navData";
@@ -24,6 +22,19 @@ type SubcategoryOption = {
 	slug: string;
 	questionCount: number;
 };
+
+// Carga diferida: no pesan en la carga inicial de la app, pero se precargan
+// cuando el navegador queda libre para que abran al instante.
+const loadLoginModal = () => import("./LoginModal");
+const loadCommandPalette = () => import("../nav/CommandPalette");
+const LoginModal = lazy(loadLoginModal);
+const CommandPalette = lazy(loadCommandPalette);
+
+function whenIdle(fn: () => void) {
+	const w = window as Window & { requestIdleCallback?: (cb: () => void) => number };
+	if (w.requestIdleCallback) w.requestIdleCallback(fn);
+	else setTimeout(fn, 1500);
+}
 
 const MAIN_CATEGORIES = QUIZ_CATEGORIES.map(({ key, label }) => ({
 	key,
@@ -43,6 +54,7 @@ export default function Navbar() {
 	const [subcategoriesError, setSubcategoriesError] = useState("");
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 	const [paletteOpen, setPaletteOpen] = useState(false);
+	const [paletteMounted, setPaletteMounted] = useState(false);
 	const [scrolled, setScrolled] = useState(false);
 	const reduceMotion = useReducedMotion();
 	const [showExperiencePicker, setShowExperiencePicker] = useState(false);
@@ -157,11 +169,19 @@ export default function Navbar() {
 		setMobileMenuOpen(false);
 	}, [location.pathname, location.search]);
 
+	useEffect(() => {
+		whenIdle(() => {
+			void loadCommandPalette();
+			if (!isAuthenticated) void loadLoginModal();
+		});
+	}, [isAuthenticated]);
+
 	// Ctrl/⌘ + K abre la paleta de comandos desde cualquier pantalla
 	useEffect(() => {
 		const onKey = (e: KeyboardEvent) => {
 			if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
 				e.preventDefault();
+				setPaletteMounted(true);
 				setPaletteOpen((v) => !v);
 			}
 		};
@@ -213,24 +233,27 @@ export default function Navbar() {
 					aria-label="Principal"
 					className="mx-auto flex h-16 w-full max-w-7xl items-center gap-3 px-4 sm:px-6"
 				>
-					<Link
-						to="/"
-						className="group flex items-center gap-2.5 rounded-lg"
-						aria-label="WebWiz Quiz, inicio"
-					>
+					<Link to="/" className="group flex items-center gap-2.5 rounded-lg">
 						<span className="relative">
 							<span
 								className="absolute inset-0 rounded-full bg-accent/30 blur-md transition group-hover:bg-accent/50"
 								aria-hidden="true"
 							/>
-							<img src="/logo.png" alt="" className="relative h-9 w-9" />
+							<img
+								src="/logo-96.webp"
+								alt=""
+								width="36"
+								height="36"
+								className="relative h-9 w-9"
+							/>
 						</span>
 						<span className="font-display text-lg font-bold tracking-tight">
 							WebWiz
-						</span>
+						</span>{" "}
 						<span className="hidden rounded-md border border-accent/40 px-1.5 font-mono text-[0.6rem] uppercase tracking-widest text-accent sm:inline">
 							quiz
 						</span>
+						<span className="sr-only">: ir al inicio</span>
 					</Link>
 
 					{/* Escritorio: enlaces en una cápsula con indicador deslizante */}
@@ -257,13 +280,19 @@ export default function Navbar() {
 					<div className="ml-auto flex items-center gap-2">
 						<button
 							type="button"
-							onClick={() => setPaletteOpen(true)}
-							aria-label="Buscar (Ctrl+K)"
+							onClick={() => {
+								setPaletteMounted(true);
+								setPaletteOpen(true);
+							}}
+							title="Buscar (Ctrl+K)"
 							className="flex min-h-touch min-w-touch items-center justify-center gap-2 rounded-full border border-line bg-surface/70 px-3 text-sm text-muted transition hover:border-accent/60 hover:text-fg md:min-w-[12rem] md:justify-start"
 						>
 							<Search className="h-4 w-4" aria-hidden="true" />
-							<span className="hidden md:inline">Buscar…</span>
-							<kbd className="ml-auto hidden rounded border border-line px-1.5 font-mono text-[0.65rem] md:inline">
+							<span className="sr-only md:not-sr-only">Buscar…</span>
+							<kbd
+								aria-hidden="true"
+								className="ml-auto hidden rounded border border-line px-1.5 font-mono text-[0.65rem] md:inline"
+							>
 								Ctrl K
 							</kbd>
 						</button>
@@ -313,7 +342,7 @@ export default function Navbar() {
 				{/* Móvil: panel desplegable */}
 				<AnimatePresence>
 					{mobileMenuOpen && (
-						<motion.nav
+						<m.nav
 							id="mobile-menu"
 							aria-label="Menú móvil"
 							initial={reduceMotion ? false : { opacity: 0, y: -8 }}
@@ -391,22 +420,28 @@ export default function Navbar() {
 									</button>
 								)}
 							</div>
-						</motion.nav>
+						</m.nav>
 					)}
 				</AnimatePresence>
 			</header>
 
-			<CommandPalette
-				open={paletteOpen}
-				onClose={() => setPaletteOpen(false)}
-				isAuthenticated={isAuthenticated}
-				onStartQuiz={requestCategory}
-				onLogin={() => setShowLoginModal(true)}
-				onLogout={() => void logout()}
-			/>
+			{paletteMounted && (
+				<Suspense fallback={null}>
+					<CommandPalette
+						open={paletteOpen}
+						onClose={() => setPaletteOpen(false)}
+						isAuthenticated={isAuthenticated}
+						onStartQuiz={requestCategory}
+						onLogin={() => setShowLoginModal(true)}
+						onLogout={() => void logout()}
+					/>
+				</Suspense>
+			)}
 
 			{showLoginModal && (
-				<LoginModal onClose={() => setShowLoginModal(false)} />
+				<Suspense fallback={null}>
+					<LoginModal onClose={() => setShowLoginModal(false)} />
+				</Suspense>
 			)}
 			{showExperiencePicker && (
 				<div className="fixed inset-0 z-50 flex items-center justify-center bg-bg/80 px-4">

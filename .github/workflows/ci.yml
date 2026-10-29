@@ -9,7 +9,7 @@ jobs:
   check:
     runs-on: ubuntu-latest
     env:
-      # Valores ficticios: el build solo necesita que existan
+      # Valores ficticios: el build y los tests no tocan Supabase real
       VITE_SUPABASE_URL: https://example.supabase.co
       VITE_SUPABASE_ANON_KEY: ci-placeholder
     steps:
@@ -22,3 +22,16 @@ jobs:
       - run: npm run lint
       - run: npm test
       - run: npm run build
+
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      # Verifica los 30 retos en un navegador real: solución pasa, inicial falla
+      - run: npm run test:e2e -- tests/e2e/challenges.spec.ts

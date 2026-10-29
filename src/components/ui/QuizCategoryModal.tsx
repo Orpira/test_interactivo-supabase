@@ -96,7 +96,7 @@ export default function QuizCategoryModal({
 		)
 			return "/icons/javascript.svg";
 
-		return "/logo.png";
+		return "/logo-96.webp";
 	};
 
 	if (!open) return null;

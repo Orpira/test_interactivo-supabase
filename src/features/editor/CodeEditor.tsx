@@ -34,25 +34,39 @@ export default function CodeEditor({
 	minHeight?: string;
 }) {
 	return (
-		<div
-			className={`code-editor overflow-auto rounded-lg border border-line bg-surface font-mono text-sm ${readOnly ? "opacity-90" : ""}`}
-			style={{ minHeight }}
-		>
-			<SimpleCodeEditor
-				value={value}
-				onValueChange={(v) => !readOnly && onChange?.(v)}
-				highlight={(code) =>
-					Prism.highlight(code, Prism.languages[PRISM_LANG[language]], PRISM_LANG[language])
-				}
-				padding={14}
-				readOnly={readOnly}
-				textareaId={id}
-				aria-label={label}
-				tabSize={2}
-				insertSpaces
-				style={{ minHeight, fontFamily: "inherit", fontVariantLigatures: "none" }}
-				textareaClassName="focus:outline-none"
-			/>
-		</div>
+		<>
+			<label htmlFor={id} className="sr-only">
+				{label}
+			</label>
+			<div
+				className={`code-editor overflow-auto rounded-lg border border-line bg-surface font-mono text-sm ${
+					readOnly ? "opacity-90" : ""
+				}`}
+				style={{ minHeight }}
+			>
+				<SimpleCodeEditor
+					value={value}
+					onValueChange={(v) => !readOnly && onChange?.(v)}
+					highlight={(code) =>
+						Prism.highlight(
+							code,
+							Prism.languages[PRISM_LANG[language]],
+							PRISM_LANG[language]
+						)
+					}
+					padding={14}
+					readOnly={readOnly}
+					textareaId={id}
+					tabSize={2}
+					insertSpaces
+					style={{
+						minHeight,
+						fontFamily: "inherit",
+						fontVariantLigatures: "none",
+					}}
+					textareaClassName="focus:outline-none"
+				/>
+			</div>
+		</>
 	);
 }

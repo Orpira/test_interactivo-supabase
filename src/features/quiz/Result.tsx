@@ -4,7 +4,7 @@ import type { User } from "@supabase/supabase-js";
 import { useAuth } from "../../services/auth";
 import { supabase } from "../../services/supabase";
 import { updateUserStats } from "../../services/userStats";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import type { AnswerResume } from "@/types/TestResult";
 import ExperienceFeedbackModal from "@/components/ui/ExperienceFeedbackModal";
 import {
@@ -432,7 +432,7 @@ function ResultItem({ data }: { data: AnswerResume }) {
 			{/* “Persiana” animada */}
 			<AnimatePresence initial={false}>
 				{open && (
-					<motion.div
+					<m.div
 						key="content"
 						initial={{ height: 0, opacity: 0 }}
 						animate={{ height: "auto", opacity: 1 }}
@@ -451,7 +451,7 @@ function ResultItem({ data }: { data: AnswerResume }) {
 								Ver explicación ampliada en {data.sourceName || "la fuente"}
 							</a>
 						)}
-					</motion.div>
+					</m.div>
 				)}
 			</AnimatePresence>
 		</article>

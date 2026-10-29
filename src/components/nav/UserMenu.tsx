@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, m, useReducedMotion } from "framer-motion";
 import {
 	BarChart3,
 	ChevronDown,
@@ -66,13 +66,15 @@ export default function UserMenu({
 				onClick={() => setOpen((v) => !v)}
 				aria-haspopup="menu"
 				aria-expanded={open}
-				aria-label={`Menú de ${name}`}
 				className="flex min-h-touch items-center gap-2 rounded-full border border-line bg-surface py-1 pl-1 pr-2.5 transition hover:border-accent/60"
 			>
-				<Avatar initial={name.charAt(0).toUpperCase()} />
-				<span className="hidden max-w-[9rem] truncate text-sm font-semibold xl:inline">
+				<span aria-hidden="true">
+					<Avatar initial={name.charAt(0).toUpperCase()} />
+				</span>
+				<span className="sr-only max-w-[9rem] truncate text-sm font-semibold xl:not-sr-only">
 					{name}
 				</span>
+				<span className="sr-only">: menú de cuenta</span>
 				<ChevronDown
 					className={`h-4 w-4 text-muted transition ${
 						open ? "rotate-180" : ""
@@ -82,7 +84,7 @@ export default function UserMenu({
 			</button>
 			<AnimatePresence>
 				{open && (
-					<motion.div
+					<m.div
 						role="menu"
 						aria-label="Cuenta"
 						initial={reduceMotion ? false : { opacity: 0, y: -6, scale: 0.97 }}
@@ -155,7 +157,7 @@ export default function UserMenu({
 						>
 							<LogOut className="h-4 w-4" aria-hidden="true" /> Cerrar sesión
 						</button>
-					</motion.div>
+					</m.div>
 				)}
 			</AnimatePresence>
 		</div>

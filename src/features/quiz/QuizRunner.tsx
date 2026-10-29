@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, m, useReducedMotion } from "framer-motion";
 import { BookOpen, ExternalLink, Flame, X } from "lucide-react";
 import { useQuestions } from "@/hooks/useQuestions";
 import QuestionCard from "@/components/ui/QuestionCard";
@@ -232,7 +232,7 @@ export default function QuizRunner() {
 			<div aria-live="polite" className="mt-5">
 				<AnimatePresence>
 					{checked && (
-						<motion.section
+						<m.section
 							initial={reduceMotion ? false : { opacity: 0, y: 8 }}
 							animate={{ opacity: 1, y: 0 }}
 							className={`rounded-xl border p-4 ${isCorrect ? "border-accent/50 bg-accent-softer" : "border-warn/50 bg-warn-soft"}`}
@@ -283,7 +283,7 @@ export default function QuizRunner() {
 									)}
 								</>
 							)}
-						</motion.section>
+						</m.section>
 					)}
 				</AnimatePresence>
 			</div>
@@ -308,7 +308,7 @@ export default function QuizRunner() {
 						className="ml-auto inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-accent px-6 font-semibold text-accent-fg transition hover:bg-accent/90 disabled:cursor-not-allowed disabled:bg-surface2 disabled:text-muted sm:w-auto"
 					>
 						{checked ? (isLast ? "Ver resultados" : "Siguiente") : "Comprobar"}
-						<kbd className="hidden rounded border border-current/30 px-1.5 font-mono text-[0.7rem] opacity-70 sm:inline">
+						<kbd aria-hidden="true" className="hidden rounded border border-current px-1.5 font-mono text-[0.7rem] sm:inline">
 							Enter
 						</kbd>
 					</button>
@@ -342,7 +342,7 @@ function StreakBadge({ streak, reduceMotion }: { streak: number; reduceMotion: b
 	// La llama se "enciende" (más intensa) a medida que crece la racha
 	const intensity = Math.min(streak, 5) / 5;
 	return (
-		<motion.span
+		<m.span
 			key={streak}
 			initial={reduceMotion || streak === 0 ? false : { scale: 1.35 }}
 			animate={{ scale: 1 }}
@@ -358,7 +358,7 @@ function StreakBadge({ streak, reduceMotion }: { streak: number; reduceMotion: b
 				fillOpacity={0.2 + intensity * 0.6}
 			/>
 			racha ×{streak}
-		</motion.span>
+		</m.span>
 	);
 }
 

@@ -87,6 +87,18 @@
 	pre {
 		@apply font-mono;
 	}
+	/* Campos de formulario con los colores del tema (no los nativos) */
+	input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+	textarea,
+	select {
+		background-color: rgb(var(--surface));
+		color: rgb(var(--text));
+		border-color: rgb(var(--border));
+	}
+	::placeholder {
+		color: rgb(var(--muted));
+		opacity: 1;
+	}
 }
 
 @media (prefers-reduced-motion: reduce) {

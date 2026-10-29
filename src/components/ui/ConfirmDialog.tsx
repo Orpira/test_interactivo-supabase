@@ -41,6 +41,8 @@ export default function ConfirmDialog({
 
 	return (
 		<div
+			role="region"
+			aria-label={title}
 			className="fixed inset-0 z-[60] flex items-center justify-center bg-bg/80 px-4 backdrop-blur-sm"
 			onMouseDown={(e) => e.target === e.currentTarget && onClose()}
 		>
