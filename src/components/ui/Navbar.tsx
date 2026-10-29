@@ -1,10 +1,15 @@
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useAuth } from "../../services/auth";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/services/supabase";
 import QuizCategoryModal from "./QuizCategoryModal";
 import LoginModal from "./LoginModal";
 import ThemeToggle from "./ThemeToggle";
+import CommandPalette from "../nav/CommandPalette";
+import UserMenu, { Avatar } from "../nav/UserMenu";
+import QuizMenu, { ActivePill } from "../nav/QuizMenu";
+import { NAV_PAGES, QUIZ_CATEGORIES } from "../nav/navData";
 import { getCategoryVariants } from "@/utils/categoryVariants";
 import {
 	getStoredExperienceLevel,
@@ -12,7 +17,7 @@ import {
 	upsertUserExperience,
 	type ExperienceLevel,
 } from "@/services/feedback";
-import { ChevronDown, Menu, X } from "lucide-react";
+import { LogIn, LogOut, Menu, Search, X } from "lucide-react";
 
 type SubcategoryOption = {
 	name: string;
@@ -20,21 +25,10 @@ type SubcategoryOption = {
 	questionCount: number;
 };
 
-// Secciones que requieren sesión (rutas protegidas con PrivateRoute)
-const PRIVATE_LINKS = [
-	{ to: "/editor", label: "Retos" },
-	{ to: "/ranking", label: "Ranking" },
-	{ to: "/dashboard", label: "Dashboard" },
-	{ to: "/historial", label: "Historial" },
-];
-
-const desktopLinkClass = ({ isActive }: { isActive: boolean }) =>
-	isActive ? "text-accent font-semibold" : "hover:text-accent";
-
-const mobileLinkClass = ({ isActive }: { isActive: boolean }) =>
-	`rounded px-2 py-2 ${
-		isActive ? "bg-surface2 text-accent" : "hover:bg-surface2"
-	}`;
+const MAIN_CATEGORIES = QUIZ_CATEGORIES.map(({ key, label }) => ({
+	key,
+	label,
+}));
 
 export default function Navbar() {
 	const { isAuthenticated, user, logout } = useAuth();
@@ -48,16 +42,11 @@ export default function Navbar() {
 	const [subcategoriesLoading, setSubcategoriesLoading] = useState(false);
 	const [subcategoriesError, setSubcategoriesError] = useState("");
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-	const [mobileQuizOpen, setMobileQuizOpen] = useState(false);
+	const [paletteOpen, setPaletteOpen] = useState(false);
+	const [scrolled, setScrolled] = useState(false);
+	const reduceMotion = useReducedMotion();
 	const [showExperiencePicker, setShowExperiencePicker] = useState(false);
 	const [pendingCategory, setPendingCategory] = useState<string | null>(null);
-
-	const MAIN_CATEGORIES = [
-		{ key: "frontend", label: "Frontend" },
-		{ key: "backend", label: "Backend" },
-		{ key: "devops", label: "DevOps" },
-		{ key: "testing", label: "Testing" },
-	];
 
 	const userDisplayName =
 		user?.user_metadata?.full_name ||
@@ -166,8 +155,27 @@ export default function Navbar() {
 
 	useEffect(() => {
 		setMobileMenuOpen(false);
-		setMobileQuizOpen(false);
 	}, [location.pathname, location.search]);
+
+	// Ctrl/⌘ + K abre la paleta de comandos desde cualquier pantalla
+	useEffect(() => {
+		const onKey = (e: KeyboardEvent) => {
+			if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+				e.preventDefault();
+				setPaletteOpen((v) => !v);
+			}
+		};
+		window.addEventListener("keydown", onKey);
+		return () => window.removeEventListener("keydown", onKey);
+	}, []);
+
+	// Sombra y fondo más opaco al hacer scroll
+	useEffect(() => {
+		const onScroll = () => setScrolled(window.scrollY > 8);
+		onScroll();
+		window.addEventListener("scroll", onScroll, { passive: true });
+		return () => window.removeEventListener("scroll", onScroll);
+	}, []);
 
 	useEffect(() => {
 		if (!isAuthenticated) return;
@@ -178,202 +186,225 @@ export default function Navbar() {
 
 	function handleCategoryClickFromMenu(categoryKey: string) {
 		setMobileMenuOpen(false);
-		setMobileQuizOpen(false);
 		requestCategory(categoryKey);
 	}
 
+	const visiblePages = NAV_PAGES.filter(
+		(p) =>
+			(!p.private || isAuthenticated) &&
+			p.to !== "/dashboard" &&
+			p.to !== "/historial"
+	);
+	const isActive = (to: string) =>
+		to === "/" ? location.pathname === "/" : location.pathname.startsWith(to);
+	const quizActive =
+		location.pathname.startsWith("/quiz") || location.pathname === "/result";
+
 	return (
 		<>
-			<nav className="sticky top-0 z-50 border-b border-line bg-surface/95 px-4 py-3 text-fg backdrop-blur-md">
-				<div className="mx-auto flex w-full max-w-7xl flex-wrap items-center gap-3">
+			<header
+				className={`sticky top-0 z-50 border-b transition-colors ${
+					scrolled
+						? "border-line bg-bg/85 shadow-[0_8px_30px_-12px_rgb(0_0_0/0.45)]"
+						: "border-transparent bg-bg/60"
+				} backdrop-blur-xl`}
+			>
+				<nav
+					aria-label="Principal"
+					className="mx-auto flex h-16 w-full max-w-7xl items-center gap-3 px-4 sm:px-6"
+				>
 					<Link
 						to="/"
-						className="flex items-center gap-2 font-display text-lg font-bold sm:text-xl"
+						className="group flex items-center gap-2.5 rounded-lg"
+						aria-label="WebWiz Quiz, inicio"
 					>
-						<img src="/logo.png" alt="Logo" className="w-10 h-10" />
-						<span className="hidden sm:inline">WebWiz Quiz</span>
+						<span className="relative">
+							<span
+								className="absolute inset-0 rounded-full bg-accent/30 blur-md transition group-hover:bg-accent/50"
+								aria-hidden="true"
+							/>
+							<img src="/logo.png" alt="" className="relative h-9 w-9" />
+						</span>
+						<span className="font-display text-lg font-bold tracking-tight">
+							WebWiz
+						</span>
+						<span className="hidden rounded-md border border-accent/40 px-1.5 font-mono text-[0.6rem] uppercase tracking-widest text-accent sm:inline">
+							quiz
+						</span>
 					</Link>
 
-					<div className="ml-auto hidden items-center gap-4 lg:flex xl:gap-5">
-						<Link to="/" className="hover:text-accent">
-							Inicio
-						</Link>
-						<div className="relative group">
-							<button className="hover:text-accent focus:outline-none flex items-center gap-1">
-								Quizzes
-								<ChevronDown className="h-4 w-4" aria-hidden="true" />
-							</button>
-							<div className="absolute left-0 mt-2 w-48 bg-surface text-fg rounded shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto transition-opacity z-40">
-								{MAIN_CATEGORIES.map((cat) => (
-									<button
-										key={cat.key}
-										onClick={() => {
-											requestCategory(cat.key);
-										}}
-										className="w-full text-left px-4 py-2 hover:bg-accent-soft"
-									>
-										{cat.label}
-									</button>
-								))}
-							</div>
-						</div>
-						{isAuthenticated &&
-							PRIVATE_LINKS.map((link) => (
-								<NavLink
-									key={link.to}
-									to={link.to}
-									className={desktopLinkClass}
-								>
-									{link.label}
-								</NavLink>
-							))}
-						<Link to="/contacto" className="hover:text-accent">
-							Contacto
-						</Link>
-						<ThemeToggle />
+					{/* Escritorio: enlaces en una cápsula con indicador deslizante */}
+					<div className="ml-6 hidden items-center rounded-full border border-line bg-surface/70 p-1 lg:flex">
+						{visiblePages.slice(0, 1).map((p) => (
+							<NavPill
+								key={p.to}
+								to={p.to}
+								label={p.label}
+								active={isActive(p.to) && !quizActive}
+							/>
+						))}
+						<QuizMenu active={quizActive} onSelect={requestCategory} />
+						{visiblePages.slice(1).map((p) => (
+							<NavPill
+								key={p.to}
+								to={p.to}
+								label={p.label}
+								active={isActive(p.to)}
+							/>
+						))}
+					</div>
+
+					<div className="ml-auto flex items-center gap-2">
+						<button
+							type="button"
+							onClick={() => setPaletteOpen(true)}
+							aria-label="Buscar (Ctrl+K)"
+							className="flex min-h-touch min-w-touch items-center justify-center gap-2 rounded-full border border-line bg-surface/70 px-3 text-sm text-muted transition hover:border-accent/60 hover:text-fg md:min-w-[12rem] md:justify-start"
+						>
+							<Search className="h-4 w-4" aria-hidden="true" />
+							<span className="hidden md:inline">Buscar…</span>
+							<kbd className="ml-auto hidden rounded border border-line px-1.5 font-mono text-[0.65rem] md:inline">
+								Ctrl K
+							</kbd>
+						</button>
+						<ThemeToggle className="hidden rounded-full sm:inline-flex" />
 						{isAuthenticated ? (
-							<>
-								<span
-									className="flex max-w-[12rem] shrink-0 items-center gap-2 font-semibold text-accent"
-									title={`${userDisplayName} (${user?.email ?? ""})`}
-								>
-									<span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent text-xs font-bold text-accent-fg">
-										{userInitial}
-									</span>
-									<span className="hidden truncate xl:inline">
-										{userDisplayName}
-									</span>
-								</span>
-								<button
-									type="button"
-									onClick={() => void logout()}
-									className="min-h-touch rounded-md border border-line bg-surface2 px-4 py-2 font-medium text-fg transition hover:border-accent/60"
-								>
-									Cerrar sesión
-								</button>
-							</>
+							<div className="hidden lg:block">
+								<UserMenu
+									name={userDisplayName}
+									email={user?.email}
+									onLogout={() => void logout()}
+								/>
+							</div>
 						) : (
 							<button
 								type="button"
 								onClick={() => setShowLoginModal(true)}
-								className="min-h-touch rounded-md bg-accent px-4 py-2 font-semibold text-accent-fg transition hover:bg-accent/90"
+								className="hidden min-h-touch items-center gap-2 rounded-full bg-accent px-4 text-sm font-semibold text-accent-fg shadow-[0_8px_24px_-10px_rgb(var(--accent)/0.8)] transition hover:-translate-y-px hover:bg-accent/90 lg:inline-flex"
 							>
+								<LogIn className="h-4 w-4" aria-hidden="true" />
 								Iniciar sesión
 							</button>
 						)}
+						<button
+							type="button"
+							className="inline-flex min-h-touch min-w-touch items-center justify-center rounded-full border border-line bg-surface/70 text-fg lg:hidden"
+							onClick={() => setMobileMenuOpen((prev) => !prev)}
+							aria-expanded={mobileMenuOpen}
+							aria-controls="mobile-menu"
+							aria-label={mobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
+						>
+							{isAuthenticated && !mobileMenuOpen ? (
+								<Avatar initial={userInitial} />
+							) : mobileMenuOpen ? (
+								<X className="h-5 w-5" aria-hidden="true" />
+							) : (
+								<Menu className="h-5 w-5" aria-hidden="true" />
+							)}
+						</button>
 					</div>
+				</nav>
+				{/* Línea de marca */}
+				<div
+					aria-hidden="true"
+					className="h-px w-full bg-gradient-to-r from-transparent via-accent/60 to-transparent"
+				/>
 
-					{isAuthenticated && (
-						<div className="ml-auto flex min-w-0 max-w-[42vw] items-center gap-2 rounded-full border border-accent/30 bg-surface2 px-2.5 py-1 text-fg shadow-sm lg:hidden">
-							<span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent text-xs font-bold text-accent-fg">
-								{userInitial}
-							</span>
-							<span className="truncate text-xs font-semibold">
-								{userDisplayName}
-							</span>
-						</div>
-					)}
-
-					<ThemeToggle
-						className={`lg:hidden ${isAuthenticated ? "" : "ml-auto"}`}
-					/>
-					<button
-						type="button"
-						className="inline-flex min-h-touch min-w-touch items-center justify-center rounded-md border border-line text-fg lg:hidden"
-						onClick={() => setMobileMenuOpen((prev) => !prev)}
-						aria-expanded={mobileMenuOpen}
-						aria-controls="mobile-menu"
-						aria-label={mobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
-					>
-						{mobileMenuOpen ? (
-							<X className="h-5 w-5" aria-hidden="true" />
-						) : (
-							<Menu className="h-5 w-5" aria-hidden="true" />
-						)}
-					</button>
-
+				{/* Móvil: panel desplegable */}
+				<AnimatePresence>
 					{mobileMenuOpen && (
-						<nav
+						<motion.nav
 							id="mobile-menu"
 							aria-label="Menú móvil"
-							className="mt-2 w-full border-t border-line pt-3 lg:hidden"
+							initial={reduceMotion ? false : { opacity: 0, y: -8 }}
+							animate={{ opacity: 1, y: 0 }}
+							exit={{ opacity: 0, y: -8 }}
+							transition={{ duration: 0.16 }}
+							className="max-h-[calc(100dvh-4rem)] overflow-y-auto border-b border-line bg-bg/95 px-4 pb-5 pt-3 backdrop-blur-xl lg:hidden"
 						>
-							<div className="flex flex-col gap-2 text-sm">
-								<Link to="/" className="rounded px-2 py-2 hover:bg-surface2">
-									Inicio
-								</Link>
-								<button
-									type="button"
-									onClick={() => setMobileQuizOpen((prev) => !prev)}
-									className="flex items-center justify-between rounded px-2 py-2 hover:bg-surface2"
-								>
-									<span>Quizzes</span>
-									<ChevronDown
-										className={`h-4 w-4 transition-transform ${
-											mobileQuizOpen ? "rotate-180" : ""
-										}`}
-										aria-hidden="true"
-									/>
-								</button>
-								{mobileQuizOpen && (
-									<div className="ml-2 flex flex-col rounded bg-surface2 p-2">
-										{MAIN_CATEGORIES.map((cat) => (
-											<button
-												key={cat.key}
-												type="button"
-												onClick={() => {
-													void handleCategoryClickFromMenu(cat.key);
-												}}
-												className="rounded px-2 py-2 text-left hover:bg-surface2"
-											>
-												{cat.label}
-											</button>
-										))}
+							{isAuthenticated && (
+								<div className="mb-3 flex items-center gap-3 rounded-xl border border-line bg-surface p-3">
+									<Avatar initial={userInitial} size="lg" />
+									<div className="min-w-0">
+										<p className="truncate font-semibold">{userDisplayName}</p>
+										<p className="truncate text-xs text-muted">{user?.email}</p>
 									</div>
+								</div>
+							)}
+							<ul className="grid gap-1">
+								{NAV_PAGES.filter((p) => !p.private || isAuthenticated).map(
+									({ to, label, icon: Icon }) => (
+										<li key={to}>
+											<NavLink
+												to={to}
+												end={to === "/"}
+												className={({ isActive: a }) =>
+													`flex min-h-12 items-center gap-3 rounded-xl px-3 font-medium ${
+														a
+															? "bg-accent-soft text-accent"
+															: "text-fg hover:bg-surface2"
+													}`
+												}
+											>
+												<Icon className="h-5 w-5" aria-hidden="true" />
+												{label}
+											</NavLink>
+										</li>
+									)
 								)}
-								{isAuthenticated &&
-									PRIVATE_LINKS.map((link) => (
-										<NavLink
-											key={link.to}
-											to={link.to}
-											className={mobileLinkClass}
-										>
-											{link.label}
-										</NavLink>
-									))}
-								<Link
-									to="/contacto"
-									className="rounded px-2 py-2 hover:bg-surface2"
-								>
-									Contacto
-								</Link>
+							</ul>
+							<p className="mb-2 mt-4 px-1 font-mono text-[0.65rem] font-semibold uppercase tracking-widest text-muted">
+								Quizzes
+							</p>
+							<div className="grid grid-cols-2 gap-2">
+								{QUIZ_CATEGORIES.map(({ key, label, icon: Icon }) => (
+									<button
+										key={key}
+										type="button"
+										onClick={() => handleCategoryClickFromMenu(key)}
+										className="flex min-h-12 items-center gap-2 rounded-xl border border-line bg-surface px-3 text-left text-sm font-medium hover:border-accent/60"
+									>
+										<Icon className="h-4 w-4 text-accent" aria-hidden="true" />
+										{label}
+									</button>
+								))}
+							</div>
+							<div className="mt-4 flex items-center gap-2">
+								<ThemeToggle className="rounded-xl border border-line" />
 								{isAuthenticated ? (
-									<>
-										<span className="truncate rounded bg-surface2 px-2 py-2 text-accent">
-											{userDisplayName}
-										</span>
-										<button
-											type="button"
-											onClick={() => void logout()}
-											className="rounded bg-warn px-3 py-2 text-left hover:bg-warn/90"
-										>
-											Cerrar sesión
-										</button>
-									</>
+									<button
+										type="button"
+										onClick={() => void logout()}
+										className="flex min-h-touch flex-1 items-center justify-center gap-2 rounded-xl border border-line bg-surface font-medium text-warn"
+									>
+										<LogOut className="h-4 w-4" aria-hidden="true" />
+										Cerrar sesión
+									</button>
 								) : (
 									<button
 										type="button"
 										onClick={() => setShowLoginModal(true)}
-										className="rounded bg-accent px-3 py-2 text-left hover:bg-accent/90"
+										className="flex min-h-touch flex-1 items-center justify-center gap-2 rounded-xl bg-accent font-semibold text-accent-fg"
 									>
+										<LogIn className="h-4 w-4" aria-hidden="true" />
 										Iniciar sesión
 									</button>
 								)}
 							</div>
-						</nav>
+						</motion.nav>
 					)}
-				</div>
-			</nav>
+				</AnimatePresence>
+			</header>
+
+			<CommandPalette
+				open={paletteOpen}
+				onClose={() => setPaletteOpen(false)}
+				isAuthenticated={isAuthenticated}
+				onStartQuiz={requestCategory}
+				onLogin={() => setShowLoginModal(true)}
+				onLogout={() => void logout()}
+			/>
+
 			{showLoginModal && (
 				<LoginModal onClose={() => setShowLoginModal(false)} />
 			)}
@@ -425,9 +456,7 @@ export default function Navbar() {
 												</span>
 											)}
 										</span>
-										<span className="block text-sm text-muted">
-											{opt.desc}
-										</span>
+										<span className="block text-sm text-muted">{opt.desc}</span>
 									</button>
 								);
 							})}
@@ -463,4 +492,27 @@ export default function Navbar() {
 
 function errorMessage(error: unknown, fallback: string) {
 	return (error as { message?: string })?.message || fallback;
+}
+
+function NavPill({
+	to,
+	label,
+	active,
+}: {
+	to: string;
+	label: string;
+	active: boolean;
+}) {
+	return (
+		<Link
+			to={to}
+			aria-current={active ? "page" : undefined}
+			className={`relative flex min-h-10 items-center rounded-full px-3.5 text-sm font-medium transition-colors ${
+				active ? "text-fg" : "text-muted hover:text-fg"
+			}`}
+		>
+			{active && <ActivePill />}
+			<span className="relative">{label}</span>
+		</Link>
+	);
 }

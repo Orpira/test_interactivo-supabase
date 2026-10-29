@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 import { vi, describe, it, expect, beforeEach } from "vitest";
@@ -72,21 +72,24 @@ describe("<Navbar />", () => {
 
 		await user.click(screen.getByRole("button", { name: /cerrar menú/i }));
 
-		expect(
-			screen.queryByRole("navigation", { name: /Menú móvil/i, hidden: true })
-		).not.toBeInTheDocument();
+		// El panel se cierra con una animación de salida
+		await waitFor(
+			() =>
+				expect(
+					screen.queryByRole("navigation", { name: /Menú móvil/i, hidden: true }),
+				).not.toBeInTheDocument(),
+			{ timeout: 3000 },
+		);
 	});
 
-	it("muestra las secciones protegidas solo con sesión iniciada", () => {
+	it("muestra las secciones protegidas solo con sesión iniciada", async () => {
 		const { unmount } = render(
 			<MemoryRouter>
 				<Navbar />
-			</MemoryRouter>
+			</MemoryRouter>,
 		);
 		for (const label of ["Retos", "Ranking", "Dashboard", "Historial"]) {
-			expect(
-				screen.queryByRole("link", { name: label })
-			).not.toBeInTheDocument();
+			expect(screen.queryByRole("link", { name: label })).not.toBeInTheDocument();
 		}
 		unmount();
 
@@ -96,26 +99,32 @@ describe("<Navbar />", () => {
 			email: "ada@test.com",
 			user_metadata: { full_name: "Ada" },
 		};
+		const user = userEvent.setup();
 		render(
 			<MemoryRouter>
 				<Navbar />
-			</MemoryRouter>
+			</MemoryRouter>,
 		);
-		expect(screen.getByRole("link", { name: "Retos" })).toHaveAttribute(
-			"href",
-			"/editor"
+		expect(screen.getByRole("link", { name: "Retos" })).toHaveAttribute("href", "/editor");
+		expect(screen.getByRole("link", { name: "Ranking" })).toHaveAttribute("href", "/ranking");
+
+		// Dashboard e Historial viven en el menú de la cuenta
+		await user.click(screen.getByRole("button", { name: /Menú de Ada/ }));
+		expect(screen.getByRole("menuitem", { name: /Dashboard/ })).toHaveAttribute("href", "/dashboard");
+		expect(screen.getByRole("menuitem", { name: /Historial/ })).toHaveAttribute("href", "/historial");
+	});
+
+	it("Ctrl+K abre la paleta de comandos y filtra", async () => {
+		const user = userEvent.setup();
+		render(
+			<MemoryRouter>
+				<Navbar />
+			</MemoryRouter>,
 		);
-		expect(screen.getByRole("link", { name: "Ranking" })).toHaveAttribute(
-			"href",
-			"/ranking"
-		);
-		expect(screen.getByRole("link", { name: "Dashboard" })).toHaveAttribute(
-			"href",
-			"/dashboard"
-		);
-		expect(screen.getByRole("link", { name: "Historial" })).toHaveAttribute(
-			"href",
-			"/historial"
-		);
+		await user.keyboard("{Control>}k{/Control}");
+		const input = await screen.findByRole("combobox");
+		await user.type(input, "contac");
+		expect(screen.getByRole("option", { name: /Contacto/ })).toBeInTheDocument();
+		expect(screen.queryByRole("option", { name: /Inicio/ })).not.toBeInTheDocument();
 	});
 });

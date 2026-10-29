@@ -1,5 +1,7 @@
 -- =============================================
 -- Schema SQL para Supabase
+-- Instalación nueva: ejecuta este archivo y después, en orden, los de
+-- supabase/migrations/ (están verificados en test/unit/migrations.test.ts).
 -- =============================================
 
 -- Tabla: questions (preguntas de quiz)
