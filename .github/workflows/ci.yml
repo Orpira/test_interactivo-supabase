@@ -7,7 +7,7 @@ on:
 
 jobs:
   check:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
       # Valores ficticios: el build y los tests no tocan Supabase real
       VITE_SUPABASE_URL: https://example.supabase.co
@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
       - run: npm ci
       - run: npm run lint
@@ -24,12 +24,12 @@ jobs:
       - run: npm run build
 
   e2e:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
