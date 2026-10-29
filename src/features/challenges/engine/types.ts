@@ -34,7 +34,7 @@ export type ChallengeTest =
 	  };
 
 export type ChallengeLevel = "junior" | "semi_senior" | "senior";
-export type ChallengeCategory = "html" | "css" | "javascript";
+export type ChallengeCategory = "html" | "css" | "javascript" | "accesibilidad" | "seguridad" | "rendimiento";
 
 export type ChallengeSpec = {
 	id: string;
@@ -49,6 +49,8 @@ export type ChallengeSpec = {
 	hints: string[];
 	/** Archivos que cambian respecto al código inicial para resolver el reto */
 	solution: Partial<ChallengeFiles>;
+	/** Opciones de ejecución de los tests (ancho, red simulada, auditoría axe) */
+	run?: RunOptions;
 };
 
 export type TestResult = {
@@ -74,6 +76,8 @@ export type RunOptions = {
 	width?: number;
 	height?: number;
 	network?: NetworkMock[];
+	/** Carga axe-core en el iframe: los tests pueden usar audit(reglas) (Fase 5) */
+	axe?: boolean;
 };
 
 /** Petición registrada por la red simulada (panel Red y tests). */

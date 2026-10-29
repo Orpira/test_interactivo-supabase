@@ -1,9 +1,9 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Bug, CheckCircle2, Clock, Laptop, Smartphone, Tablet } from "lucide-react";
-import { INCIDENTS } from "@/content/incidents";
 import { LEVEL_LABEL } from "@/features/editor/languages";
 import { getClosedIncidents } from "./session";
+import { useIncidentCatalog } from "./useIncidentCatalog";
 import { formatClock } from "./timeline";
 import { AREA_LABEL, type IncidentArea } from "./types";
 
@@ -12,6 +12,7 @@ const AREAS: IncidentArea[] = ["css", "javascript", "accesibilidad", "seguridad"
 
 /** /incidencias: tickets abiertos agrupados por área. */
 export default function IncidentList() {
+	const { incidents: INCIDENTS } = useIncidentCatalog();
 	const closed = useMemo(() => getClosedIncidents(), []);
 	const done = INCIDENTS.filter((i) => closed[i.id]).length;
 

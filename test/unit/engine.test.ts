@@ -40,3 +40,11 @@ describe("buildDocument", () => {
 		expect(html).not.toContain('"</script><img');
 	});
 });
+
+import { buildDocument } from "../../src/features/challenges/engine/buildDocument";
+describe("buildDocument", () => {
+	it("no corrompe los $ del arnés en páginas con </body>", () => {
+		const doc = buildDocument({ "index.html": "<body><p>x</p></body>", "styles.css": "", "app.js": "" }, { harness: 'var a = "$$"; var b = "$&";' });
+		expect(doc).toContain('var a = "$$"; var b = "$&";');
+	});
+});

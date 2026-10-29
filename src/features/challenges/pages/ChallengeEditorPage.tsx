@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Group, Panel, Separator } from "react-resizable-panels";
 import {
@@ -60,7 +60,8 @@ function ChallengeWorkspace({ challenge, all }: { challenge: ChallengeSpec; all:
 	const desktop = useMediaQuery("(min-width: 768px)");
 	const draft = useDraft(challenge);
 	const { files, setFile, hintsShown, setHintsShown } = draft;
-	const { results, running, runs, runNow } = useLiveTests(files, challenge.tests);
+	const { results, running, runs, runNow } = useLiveTests(files, challenge.tests, challenge.run);
+	const previewOptions = useMemo(() => (challenge.run?.network ? { network: challenge.run.network } : undefined), [challenge]);
 
 	const visibleFiles = FILE_NAMES.filter((f) => challenge.editable.includes(f) || challenge.files[f].trim());
 	const readOnlyFiles = visibleFiles.filter((f) => !challenge.editable.includes(f));
@@ -218,7 +219,7 @@ function ChallengeWorkspace({ challenge, all }: { challenge: ChallengeSpec; all:
 		</div>
 	);
 
-	const preview = <PreviewFrame files={files} onConsole={onConsole} onReload={clearConsole} />;
+	const preview = <PreviewFrame files={files} onConsole={onConsole} onReload={clearConsole} options={previewOptions} />;
 	const consolePanel = <ConsolePanel entries={consoleEntries} onClear={clearConsole} />;
 	const testsPanel = (
 		<TestsPanel tests={challenge.tests} results={results} running={running} hintsShown={hintsShown} onNext={goNext} />

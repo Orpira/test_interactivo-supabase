@@ -213,7 +213,7 @@ export default function Navbar() {
 		(p) =>
 			(!p.private || isAuthenticated) &&
 			!(p.publicOnly && isAuthenticated) &&
-			!["/dashboard", "/historial", "/mapa", "/practicar"].includes(p.to)
+			!["/dashboard", "/historial", "/mapa", "/practicar", "/revisiones", "/explica", "/sql", "/git", "/crear"].includes(p.to)
 	);
 	const isActive = (to: string) =>
 		to === "/" ? location.pathname === "/" : location.pathname.startsWith(to);

@@ -17,6 +17,7 @@ import {
 	Wrench,
 } from "lucide-react";
 import { INCIDENTS, getIncident } from "@/content/incidents";
+import { useIncidentCatalog } from "./useIncidentCatalog";
 import { useAuth } from "@/services/auth";
 import { saveAttempt } from "@/services/challengeAttempts";
 import CodeMirrorEditor from "@/features/editor/CodeMirrorEditor";
@@ -43,7 +44,9 @@ import type { IncidentSpec } from "./types";
 
 export default function IncidentPage() {
 	const { id } = useParams();
-	const incident = id ? getIncident(id) : undefined;
+	const { incidents, loaded } = useIncidentCatalog();
+	const incident = id ? (getIncident(id) ?? incidents.find((i) => i.id === id)) : undefined;
+	if (!incident && !loaded) return <p className="p-6 text-center text-muted">Cargando incidencia…</p>;
 	if (!incident) {
 		return (
 			<div className="space-y-3 p-6 text-center">
@@ -105,7 +108,7 @@ function IncidentWorkspace({ incident }: { incident: IncidentSpec }) {
 	const frameRef = useRef<HTMLIFrameElement>(null);
 
 	const index = INCIDENTS.findIndex((i) => i.id === incident.id);
-	const next = INCIDENTS[index + 1];
+	const next = index >= 0 ? INCIDENTS[index + 1] : undefined;
 	const elapsed = (progress.closed ? progress.closed.durationMs : now - progress.startedAt) || 0;
 
 	useEffect(() => {
@@ -498,7 +501,7 @@ function IncidentWorkspace({ incident }: { incident: IncidentSpec }) {
 				<ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" /> Incidencias
 			</Link>
 			<span>
-				· {index + 1} de {INCIDENTS.length}
+				· {index >= 0 ? `${index + 1} de ${INCIDENTS.length}` : "comunidad"}
 			</span>
 		</nav>
 	);

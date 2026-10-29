@@ -31,6 +31,14 @@ const LearningSync = lazy(() => import("@/features/learning/LearningSync"));
 const HoyPage = lazy(() => import("@/features/hoy/HoyPage"));
 const PracticarPage = lazy(() => import("@/features/hoy/PracticarPage"));
 const MapaPage = lazy(() => import("@/features/hoy/MapaPage"));
+const ReviewList = lazy(() => import("@/features/reviews/ReviewList"));
+const ReviewPage = lazy(() => import("@/features/reviews/ReviewPage"));
+const ExplainList = lazy(() => import("@/features/explain/ExplainList"));
+const ExplainPage = lazy(() => import("@/features/explain/ExplainPage"));
+const LabList = lazy(() => import("@/features/labs/LabList"));
+const SqlLabPage = lazy(() => import("@/features/sql/SqlLabPage"));
+const GitLabPage = lazy(() => import("@/features/git/GitLabPage"));
+const CreatePage = lazy(() => import("@/features/create/CreatePage"));
 const IncidentList = lazy(() => import("@/features/incidents/IncidentList"));
 const IncidentPage = lazy(() => import("@/features/incidents/IncidentPage"));
 const ChallengeEditorPage = lazy(
@@ -154,6 +162,78 @@ export default function AppRouter() {
 							element={
 								<PrivateRoute>
 									<MapaPage />
+								</PrivateRoute>
+							}
+						/>
+						<Route
+							path="/revisiones"
+							element={
+								<PrivateRoute>
+									<ReviewList />
+								</PrivateRoute>
+							}
+						/>
+						<Route
+							path="/revisiones/:id"
+							element={
+								<PrivateRoute>
+									<ReviewPage />
+								</PrivateRoute>
+							}
+						/>
+						<Route
+							path="/explica"
+							element={
+								<PrivateRoute>
+									<ExplainList />
+								</PrivateRoute>
+							}
+						/>
+						<Route
+							path="/explica/:id"
+							element={
+								<PrivateRoute>
+									<ExplainPage />
+								</PrivateRoute>
+							}
+						/>
+						<Route
+							path="/sql"
+							element={
+								<PrivateRoute>
+									<LabList lab="sql" />
+								</PrivateRoute>
+							}
+						/>
+						<Route
+							path="/sql/:id"
+							element={
+								<PrivateRoute>
+									<SqlLabPage />
+								</PrivateRoute>
+							}
+						/>
+						<Route
+							path="/git"
+							element={
+								<PrivateRoute>
+									<LabList lab="git" />
+								</PrivateRoute>
+							}
+						/>
+						<Route
+							path="/git/:id"
+							element={
+								<PrivateRoute>
+									<GitLabPage />
+								</PrivateRoute>
+							}
+						/>
+						<Route
+							path="/crear"
+							element={
+								<PrivateRoute>
+									<CreatePage />
 								</PrivateRoute>
 							}
 						/>

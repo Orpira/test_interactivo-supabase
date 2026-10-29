@@ -81,7 +81,8 @@ test("confianza → diagnóstico → mapa → repaso al día siguiente", async (
 	await expect(page.getByText(/fallaste 1 de las 3 que marcaste como «Seguro»/)).toBeVisible();
 	await expect(page.getByText("Siguiente paso recomendado")).toBeVisible();
 	await expect(page.getByRole("link", { name: "Empezar" })).toHaveCount(1);
-	await expect(page.getByRole("link", { name: "Empezar" })).toHaveAttribute("href", /\/repaso\?conceptos=/);
+	// Repaso del concepto más flojo o, si tiene pregunta abierta, "Explícalo tú"
+	await expect(page.getByRole("link", { name: "Empezar" })).toHaveAttribute("href", /\/(repaso\?conceptos=|explica\/)/);
 
 	// El mapa refleja el quiz
 	await page.goto("/mapa");

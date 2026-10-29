@@ -25,8 +25,10 @@ export async function runChallengeTests(
 	const domTests = tests.filter((t) => t.type === "dom");
 	const workerTests = tests.filter((t) => t.type !== "dom");
 
+	// axe-core solo se descarga para los retos de accesibilidad
+	const axeSource = options.axe && domTests.length ? await loadAxe() : undefined;
 	const [domResults, workerResults] = await Promise.all([
-		domTests.length ? runDomTests(files, domTests, options) : Promise.resolve([]),
+		domTests.length ? runDomTests(files, domTests, options, axeSource) : Promise.resolve([]),
 		workerTests.length ? runWorkerTests(files["app.js"], workerTests) : Promise.resolve([]),
 	]);
 
@@ -38,10 +40,18 @@ export async function runChallengeTests(
 
 // ------------------------------------------------------------------ DOM
 
+let axeCache: Promise<string> | null = null;
+/** axe-core con los mensajes en español. */
+const loadAxe = () =>
+	(axeCache ??= Promise.all([import("axe-core/axe.min.js?raw"), import("axe-core/locales/es.json")]).then(
+		([src, es]) => `${src.default as string}\n;axe.configure({ locale: ${JSON.stringify(es.default)} });`,
+	));
+
 function runDomTests(
 	files: ChallengeFiles,
 	tests: ChallengeTest[],
 	options: RunOptions,
+	axeSource?: string,
 ): Promise<TestResult[]> {
 	return new Promise((resolve) => {
 		const iframe = document.createElement("iframe");
@@ -102,11 +112,11 @@ function runDomTests(
 						message: `Tiempo agotado: la página no respondió en ${TEST_TIMEOUT_MS / 1000} s.`,
 					})),
 				),
-			tests.length * TEST_TIMEOUT_MS + 3000,
+			tests.length * TEST_TIMEOUT_MS + (axeSource ? 6000 : 3000),
 		);
 
 		window.addEventListener("message", onMessage);
-		iframe.srcdoc = buildDocument(files, { harness: DOM_HARNESS, network: options.network });
+		iframe.srcdoc = buildDocument(files, { harness: DOM_HARNESS, network: options.network, axeSource });
 		document.body.appendChild(iframe);
 	});
 }
