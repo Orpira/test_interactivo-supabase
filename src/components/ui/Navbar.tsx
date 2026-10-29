@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../services/auth";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/services/supabase";
@@ -18,6 +18,22 @@ type SubcategoryOption = {
 	slug: string;
 	questionCount: number;
 };
+
+// Secciones que requieren sesión (rutas protegidas con PrivateRoute)
+const PRIVATE_LINKS = [
+	{ to: "/editor", label: "Retos" },
+	{ to: "/ranking", label: "Ranking" },
+	{ to: "/dashboard", label: "Dashboard" },
+	{ to: "/historial", label: "Historial" },
+];
+
+const desktopLinkClass = ({ isActive }: { isActive: boolean }) =>
+	isActive ? "text-indigo-300 font-semibold" : "hover:text-indigo-300";
+
+const mobileLinkClass = ({ isActive }: { isActive: boolean }) =>
+	`rounded px-2 py-2 ${
+		isActive ? "bg-slate-800 text-indigo-300" : "hover:bg-slate-800"
+	}`;
 
 export default function Navbar() {
 	const { isAuthenticated, user, logout } = useAuth();
@@ -177,7 +193,7 @@ export default function Navbar() {
 						<span className="hidden sm:inline">WebWiz Quiz</span>
 					</Link>
 
-					<div className="ml-auto hidden items-center gap-6 md:flex">
+					<div className="ml-auto hidden items-center gap-4 lg:flex xl:gap-5">
 						<Link to="/" className="hover:text-indigo-300">
 							Inicio
 						</Link>
@@ -200,24 +216,37 @@ export default function Navbar() {
 								))}
 							</div>
 						</div>
-						{isAuthenticated && (
-							<Link to="/dashboard" className="hover:text-indigo-300">
-								Dashboard
-							</Link>
-						)}
+						{isAuthenticated &&
+							PRIVATE_LINKS.map((link) => (
+								<NavLink
+									key={link.to}
+									to={link.to}
+									className={desktopLinkClass}
+								>
+									{link.label}
+								</NavLink>
+							))}
 						<Link to="/contacto" className="hover:text-indigo-300">
 							Contacto
 						</Link>
 						{isAuthenticated ? (
 							<>
-								<span className="max-w-[14rem] truncate font-semibold text-indigo-200">
-									{user?.email}
+								<span
+									className="flex max-w-[12rem] shrink-0 items-center gap-2 font-semibold text-indigo-200"
+									title={`${userDisplayName} (${user?.email ?? ""})`}
+								>
+									<span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-indigo-500 text-xs font-bold text-white">
+										{userInitial}
+									</span>
+									<span className="hidden truncate xl:inline">
+										{userDisplayName}
+									</span>
 								</span>
 								<button
 									onClick={() => void logout()}
 									className="bg-orange-600 hover:bg-orange-500 text-white px-4 py-2 rounded transition"
 								>
-									Cerrar sesion
+									Cerrar sesión
 								</button>
 							</>
 						) : (
@@ -225,13 +254,13 @@ export default function Navbar() {
 								onClick={() => setShowLoginModal(true)}
 								className="bg-indigo-400 hover:bg-indigo-300 text-white px-4 py-2 rounded transition"
 							>
-								Iniciar sesion
+								Iniciar sesión
 							</button>
 						)}
 					</div>
 
 					{isAuthenticated && (
-						<div className="ml-auto flex min-w-0 max-w-[42vw] items-center gap-2 rounded-full border border-indigo-400/30 bg-slate-800 px-2.5 py-1 text-indigo-100 shadow-sm md:hidden">
+						<div className="ml-auto flex min-w-0 max-w-[42vw] items-center gap-2 rounded-full border border-indigo-400/30 bg-slate-800 px-2.5 py-1 text-indigo-100 shadow-sm lg:hidden">
 							<span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-indigo-500 text-xs font-bold text-white">
 								{userInitial}
 							</span>
@@ -243,7 +272,7 @@ export default function Navbar() {
 
 					<button
 						type="button"
-						className={`inline-flex items-center justify-center rounded-md border border-slate-700 p-2 text-white md:hidden ${
+						className={`inline-flex items-center justify-center rounded-md border border-slate-700 p-2 text-white lg:hidden ${
 							isAuthenticated ? "" : "ml-auto"
 						}`}
 						onClick={() => setMobileMenuOpen((prev) => !prev)}
@@ -262,7 +291,7 @@ export default function Navbar() {
 						<nav
 							id="mobile-menu"
 							aria-label="Menú móvil"
-							className="mt-2 w-full border-t border-slate-700 pt-3 md:hidden"
+							className="mt-2 w-full border-t border-slate-700 pt-3 lg:hidden"
 						>
 							<div className="flex flex-col gap-2 text-sm">
 								<Link to="/" className="rounded px-2 py-2 hover:bg-slate-800">
@@ -297,14 +326,16 @@ export default function Navbar() {
 										))}
 									</div>
 								)}
-								{isAuthenticated && (
-									<Link
-										to="/dashboard"
-										className="rounded px-2 py-2 hover:bg-slate-800"
-									>
-										Dashboard
-									</Link>
-								)}
+								{isAuthenticated &&
+									PRIVATE_LINKS.map((link) => (
+										<NavLink
+											key={link.to}
+											to={link.to}
+											className={mobileLinkClass}
+										>
+											{link.label}
+										</NavLink>
+									))}
 								<Link
 									to="/contacto"
 									className="rounded px-2 py-2 hover:bg-slate-800"
@@ -321,7 +352,7 @@ export default function Navbar() {
 											onClick={() => void logout()}
 											className="rounded bg-orange-600 px-3 py-2 text-left hover:bg-orange-500"
 										>
-											Cerrar sesion
+											Cerrar sesión
 										</button>
 									</>
 								) : (
@@ -330,7 +361,7 @@ export default function Navbar() {
 										onClick={() => setShowLoginModal(true)}
 										className="rounded bg-indigo-500 px-3 py-2 text-left hover:bg-indigo-400"
 									>
-										Iniciar sesion
+										Iniciar sesión
 									</button>
 								)}
 							</div>

@@ -76,4 +76,46 @@ describe("<Navbar />", () => {
 			screen.queryByRole("navigation", { name: /Menú móvil/i, hidden: true })
 		).not.toBeInTheDocument();
 	});
+
+	it("muestra las secciones protegidas solo con sesión iniciada", () => {
+		const { unmount } = render(
+			<MemoryRouter>
+				<Navbar />
+			</MemoryRouter>
+		);
+		for (const label of ["Retos", "Ranking", "Dashboard", "Historial"]) {
+			expect(
+				screen.queryByRole("link", { name: label })
+			).not.toBeInTheDocument();
+		}
+		unmount();
+
+		mockAuth.isAuthenticated = true;
+		mockAuth.user = {
+			id: "1",
+			email: "ada@test.com",
+			user_metadata: { full_name: "Ada" },
+		};
+		render(
+			<MemoryRouter>
+				<Navbar />
+			</MemoryRouter>
+		);
+		expect(screen.getByRole("link", { name: "Retos" })).toHaveAttribute(
+			"href",
+			"/editor"
+		);
+		expect(screen.getByRole("link", { name: "Ranking" })).toHaveAttribute(
+			"href",
+			"/ranking"
+		);
+		expect(screen.getByRole("link", { name: "Dashboard" })).toHaveAttribute(
+			"href",
+			"/dashboard"
+		);
+		expect(screen.getByRole("link", { name: "Historial" })).toHaveAttribute(
+			"href",
+			"/historial"
+		);
+	});
 });
