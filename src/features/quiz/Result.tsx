@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
+import type { User } from "@supabase/supabase-js";
 import { useAuth } from "../../services/auth";
 import { supabase } from "../../services/supabase";
 import { updateUserStats } from "../../services/userStats";
@@ -16,12 +17,24 @@ import {
 
 type Props = { answers?: AnswerResume[] };
 
+type SummaryEntry = {
+	question: string;
+	options: string[];
+	correctAnswer: string;
+	selectedAnswer: string;
+	subcategory?: string;
+	shortExplanation?: string;
+	sourceUrl?: string;
+	sourceName?: string;
+};
+
 export default function Result({ answers: answersProp }: Props) {
 	const location = useLocation();
+	const navigate = useNavigate();
 	const { isAuthenticated, user } = useAuth();
 	const hasSaved = useRef(false);
 	const [loadingFromDB, setLoadingFromDB] = useState(false);
-	const [dbSummary, setDbSummary] = useState<any[] | null>(null);
+	const [dbSummary, setDbSummary] = useState<SummaryEntry[] | null>(null);
 	const [dbScore, setDbScore] = useState<number | undefined>();
 	const [dbTotal, setDbTotal] = useState<number | undefined>();
 	const [dbCategory, setDbCategory] = useState<string | undefined>();
@@ -32,7 +45,7 @@ export default function Result({ answers: answersProp }: Props) {
 	const [feedbackLoading, setFeedbackLoading] = useState(false);
 	const [feedbackError, setFeedbackError] = useState<string | null>(null);
 	const [experienceLevel, setExperienceLevel] = useState<ExperienceLevel>(
-		() => getStoredExperienceLevel() ?? "junior",
+		() => getStoredExperienceLevel() ?? "junior"
 	);
 	const feedbackChecked = useRef(false);
 
@@ -45,16 +58,7 @@ export default function Result({ answers: answersProp }: Props) {
 		total?: number;
 		category?: string;
 		subcategory?: string;
-		summary?: {
-			question: string;
-			options: string[];
-			correctAnswer: string;
-			selectedAnswer: string;
-			subcategory?: string;
-			shortExplanation?: string;
-			sourceUrl?: string;
-			sourceName?: string;
-		}[];
+		summary?: SummaryEntry[];
 	} | null;
 
 	// Cargar resultado desde Supabase si viene con ?id=
@@ -89,7 +93,7 @@ export default function Result({ answers: answersProp }: Props) {
 	const answers: AnswerResume[] =
 		answersProp && answersProp.length > 0
 			? answersProp
-			: (activeSummary ?? []).map((s: any, i: number) => ({
+			: (activeSummary ?? []).map((s, i) => ({
 					id: String(i),
 					question: s.question,
 					userAnswer: s.selectedAnswer,
@@ -98,7 +102,7 @@ export default function Result({ answers: answersProp }: Props) {
 					shortExplanation: s.shortExplanation ?? "",
 					sourceUrl: s.sourceUrl ?? "",
 					sourceName: s.sourceName ?? "",
-				}));
+			  }));
 
 	const finalScore = state?.score ?? dbScore;
 	const finalTotal = state?.total ?? dbTotal;
@@ -134,9 +138,9 @@ export default function Result({ answers: answersProp }: Props) {
 		) {
 			hasSaved.current = true;
 			const resultado = {
-				name: user.user_metadata?.full_name || "",
-				email: user.email || "",
-				userId: user.id || "",
+				// No guardamos el email: la tabla resultados alimenta el ranking público.
+				name: getPublicDisplayName(user),
+				userId: user.id,
 				score: finalScore,
 				total: finalTotal,
 				category: String(finalCategory),
@@ -147,16 +151,28 @@ export default function Result({ answers: answersProp }: Props) {
 			supabase
 				.from("resultados")
 				.insert(resultado)
-				.then(({ error }) => {
+				.select("id")
+				.single()
+				.then(({ data, error }) => {
 					if (error) {
 						console.error("Error guardando resultado:", error);
 						setSaveError(
-							error.message || "No se pudo guardar el resultado del quiz.",
+							error.message || "No se pudo guardar el resultado del quiz."
 						);
+						return;
+					}
+					// Fijamos la URL con el id: al recargar no se vuelve a insertar
+					// el resultado y el enlace se puede compartir.
+					if (data?.id) {
+						navigate(`/result?id=${data.id}`, {
+							replace: true,
+							state: location.state,
+						});
 					}
 				});
 			updateUserStats(user, finalCategory, finalScore, finalTotal);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps -- guardado único, protegido por hasSaved
 	}, [
 		isAuthenticated,
 		user,
@@ -214,9 +230,10 @@ export default function Result({ answers: answersProp }: Props) {
 				quizId: resultId ?? undefined,
 			});
 			setFeedbackOpen(false);
-		} catch (error: any) {
+		} catch (error) {
 			setFeedbackError(
-				error?.message || "No se pudo enviar tu evaluación. Intenta de nuevo.",
+				(error as { message?: string })?.message ||
+					"No se pudo enviar tu evaluación. Intenta de nuevo."
 			);
 		} finally {
 			setFeedbackLoading(false);
@@ -341,13 +358,20 @@ export default function Result({ answers: answersProp }: Props) {
 			/>
 		</>
 	);
+}
 
-	function ResultItem({ data }: { data: AnswerResume }) {
-		const [open, setOpen] = useState(false);
+function getPublicDisplayName(user: User) {
+	const fullName = user.user_metadata?.full_name || user.user_metadata?.name;
+	if (fullName) return String(fullName);
+	return user.email ? user.email.split("@")[0] : "Anónimo";
+}
 
-		return (
-			<article
-				className={`
+function ResultItem({ data }: { data: AnswerResume }) {
+	const [open, setOpen] = useState(false);
+
+	return (
+		<article
+			className={`
         rounded-xl border shadow
         ${
 					data.correct
@@ -355,80 +379,81 @@ export default function Result({ answers: answersProp }: Props) {
 						: "border-red-300 bg-red-50/40"
 				}
       `}
+		>
+			{/* Cabecera */}
+			<button
+				type="button"
+				className="flex w-full items-center justify-between gap-4 p-4 text-left cursor-pointer"
+				onClick={() => setOpen(!open)}
+				aria-expanded={open}
 			>
-				{/* Cabecera */}
-				<header
-					className="flex items-center justify-between gap-4 p-4 cursor-pointer"
-					onClick={() => setOpen(!open)}
-				>
-					<div>
-						<h3 className="font-semibold">{data.question}</h3>
-						<p className="text-sm">
-							Tu respuesta:{" "}
-							<span
-								className={
-									data.correct
-										? "font-medium text-green-700"
-										: "font-medium text-red-700"
-								}
-							>
-								{data.userAnswer}
+				<div>
+					<p className="font-semibold">{data.question}</p>
+					<p className="text-sm">
+						Tu respuesta:{" "}
+						<span
+							className={
+								data.correct
+									? "font-medium text-green-700"
+									: "font-medium text-red-700"
+							}
+						>
+							{data.userAnswer}
+						</span>
+					</p>
+					{!data.correct && (
+						<p className="text-sm mt-0.5">
+							Respuesta correcta:{" "}
+							<span className="font-medium text-green-700">
+								{data.correctAnswer}
 							</span>
 						</p>
-						{!data.correct && (
-							<p className="text-sm mt-0.5">
-								Respuesta correcta:{" "}
-								<span className="font-medium text-green-700">
-									{data.correctAnswer}
-								</span>
-							</p>
-						)}
-					</div>
+					)}
+				</div>
 
-					{/* Chevron indicador */}
-					<svg
-						className={`w-6 h-6 shrink-0 transition-transform ${
-							open ? "rotate-180" : "rotate-0"
-						}`}
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
+				{/* Chevron indicador */}
+				<svg
+					className={`w-6 h-6 shrink-0 transition-transform ${
+						open ? "rotate-180" : "rotate-0"
+					}`}
+					fill="none"
+					stroke="currentColor"
+					viewBox="0 0 24 24"
+				>
+					<path
+						strokeLinecap="round"
+						strokeLinejoin="round"
+						strokeWidth={2}
+						d="M19 9l-7 7-7-7"
+					/>
+				</svg>
+			</button>
+
+			{/* “Persiana” animada */}
+			<AnimatePresence initial={false}>
+				{open && (
+					<motion.div
+						key="content"
+						initial={{ height: 0, opacity: 0 }}
+						animate={{ height: "auto", opacity: 1 }}
+						exit={{ height: 0, opacity: 0 }}
+						transition={{ duration: 0.25, ease: "easeInOut" }}
+						className="overflow-hidden border-t px-4 pb-4"
 					>
-						<path
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							strokeWidth={2}
-							d="M19 9l-7 7-7-7"
-						/>
-					</svg>
-				</header>
-
-				{/* “Persiana” animada */}
-				<AnimatePresence initial={false}>
-					{open && (
-						<motion.div
-							key="content"
-							initial={{ height: 0, opacity: 0 }}
-							animate={{ height: "auto", opacity: 1 }}
-							exit={{ height: 0, opacity: 0 }}
-							transition={{ duration: 0.25, ease: "easeInOut" }}
-							className="overflow-hidden border-t px-4 pb-4"
-						>
-							<p className="mt-3">{data.shortExplanation}</p>
+						<p className="mt-3">{data.shortExplanation}</p>
+						{data.sourceUrl && (
 							<a
-								href={data.sourceUrl || "#"} // Asegurar que siempre haya un valor válido
-								target={data.sourceUrl ? "_blank" : "_self"} // Abrir en nueva pestaña solo si hay URL válida
+								href={data.sourceUrl}
+								target="_blank"
 								rel="noopener noreferrer"
 								className="mt-2 inline-block text-indigo-600 underline text-sm"
 							>
-								Ver explicación ampliada en{" "}
-								{data.sourceName || "fuente desconocida"} // Mostrar texto por
-								defecto si no hay fuente
+								Ver explicación ampliada en {data.sourceName || "la fuente"}
 							</a>
-						</motion.div>
-					)}
-				</AnimatePresence>
-			</article>
-		);
-	}
+						)}
+					</motion.div>
+				)}
+			</AnimatePresence>
+		</article>
+	);
 }

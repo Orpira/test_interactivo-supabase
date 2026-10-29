@@ -3,7 +3,19 @@ import { useEffect, useState } from "react";
 import { supabase } from "../services/supabase";
 import { useAuth } from "../services/auth";
 
-type HistoryItem = { id: string; [key: string]: any };
+export type HistoryItem = {
+	id: string;
+	userId: string;
+	name?: string | null;
+	score: number;
+	total: number;
+	category: string;
+	subcategory?: string | null;
+	subcategoria?: string;
+	summary?: Array<{ subcategory?: string; subcategoria?: string }> | null;
+	timestamp: string;
+	createdAt?: string;
+};
 
 export function useUserHistory() {
 	const { user } = useAuth();
@@ -30,7 +42,7 @@ export function useUserHistory() {
 				console.error("Error cargando historial:", error);
 				setError(error.message || "No se pudo cargar el historial.");
 			} else {
-				setHistory(data ?? []);
+				setHistory((data ?? []) as HistoryItem[]);
 			}
 			setLoading(false);
 		};

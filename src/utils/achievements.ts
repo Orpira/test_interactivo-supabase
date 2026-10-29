@@ -1,53 +1,48 @@
-import { TestResult } from "../types/TestResult";
+import type { TestResult } from "../types/TestResult";
 
-export function calculateAchievements(results: TestResult[]) {
-  const categories = new Set<string>();
-  let perfectScore = false;
-  let totalTests = results.length;
-  let improved = false;
+export type Achievement = {
+	icon: string;
+	title: string;
+	unlocked: boolean;
+};
 
-  let unlocked = {
-    firstTest: totalTests >= 1,
-    fiveTests: totalTests >= 5,
-    perfect: false,
-    allCategories: false,
-    improvement: false,
-  };
+const average = (values: number[]) =>
+	values.length ? values.reduce((a, b) => a + b, 0) / values.length : 0;
 
-  let scores: number[] = [];
+export function calculateAchievements(results: TestResult[]): Achievement[] {
+	const valid = results.filter((r) => r.total > 0);
 
-  results.forEach((r) => {
-    if (r.score === r.total) unlocked.perfect = true;
-    categories.add(r.category);
-    scores.push(r.score / r.total);
-  });
+	// Orden cronológico (más antiguo primero), independientemente de cómo
+	// lleguen los datos: necesario para medir la mejora.
+	const chronological = [...valid].sort(
+		(a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+	);
+	const scores = chronological.map((r) => r.score / r.total);
+	const categories = new Set(valid.map((r) => r.category.toLowerCase()));
 
-  if (categories.size >= 3) unlocked.allCategories = true;
-  if (scores.length >= 2) {
-    const firstHalf = scores
-      .slice(0, Math.floor(scores.length / 2))
-      .reduce((a, b) => a + b, 0);
-    const secondHalf = scores
-      .slice(Math.floor(scores.length / 2))
-      .reduce((a, b) => a + b, 0);
-    if (secondHalf / (scores.length / 2) > firstHalf / (scores.length / 2)) {
-      unlocked.improvement = true;
-    }
-  }
+	const half = Math.floor(scores.length / 2);
+	const improved =
+		scores.length >= 2 &&
+		average(scores.slice(scores.length - half)) >
+			average(scores.slice(0, half));
 
-  return [
-    {
-      icon: "🥇",
-      title: "Primer quiz completado",
-      unlocked: unlocked.firstTest,
-    },
-    { icon: "🔥", title: "5 quizzes seguidos", unlocked: unlocked.fiveTests },
-    { icon: "💯", title: "Puntuación perfecta", unlocked: unlocked.perfect },
-    {
-      icon: "🚀",
-      title: "Explorador de categorías",
-      unlocked: unlocked.allCategories,
-    },
-    { icon: "📈", title: "Mejora continua", unlocked: unlocked.improvement },
-  ];
+	return [
+		{
+			icon: "🥇",
+			title: "Primer quiz completado",
+			unlocked: valid.length >= 1,
+		},
+		{ icon: "🔥", title: "5 quizzes completados", unlocked: valid.length >= 5 },
+		{
+			icon: "💯",
+			title: "Puntuación perfecta",
+			unlocked: valid.some((r) => r.score === r.total),
+		},
+		{
+			icon: "🚀",
+			title: "Explorador de categorías",
+			unlocked: categories.size >= 3,
+		},
+		{ icon: "📈", title: "Mejora continua", unlocked: improved },
+	];
 }

@@ -30,11 +30,12 @@ export default function QuizCategoryModal({
 
 	const selectedSubcategoryData = useMemo(
 		() => subcategories.find((sub) => sub.name === selectedSubcategory),
-		[subcategories, selectedSubcategory],
+		[subcategories, selectedSubcategory]
 	);
 
 	const countOptions = useMemo(() => {
-		const available = selectedSubcategoryData?.questionCount ?? 0;
+		// Máximo 50 preguntas por quiz (coincide con QuizRunner y la BD)
+		const available = Math.min(selectedSubcategoryData?.questionCount ?? 0, 50);
 		const base = [5, 10, 15, 20].filter((n) => n <= available);
 		if (available > 0 && !base.includes(available)) {
 			base.push(available);

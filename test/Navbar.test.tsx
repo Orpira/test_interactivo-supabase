@@ -3,78 +3,119 @@ import { MemoryRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 import { vi, describe, it, expect, beforeEach } from "vitest";
 import Navbar from "../src/components/ui/Navbar";
-import { within as testingLibraryWithin } from "@testing-library/react";
 
 // Mock del módulo de auth para tests
 const mockAuth = {
-  user: null as any,
-  session: null,
-  isAuthenticated: false,
-  isLoading: false,
-  loginWithRedirect: vi.fn(),
-  loginWithGoogle: vi.fn(),
-  logout: vi.fn(),
+	user: null as null | Record<string, unknown>,
+	session: null,
+	isAuthenticated: false,
+	isLoading: false,
+	loginWithRedirect: vi.fn(),
+	loginWithGoogle: vi.fn(),
+	logout: vi.fn(),
 };
 
 vi.mock("../src/services/auth", () => ({
-  useAuth: () => mockAuth,
-  AuthProvider: ({ children }: { children: React.ReactNode }) => children,
+	useAuth: () => mockAuth,
+	AuthProvider: ({ children }: { children: React.ReactNode }) => children,
 }));
 
 describe("<Navbar />", () => {
-  beforeEach(() => {
-    mockAuth.isAuthenticated = false;
-    mockAuth.user = null;
-    mockAuth.loginWithRedirect = vi.fn();
-  });
+	beforeEach(() => {
+		mockAuth.isAuthenticated = false;
+		mockAuth.user = null;
+		mockAuth.loginWithRedirect = vi.fn();
+	});
 
-  it('muestra el boton "Iniciar sesion" cuando NO hay usuario', () => {
-    render(
-      <MemoryRouter>
-        <Navbar />
-      </MemoryRouter>
-    );
-    expect(screen.getByText(/Iniciar\s+sesi/i)).toBeInTheDocument();
-  });
+	it('muestra el boton "Iniciar sesion" cuando NO hay usuario', () => {
+		render(
+			<MemoryRouter>
+				<Navbar />
+			</MemoryRouter>
+		);
+		expect(screen.getByText(/Iniciar\s+sesi/i)).toBeInTheDocument();
+	});
 
-  it("no muestra el boton de login si el usuario esta autenticado", () => {
-    mockAuth.isAuthenticated = true;
-    mockAuth.user = {
-      id: "1",
-      email: "ada@test.com",
-      user_metadata: { full_name: "Ada" },
-    };
-    render(
-      <MemoryRouter>
-        <Navbar />
-      </MemoryRouter>
-    );
-    expect(screen.queryByText(/Iniciar\s+sesi/i)).not.toBeInTheDocument();
-  });
+	it("no muestra el boton de login si el usuario esta autenticado", () => {
+		mockAuth.isAuthenticated = true;
+		mockAuth.user = {
+			id: "1",
+			email: "ada@test.com",
+			user_metadata: { full_name: "Ada" },
+		};
+		render(
+			<MemoryRouter>
+				<Navbar />
+			</MemoryRouter>
+		);
+		expect(screen.queryByText(/Iniciar\s+sesi/i)).not.toBeInTheDocument();
+	});
 
-  it("abre y cierra el panel movil con el boton hamburguesa", async () => {
-    const user = userEvent.setup();
-    render(
-      <MemoryRouter>
-        <Navbar />
-      </MemoryRouter>
-    );
+	it("abre y cierra el panel movil con el boton hamburguesa", async () => {
+		const user = userEvent.setup();
+		render(
+			<MemoryRouter>
+				<Navbar />
+			</MemoryRouter>
+		);
 
-    const openBtn = screen.getByRole("button", { name: /abrir menú/i });
-    await user.click(openBtn);
+		const openBtn = screen.getByRole("button", { name: /abrir menú/i });
+		await user.click(openBtn);
 
-    const mobileNav = await screen.findByRole("navigation", {
-      name: /Menú móvil/i,
-      hidden: true,
-    });
+		expect(
+			await screen.findByRole("navigation", {
+				name: /Menú móvil/i,
+				hidden: true,
+			})
+		).toBeInTheDocument();
+		expect(openBtn).toHaveAttribute("aria-expanded", "true");
 
-    const closeBtn = testingLibraryWithin(mobileNav).getByRole("button", {
-      name: /cerrar menú/i,
-    });
-    await user.click(closeBtn);
+		await user.click(screen.getByRole("button", { name: /cerrar menú/i }));
 
-    expect(
-      screen.queryByRole("navigation", { name: /Menú móvil/i, hidden: true })
-    ).not.toBeInTheDocument();
-  });
+		expect(
+			screen.queryByRole("navigation", { name: /Menú móvil/i, hidden: true })
+		).not.toBeInTheDocument();
+	});
+
+	it("muestra las secciones protegidas solo con sesión iniciada", () => {
+		const { unmount } = render(
+			<MemoryRouter>
+				<Navbar />
+			</MemoryRouter>
+		);
+		for (const label of ["Retos", "Ranking", "Dashboard", "Historial"]) {
+			expect(
+				screen.queryByRole("link", { name: label })
+			).not.toBeInTheDocument();
+		}
+		unmount();
+
+		mockAuth.isAuthenticated = true;
+		mockAuth.user = {
+			id: "1",
+			email: "ada@test.com",
+			user_metadata: { full_name: "Ada" },
+		};
+		render(
+			<MemoryRouter>
+				<Navbar />
+			</MemoryRouter>
+		);
+		expect(screen.getByRole("link", { name: "Retos" })).toHaveAttribute(
+			"href",
+			"/editor"
+		);
+		expect(screen.getByRole("link", { name: "Ranking" })).toHaveAttribute(
+			"href",
+			"/ranking"
+		);
+		expect(screen.getByRole("link", { name: "Dashboard" })).toHaveAttribute(
+			"href",
+			"/dashboard"
+		);
+		expect(screen.getByRole("link", { name: "Historial" })).toHaveAttribute(
+			"href",
+			"/historial"
+		);
+	});
 });

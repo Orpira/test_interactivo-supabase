@@ -108,7 +108,11 @@ Crea un archivo `.env` en la raíz con:
 ```env
 VITE_SUPABASE_URL=...
 VITE_SUPABASE_ANON_KEY=...
+# Solo si Supabase tiene activada la protección CAPTCHA (proveedor: Cloudflare Turnstile)
+VITE_TURNSTILE_SITE_KEY=...
 ```
+
+> La site key de Turnstile es pública (empieza por `0x4…`). La **secret key** se configura únicamente en Supabase, nunca en el frontend. En el widget de Turnstile (panel de Cloudflare) añade los dominios donde se usa la app: `orpira.es`, el dominio de Vercel y `localhost` (APK y desarrollo).
 
 ---
 
@@ -139,6 +143,21 @@ npx playwright test
 7. Al finalizar, el resultado guarda categoría, subcategoría y resumen de respuestas para alimentar dashboard, historial y ranking.
 
 ## Cambios recientes
+
+### Octubre 2026: estabilidad, seguridad y retos
+
+> ⚠️ **Requiere ejecutar en Supabase** `supabase/migrations/20261028_harden_resultados.sql` (idempotente).
+
+- **Retos de código operativos:** `/editor` lista los retos por categoría; cada reto tiene navegación anterior/siguiente y botón *Verificar solución*.
+- **Validación real:** HTML por etiquetas requeridas, CSS por declaraciones de cada selector y JavaScript ejecutando casos de prueba (`expr => valor`) en un Web Worker aislado con límite de 2 s.
+- **Seguridad:** la vista previa del editor ya no usa `allow-same-origin` (el código del usuario no puede leer la sesión); solo se pueden insertar resultados propios; el email deja de guardarse en `resultados` (tabla de lectura pública).
+- **Quiz:** una sola consulta, preguntas y opciones barajadas, prioridad al nivel del usuario completando con otros niveles, sin doble puntuación por doble clic, botón *Reintentar* ante errores.
+- **Resultados:** al guardarse, la URL pasa a `/result?id=…` (recargar ya no duplica el resultado y el enlace se puede compartir).
+- **Ranking:** ordenado por porcentaje; corregido un fallo de orden de hooks que podía romper la página al iniciar sesión.
+- **Dashboard:** logro «Mejora continua» calculado en orden cronológico, historial ordenado por fecha, CSV con escape correcto y compatible con Excel.
+- Página 404, rutas con carga diferida (bundle inicial de 1.081 kB a 580 kB), lint sin errores, 25 tests y CI en GitHub Actions.
+
+### Anteriores
 
 - Se añadió manejo visible de errores en el flujo de quizzes, resultados, ranking y dashboard cuando fallan consultas o escrituras en Supabase.
 - Se corrigió el solapamiento del menú `Quizzes` del navbar para evitar que bloqueara clics sobre acciones del ranking, como `Top 10`.
