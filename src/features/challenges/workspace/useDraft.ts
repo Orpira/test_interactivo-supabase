@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import type { ChallengeFiles, ChallengeSpec, FileName } from "../engine/types";
 
+/** Lo mínimo para guardar borradores: sirve para retos e incidencias. */
+export type DraftSource = Pick<ChallengeSpec, "id" | "files" | "editable" | "hints">;
+
 type Draft = { files: Partial<ChallengeFiles>; hints: number; savedAt: number };
 
 const key = (id: string) => `webwiz-draft:${id}`;
@@ -18,7 +21,7 @@ function readDraft(id: string): Draft | null {
  * Archivos del reto con guardado automático del borrador en localStorage:
  * recargar la página (o cerrar la app) conserva lo escrito.
  */
-export function useDraft(challenge: ChallengeSpec) {
+export function useDraft(challenge: DraftSource) {
 	const initial = useRef(readDraft(challenge.id));
 	const [files, setFiles] = useState<ChallengeFiles>(() => ({
 		...challenge.files,

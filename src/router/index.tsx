@@ -27,6 +27,8 @@ const ChallengeCategories = lazy(
 	() => import("@/features/challenges/pages/ChallengeCategories")
 );
 const ResetPassword = lazy(() => import("@/pages/ResetPassword"));
+const IncidentList = lazy(() => import("@/features/incidents/IncidentList"));
+const IncidentPage = lazy(() => import("@/features/incidents/IncidentPage"));
 const ChallengeEditorPage = lazy(
 	() => import("@/features/challenges/pages/ChallengeEditorPage")
 );
@@ -79,7 +81,7 @@ function PasswordRecoveryRedirect() {
 /** Sin footer en pantallas de trabajo a pantalla completa (quiz y retos). */
 function FooterGate() {
 	const { pathname } = useLocation();
-	if (/^\/quiz\//.test(pathname) || /^\/editor\/[^/]+\/[^/]+/.test(pathname)) return null;
+	if (/^\/quiz\//.test(pathname) || /^\/editor\/[^/]+\/[^/]+/.test(pathname) || /^\/incidencias\/[^/]+/.test(pathname)) return null;
 	return <Footer />;
 }
 
@@ -140,6 +142,22 @@ export default function AppRouter() {
 							element={
 								<PrivateRoute>
 									<ChallengeEditorPage />
+								</PrivateRoute>
+							}
+						/>
+						<Route
+							path="/incidencias"
+							element={
+								<PrivateRoute>
+									<IncidentList />
+								</PrivateRoute>
+							}
+						/>
+						<Route
+							path="/incidencias/:id"
+							element={
+								<PrivateRoute>
+									<IncidentPage />
 								</PrivateRoute>
 							}
 						/>

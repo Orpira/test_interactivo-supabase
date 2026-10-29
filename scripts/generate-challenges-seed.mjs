@@ -1,4 +1,4 @@
-// Genera supabase/migrations/20261029_fase1_retos_seed.sql desde el catálogo TS.
+// Genera los seeds SQL de retos (Fase 1) e incidencias (Fase 3) desde el catálogo TS.
 // Uso: npm run db:challenges-seed
 import { build } from "esbuild";
 import { writeFileSync, mkdtempSync } from "node:fs";
@@ -12,7 +12,8 @@ const out = join(mkdtempSync(join(tmpdir(), "webwiz-")), "seed.mjs");
 await build({
 	stdin: {
 		contents: `export { challengeCatalog } from "@/content/challenges";
-export { challengesToSql } from "@/content/challenges/toSql";`,
+export { INCIDENTS } from "@/content/incidents";
+export { challengesToSql, incidentsToSql } from "@/content/challenges/toSql";`,
 		resolveDir: root,
 	},
 	bundle: true,
@@ -23,7 +24,11 @@ export { challengesToSql } from "@/content/challenges/toSql";`,
 	logLevel: "error",
 });
 
-const { challengeCatalog, challengesToSql } = await import(pathToFileURL(out).href);
+const { challengeCatalog, challengesToSql, INCIDENTS, incidentsToSql } = await import(pathToFileURL(out).href);
 const target = join(root, "supabase/migrations/20261029_fase1_retos_seed.sql");
 writeFileSync(target, challengesToSql(challengeCatalog));
 console.log(`✔ ${challengeCatalog.length} retos → ${target}`);
+
+const incidentsTarget = join(root, "supabase/migrations/20261030_fase3_incidencias_seed.sql");
+writeFileSync(incidentsTarget, incidentsToSql(INCIDENTS));
+console.log(`✔ ${INCIDENTS.length} incidencias → ${incidentsTarget}`);

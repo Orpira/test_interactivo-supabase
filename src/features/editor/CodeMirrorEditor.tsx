@@ -103,7 +103,8 @@ export default function CodeMirrorEditor({ value, onChange, language, readOnly =
 			syntaxHighlighting(webwizHighlight),
 			webwizTheme,
 			EditorView.lineWrapping,
-			EditorView.contentAttributes.of({ "aria-label": label }),
+			// tabindex 0: también en solo lectura se puede enfocar y desplazar con teclado
+			EditorView.contentAttributes.of({ "aria-label": label, tabindex: "0" }),
 			...(readOnly
 				? []
 				: [
@@ -119,7 +120,7 @@ export default function CodeMirrorEditor({ value, onChange, language, readOnly =
 	);
 
 	return (
-		<div className={`overflow-hidden rounded-lg border border-line ${readOnly ? "opacity-90" : ""} ${className}`}>
+		<div className={`overflow-hidden rounded-lg border border-line ${readOnly ? "bg-surface2" : ""} ${className}`}>
 			<CodeMirror
 				value={value}
 				onChange={onChange}

@@ -20,6 +20,8 @@ export default defineConfig({
 		trace: "on-first-retry",
 		headless: true,
 		viewport: { width: 1280, height: 720 },
+		// Opcional: usar un Chromium ya instalado (PW_CHROMIUM=/ruta/a/chrome)
+		...(process.env.PW_CHROMIUM ? { launchOptions: { executablePath: process.env.PW_CHROMIUM } } : {}),
 	},
 	// Chromium por defecto; Firefox y WebKit con --project (requieren `npx playwright install`)
 	projects: [

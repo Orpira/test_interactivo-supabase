@@ -58,3 +58,31 @@ export type TestResult = {
 };
 
 export const TEST_TIMEOUT_MS = 2000;
+
+/** Respuesta simulada para fetch() dentro del iframe (Modo Incidencia). */
+export type NetworkMock = {
+	method: string;
+	/** Ruta con o sin query: "/api/pay" o "/api/buscar?q=ja" */
+	url: string;
+	status: number;
+	body?: unknown;
+	/** Retardo simulado de la respuesta */
+	delayMs?: number;
+};
+
+export type RunOptions = {
+	width?: number;
+	height?: number;
+	network?: NetworkMock[];
+};
+
+/** Petición registrada por la red simulada (panel Red y tests). */
+export type NetworkRecord = {
+	id: number;
+	method: string;
+	url: string;
+	body: string | null;
+	/** null = en curso; 0 = cancelada */
+	status: number | null;
+	timeMs: number | null;
+};
