@@ -10,6 +10,7 @@ import { conceptsForQuestion, type ConceptRef } from "@/features/learning/concep
 import { CONFIDENCE_LABEL, returnsLabel, type Confidence } from "@/features/learning/fsrs";
 import { calibration, diagnosisHeadline, overconfidentCount, splitConcepts, type GradedAnswer } from "@/features/learning/diagnosis";
 import { useLearning } from "@/features/learning/store";
+import { EXPLAIN_PROMPTS } from "@/content/explain";
 import type { AnswerResume } from "@/types/TestResult";
 import ExperienceFeedbackModal from "@/components/ui/ExperienceFeedbackModal";
 import {
@@ -300,7 +301,11 @@ export default function Result({ answers: answersProp }: Props) {
 		return card && returnsLabel(card.due) === "mañana";
 	}).length;
 	const weakest = split.weak[0];
-	const recommended = weakest
+	// Tras un bloque de preguntas: si el concepto más flojo tiene pregunta abierta, "Explícalo tú"
+	const explain = weakest ? EXPLAIN_PROMPTS.find((p) => p.concept === weakest.id) : undefined;
+	const recommended = explain
+		? { label: `Explícalo tú: ${weakest?.name}`, detail: "Corrige Claude · unos 3 min", to: `/explica/${explain.id}` }
+		: weakest
 		? { label: `Repasar ${weakest.name}`, detail: "5 preguntas · unos 3 min", to: `/repaso?conceptos=${encodeURIComponent(weakest.id)}&count=5` }
 		: { label: "Abrir la incidencia del día", detail: "Depura un bug real · ~10 min", to: "/hoy" };
 	const modeLabel = state?.mode === "diagnostico" ? "DIAGNÓSTICO" : state?.mode === "repaso" ? "REPASO" : "QUIZ";

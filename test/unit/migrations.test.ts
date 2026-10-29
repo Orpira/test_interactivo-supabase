@@ -8,6 +8,10 @@ import { challengesToSql, incidentsToSql } from "../../src/content/challenges/to
 import { INCIDENTS } from "../../src/content/incidents";
 import { PREDICT_QUESTIONS } from "../../src/content/questions/predict";
 import { learningSeedSql } from "../../src/content/questions/toSql";
+import { phase5SeedSql } from "../../src/content/topics/toSql";
+import { topicChallenges } from "../../src/content/topics";
+import { REVIEWS } from "../../src/content/reviews";
+import { EXPLAIN_PROMPTS } from "../../src/content/explain";
 import { areaFor, conceptsForQuestion, slugify } from "../../src/features/learning/concepts";
 
 const dir = join(__dirname, "../../supabase");
@@ -47,14 +51,22 @@ describe("esquema y migraciones de Supabase", () => {
 			`SELECT count(*) FILTER (WHERE NOT legacy)::int AS visibles,
 			        count(*) FILTER (WHERE legacy)::int AS legacy FROM challenges`,
 		);
-		expect(rows[0]).toEqual({ visibles: challengeCatalog.length + INCIDENTS.length, legacy: 1 });
+		expect(rows[0]).toEqual({ visibles: challengeCatalog.length + INCIDENTS.length + topicChallenges.length + REVIEWS.length, legacy: 1 });
 		const types = await db.query<{ type: string; n: number }>(
 			`SELECT type, count(*)::int AS n FROM challenges WHERE NOT legacy GROUP BY type ORDER BY type`,
 		);
 		expect(types.rows).toEqual([
-			{ type: "challenge", n: challengeCatalog.length },
+			{ type: "challenge", n: challengeCatalog.length + topicChallenges.length },
 			{ type: "incident", n: INCIDENTS.length },
+			{ type: "review", n: REVIEWS.length },
 		]);
+		// Fase 5: preguntas abiertas con rúbrica y conceptos de los temas nuevos
+		const explain = await db.query<{ n: number }>(`SELECT count(*)::int AS n FROM questions WHERE kind = 'explain' AND jsonb_array_length(option_meta->'keyPoints') = 3`);
+		expect(explain.rows[0].n).toBe(EXPLAIN_PROMPTS.length);
+		const orphan = await db.query<{ c: string }>(
+			`SELECT DISTINCT unnest(concepts) AS c FROM questions WHERE kind = 'explain' EXCEPT SELECT id FROM concepts`,
+		);
+		expect(orphan.rows).toEqual([]);
 		// Fase 4: los conceptos derivados en SQL coinciden con los del cliente
 		const derived = await db.query<{ category: string; subcategory: string | null; concepts: string[]; name: string; area: string }>(
 			`SELECT q.category, q.subcategory, q.concepts, c.name, c.area FROM questions q JOIN concepts c ON c.id = q.concepts[1] WHERE q.kind = 'choice'`,
@@ -88,6 +100,16 @@ describe("esquema y migraciones de Supabase", () => {
 			{ name: "U0", points: 3, position: 2, is_me: true, level: "junior" },
 		]);
 
+		// Fase 5: solo los editores publican (RLS con el rol authenticated)
+		await db.exec(`INSERT INTO user_roles (user_id, role) VALUES ('${ids[1]}', 'editor');`);
+		await db.exec(`GRANT SELECT, INSERT ON challenges TO authenticated; GRANT SELECT ON user_roles TO authenticated;`);
+		const publish = (author: string) =>
+			db.exec(`SET ROLE authenticated; INSERT INTO challenges (id, title, instructions, category, type, spec, author_id) VALUES ('com-${author.slice(-1)}', 't', 'i', 'css', 'challenge', '{}', '${author}'); RESET ROLE;`);
+		await expect(publish(ids[0])).rejects.toThrow(/row-level security/);
+		await db.exec("RESET ROLE");
+		await db.exec(`CREATE OR REPLACE FUNCTION auth.uid() RETURNS UUID LANGUAGE sql AS $$ SELECT '${ids[1]}'::uuid $$;`);
+		await publish(ids[1]);
+
 		// Intento de incidencia con línea de tiempo y puntuación
 		await db.exec(`INSERT INTO auth.users (id) VALUES ('00000000-0000-0000-0000-000000000001');`);
 		await db.exec(`INSERT INTO challenge_attempts (user_id, challenge_id, code, results, passed, score, timeline)
@@ -106,5 +128,7 @@ describe("esquema y migraciones de Supabase", () => {
 		expect(incidents).toBe(incidentsToSql(INCIDENTS));
 		const learning = readFileSync(join(dir, "migrations/20261031_fase4_aprendizaje_seed.sql"), "utf8");
 		expect(learning).toBe(learningSeedSql(PREDICT_QUESTIONS));
+		const phase5 = readFileSync(join(dir, "migrations/20261101_fase5_ia_temas_seed.sql"), "utf8");
+		expect(phase5).toBe(phase5SeedSql(topicChallenges, REVIEWS, EXPLAIN_PROMPTS));
 	});
 });

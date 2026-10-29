@@ -144,6 +144,39 @@ npx playwright test
 
 ## Cambios recientes
 
+### Fase 5: revisión de código de IA, «Explícalo tú», temas nuevos y `/crear`
+
+> ⚠️ **Supabase:** tras las de la Fase 4, ejecuta `20261101_fase5_ia_temas.sql` y después `20261101_fase5_ia_temas_seed.sql`.
+>
+> **Edge Function «Explícalo tú»:** despliégala con la CLI de Supabase:
+>
+> ```bash
+> supabase secrets set ANTHROPIC_API_KEY=sk-ant-...   # la clave solo vive aquí
+> supabase functions deploy explain-review
+> ```
+>
+> Opcionales: `CLAUDE_MODEL` (por defecto `claude-sonnet-5-5`) y `EXPLAIN_DAILY_LIMIT` (por defecto 10).
+>
+> **Editores de `/crear`:** `INSERT INTO user_roles (user_id, role) VALUES ('<uuid>', 'editor');`
+
+- **Revisa el código de la IA** (`/revisiones`): 8 PR «generados por IA», de 30 a 80 líneas, con 2-3 fallos sutiles (XSS, RLS abierta, `useEffect` sin dependencias, accesibilidad, condiciones de carrera, inyección SQL, N+1…).
+  - Comentas una línea y eliges la categoría.
+  - Acertar exige la línea (±1) y la categoría; la línea correcta con otra categoría da puntos parciales y los falsos positivos restan.
+  - Al terminar se muestran todos los fallos con su explicación.
+- **Explícalo tú** (`/explica`): 10 preguntas abiertas que corrige Claude mediante una Supabase Edge Function con una rúbrica de 3 puntos clave y los conceptos erróneos conocidos.
+  - La rúbrica no sale de la base de datos.
+  - La respuesta de Claude se valida (JSON) antes de mostrarla; si no es válida, aparece un mensaje amable en lugar de un fallo de pantalla.
+  - Hay caché por hash de la respuesta y límite diario por usuario.
+  - Un concepto erróneo detectado pasa a «A reforzar» y entra en el repaso.
+- **Temas nuevos** (10 o más por tema):
+  - **Accesibilidad:** auditoría WCAG real con axe-core dentro del iframe, mensajes en español.
+  - **Seguridad:** primero se explota el fallo y después se parchea.
+  - **Rendimiento:** se mide antes y después (desplazamiento, peticiones, mutaciones, cálculos).
+  - **SQL** (`/sql`): PostgreSQL real con PGlite en el navegador; cada ejecución va en una transacción que se deshace.
+  - **Git en escenarios** (`/git`): terminal y repositorio en memoria.
+  - **Trabajo con IA:** las revisiones y «Explícalo tú».
+- **`/crear`** (rol editor): JSON de un reto o una incidencia con plantilla, vista previa del código inicial y de la solución, y validación automática (el inicial falla y la solución pasa; en incidencias también la regresión). Solo se publica lo validado; la RLS lo exige en el servidor.
+
 ### Fase 4: «Hoy», confianza, diagnóstico y repaso espaciado
 
 > ⚠️ **Supabase:** tras las de la Fase 3, ejecuta `20261031_fase4_aprendizaje.sql` y `20261031_fase4_aprendizaje_seed.sql`. Añaden `concepts`, `answers`, `concept_cards`, `streaks`, la función `weekly_league()`, un concepto por subcategoría de tus preguntas y 12 preguntas de predicción. Sin ellas la app funciona y guarda el progreso solo en el dispositivo.

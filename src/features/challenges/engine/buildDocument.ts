@@ -143,6 +143,8 @@ export type BuildOptions = {
 	network?: NetworkMock[];
 	/** Activa el inspector del panel Elementos */
 	inspector?: boolean;
+	/** Código de axe-core para las auditorías de accesibilidad */
+	axeSource?: string;
 };
 
 /**
@@ -164,7 +166,8 @@ export function buildDocument(files: ChallengeFiles, options: BuildOptions = {})
 		: "";
 	const inspector = options.inspector ? `<script>${INSPECTOR_BRIDGE}</script>` : "";
 	const head = `<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><script>${CONSOLE_BRIDGE}</script>${network}${inspector}<style>${escapeTag(files["styles.css"], "style")}</style>`;
-	const tail = `${userScript}${options.harness ? `<script>${escapeTag(options.harness, "script")}</script>` : ""}`;
+	const axe = options.axeSource ? `<script>${escapeTag(options.axeSource, "script")}</script>` : "";
+	const tail = `${userScript}${axe}${options.harness ? `<script>${escapeTag(options.harness, "script")}</script>` : ""}`;
 
 	let html = files["index.html"];
 	// Quitar enlaces a los propios archivos: ya van incrustados
@@ -175,7 +178,9 @@ export function buildDocument(files: ChallengeFiles, options: BuildOptions = {})
 	if (/<head[^>]*>/i.test(html)) html = html.replace(/<head[^>]*>/i, (m) => m + head);
 	else html = head + html;
 
-	if (/<\/body>/i.test(html)) html = html.replace(/<\/body>/i, tail + "</body>");
+	// Reemplazo con función: en una cadena de reemplazo "$$" o "$&" son especiales
+	// (rompía el arnés, que usa $ y $$, en páginas con </body>)
+	if (/<\/body>/i.test(html)) html = html.replace(/<\/body>/i, () => tail + "</body>");
 	else html = html + tail;
 
 	return html;

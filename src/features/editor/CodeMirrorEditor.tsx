@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import CodeMirror, { EditorView } from "@uiw/react-codemirror";
 import { html } from "@codemirror/lang-html";
 import { css } from "@codemirror/lang-css";
+import { PostgreSQL, sql } from "@codemirror/lang-sql";
 import { javascript } from "@codemirror/lang-javascript";
 import { linter, lintGutter, type Diagnostic } from "@codemirror/lint";
 import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
@@ -75,7 +76,11 @@ const webwizHighlight = HighlightStyle.define([
 
 const LINTERS = { html: lintHtml, css: lintCss, javascript: lintJs };
 
-function languageExtension(lang: EditorLanguage) {
+/** Lenguajes del editor: los de los retos y, en los laboratorios, SQL. */
+export type CodeLanguage = EditorLanguage | "sql";
+
+function languageExtension(lang: CodeLanguage) {
+	if (lang === "sql") return sql({ dialect: PostgreSQL });
 	if (lang === "css") return css();
 	if (lang === "javascript") return javascript();
 	return html({ autoCloseTags: true, matchClosingTags: true });
@@ -84,7 +89,7 @@ function languageExtension(lang: EditorLanguage) {
 type Props = {
 	value: string;
 	onChange?: (value: string) => void;
-	language: EditorLanguage;
+	language: CodeLanguage;
 	readOnly?: boolean;
 	label: string;
 	className?: string;
@@ -105,13 +110,13 @@ export default function CodeMirrorEditor({ value, onChange, language, readOnly =
 			EditorView.lineWrapping,
 			// tabindex 0: también en solo lectura se puede enfocar y desplazar con teclado
 			EditorView.contentAttributes.of({ "aria-label": label, tabindex: "0" }),
-			...(readOnly
+			...(readOnly || language === "sql"
 				? []
 				: [
 						lintGutter(),
 						linter(
 							(view): Diagnostic[] =>
-								LINTERS[language](view.state.doc.toString()).map((d) => ({ ...d })),
+								LINTERS[language as EditorLanguage](view.state.doc.toString()).map((d) => ({ ...d })),
 							{ delay: 350 },
 						),
 					]),

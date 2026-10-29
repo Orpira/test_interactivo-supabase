@@ -10,6 +10,9 @@ const CATEGORIES = [
 	{ slug: "html", label: "HTML", blurb: "Semántica, formularios y accesibilidad" },
 	{ slug: "css", label: "CSS", blurb: "Flexbox, grid, responsive y temas" },
 	{ slug: "javascript", label: "JavaScript", blurb: "Funciones, DOM, asincronía y seguridad" },
+	{ slug: "accesibilidad", label: "Accesibilidad", blurb: "Pasa una auditoría WCAG real (axe-core)" },
+	{ slug: "seguridad", label: "Seguridad", blurb: "Explota el fallo y después parchéalo" },
+	{ slug: "rendimiento", label: "Rendimiento", blurb: "CLS, peticiones, DOM: mide antes y después" },
 ] as const;
 
 const LEVEL_ORDER = ["junior", "semi_senior", "senior"];
@@ -56,7 +59,7 @@ export default function ChallengeCategories() {
 				Cada reto se corrige por comportamiento: da igual cómo lo escribas, si funciona, pasa los tests.
 			</p>
 
-			<div role="tablist" aria-label="Lenguaje" className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
+			<div role="tablist" aria-label="Tema" className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
 				{CATEGORIES.map((cat) => {
 					const all = challenges.filter((c) => c.category === cat.slug);
 					const done = all.filter((c) => solved.has(c.id)).length;

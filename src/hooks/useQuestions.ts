@@ -33,12 +33,14 @@ type Filter = (q: QuestionQuery) => QuestionQuery;
  * aplicado (columna inexistente), repite la consulta con las básicas.
  */
 export async function selectQuestions(filter: Filter): Promise<QuizQuestion[]> {
+	// Las preguntas abiertas ("Explícalo tú") no son de test: nunca entran en un quiz
+	const playable = (q: QuizQuestion) => q.kind !== "explain" && q.options.length >= 2;
 	const full = await filter(supabase.from("questions").select(FULL_COLUMNS));
-	if (!full.error) return (full.data ?? []).map((r) => normalizeQuestion(r as Record<string, unknown>));
+	if (!full.error) return (full.data ?? []).map((r) => normalizeQuestion(r as Record<string, unknown>)).filter(playable);
 	if (!/column|42703/i.test(`${full.error.code} ${full.error.message}`)) throw full.error;
 	const basic = await filter(supabase.from("questions").select(BASE_COLUMNS));
 	if (basic.error) throw basic.error;
-	return (basic.data ?? []).map((r) => normalizeQuestion(r as Record<string, unknown>));
+	return (basic.data ?? []).map((r) => normalizeQuestion(r as Record<string, unknown>)).filter(playable);
 }
 
 type QuestionsState = {

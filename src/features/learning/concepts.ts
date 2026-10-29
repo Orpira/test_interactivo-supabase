@@ -4,7 +4,7 @@
  * deriva de la subcategoría (o la categoría). La misma lógica existe en SQL
  * (funciones webwiz_slug y webwiz_area, ver scripts/generate-learning-sql.mjs).
  */
-export const AREAS = ["HTML", "CSS", "JavaScript", "Backend", "Linux", "DevOps", "Testing"] as const;
+export const AREAS = ["HTML", "CSS", "JavaScript", "Backend", "SQL", "Linux", "DevOps", "Testing", "Accesibilidad", "Seguridad", "Rendimiento", "IA"] as const;
 export type Area = (typeof AREAS)[number];
 
 /**
@@ -62,7 +62,39 @@ export const CONCEPT_CATALOG: ConceptRef[] = [
 	{ id: "references", name: "Referencias y copias", area: "JavaScript" },
 ];
 
-const CATALOG_BY_ID = new Map(CONCEPT_CATALOG.map((c) => [c.id, c]));
+/** Conceptos de los temas de la Fase 5 (se insertan con su propio seed). */
+export const EXTRA_CONCEPTS: ConceptRef[] = [
+	{ id: "xss", name: "XSS", area: "Seguridad" },
+	{ id: "rls", name: "Políticas RLS", area: "Seguridad" },
+	{ id: "sql-inyeccion", name: "Inyección SQL", area: "Seguridad" },
+	{ id: "seguridad-credenciales", name: "Credenciales y secretos", area: "Seguridad" },
+	{ id: "seguridad-eval", name: "eval y código dinámico", area: "Seguridad" },
+	{ id: "seguridad-cabeceras", name: "Cabeceras de seguridad", area: "Seguridad" },
+	{ id: "csrf", name: "CSRF", area: "Seguridad" },
+	{ id: "react-hooks", name: "Hooks de React", area: "JavaScript" },
+	{ id: "react-listas", name: "Listas y keys en React", area: "JavaScript" },
+	{ id: "a11y-imagenes", name: "Imágenes accesibles", area: "Accesibilidad" },
+	{ id: "a11y-formularios", name: "Formularios accesibles", area: "Accesibilidad" },
+	{ id: "a11y-dialogos", name: "Diálogos accesibles", area: "Accesibilidad" },
+	{ id: "a11y-contraste", name: "Contraste", area: "Accesibilidad" },
+	{ id: "a11y-semantica", name: "Semántica y landmarks", area: "Accesibilidad" },
+	{ id: "sql-consultas", name: "SELECT y filtros", area: "SQL" },
+	{ id: "sql-joins", name: "JOIN", area: "SQL" },
+	{ id: "sql-agregados", name: "GROUP BY y agregados", area: "SQL" },
+	{ id: "sql-subconsultas", name: "Subconsultas y CTE", area: "SQL" },
+	{ id: "sql-indices", name: "Índices", area: "SQL" },
+	{ id: "sql-rendimiento", name: "Rendimiento de consultas", area: "SQL" },
+	{ id: "git-commits", name: "Commits y staging", area: "DevOps" },
+	{ id: "git-ramas", name: "Ramas", area: "DevOps" },
+	{ id: "git-deshacer", name: "Deshacer en Git", area: "DevOps" },
+	{ id: "web-vitals", name: "Core Web Vitals", area: "Rendimiento" },
+	{ id: "carga-recursos", name: "Carga de recursos", area: "Rendimiento" },
+	{ id: "render-bloqueo", name: "Bloqueo del renderizado", area: "Rendimiento" },
+	{ id: "ia-revision", name: "Revisar código de IA", area: "IA" },
+	{ id: "ia-explicar", name: "Explicar con tus palabras", area: "IA" },
+];
+
+const CATALOG_BY_ID = new Map([...CONCEPT_CATALOG, ...EXTRA_CONCEPTS].map((c) => [c.id, c]));
 
 const titleCase = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 

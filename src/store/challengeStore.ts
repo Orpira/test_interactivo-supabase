@@ -1,6 +1,9 @@
 import { create } from "zustand";
 import { supabase } from "@/services/supabase";
 import { challengeCatalog } from "@/content/challenges";
+import { topicChallenges } from "@/content/topics";
+
+const LOCAL = [...challengeCatalog, ...topicChallenges];
 import type { ChallengeSpec } from "@/features/challenges/engine/types";
 
 interface ChallengeStore {
@@ -18,7 +21,7 @@ interface ChallengeStore {
  * del repo.
  */
 export const useChallengeStore = create<ChallengeStore>((set, get) => ({
-	challenges: challengeCatalog,
+	challenges: LOCAL,
 	loading: false,
 	loaded: false,
 	fetchChallenges: async () => {
@@ -33,7 +36,7 @@ export const useChallengeStore = create<ChallengeStore>((set, get) => ({
 				.eq("type", "challenge")
 				.not("spec", "is", null);
 			if (error) throw error;
-			const known = new Set(challengeCatalog.map((c) => c.id));
+			const known = new Set(LOCAL.map((c) => c.id));
 			for (const row of data ?? []) {
 				const spec = row.spec as ChallengeSpec | null;
 				if (spec && !known.has(row.id) && Array.isArray(spec.tests)) {
@@ -43,6 +46,6 @@ export const useChallengeStore = create<ChallengeStore>((set, get) => ({
 		} catch (error) {
 			console.warn("Retos de Supabase no disponibles; se usan los del repo.", error);
 		}
-		set({ challenges: [...challengeCatalog, ...extra], loading: false, loaded: true });
+		set({ challenges: [...LOCAL, ...extra], loading: false, loaded: true });
 	},
 }));

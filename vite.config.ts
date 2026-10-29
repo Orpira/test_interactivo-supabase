@@ -12,6 +12,10 @@ export default defineConfig({
 			extension: [".js", ".ts", ".jsx", ".tsx"],
 		}),
 	],
+	// PGlite (laboratorio SQL) carga su .wasm y sus datos con import.meta.url: sin pre-empaquetar
+	optimizeDeps: {
+		exclude: ["@electric-sql/pglite"],
+	},
 	resolve: {
 		alias: {
 			"@": path.resolve(__dirname, "src"),
