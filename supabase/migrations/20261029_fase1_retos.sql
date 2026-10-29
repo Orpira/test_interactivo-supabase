@@ -16,11 +16,20 @@ ALTER TABLE challenges DROP CONSTRAINT IF EXISTS challenges_type_check;
 ALTER TABLE challenges
   ADD CONSTRAINT challenges_type_check CHECK (type IN ('challenge', 'incident', 'review'));
 
--- Los retos antiguos pueden traer niveles en otro formato: NOT VALID no los revisa
+-- Los retos antiguos pueden traer niveles en otro formato ("principiante"…)
+-- y una restricción previa con esos valores: se sustituye y se normalizan.
+-- (Cualquier UPDATE posterior sobre una fila con un nivel no admitido fallaría.)
 ALTER TABLE challenges DROP CONSTRAINT IF EXISTS challenges_difficulty_check;
+UPDATE challenges SET difficulty = CASE
+    WHEN lower(trim(difficulty)) IN ('principiante', 'basico', 'básico', 'facil', 'fácil', 'beginner', 'easy', 'junior') THEN 'junior'
+    WHEN lower(trim(difficulty)) IN ('intermedio', 'medio', 'intermediate', 'medium', 'semi_senior', 'semi-senior', 'semisenior', 'semi senior') THEN 'semi_senior'
+    WHEN lower(trim(difficulty)) IN ('avanzado', 'dificil', 'difícil', 'advanced', 'hard', 'experto', 'senior') THEN 'senior'
+    ELSE 'junior'
+  END
+WHERE difficulty IS NOT NULL AND difficulty NOT IN ('junior', 'semi_senior', 'senior');
 ALTER TABLE challenges
   ADD CONSTRAINT challenges_difficulty_check
-  CHECK (difficulty IS NULL OR difficulty IN ('junior', 'semi_senior', 'senior')) NOT VALID;
+  CHECK (difficulty IS NULL OR difficulty IN ('junior', 'semi_senior', 'senior'));
 
 -- 2. Los 150 retos antiguos (3 enunciados repetidos, sin tests) quedan ocultos
 UPDATE challenges SET legacy = true WHERE spec IS NULL AND legacy = false;
