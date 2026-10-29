@@ -76,6 +76,13 @@ function PasswordRecoveryRedirect() {
 	return null;
 }
 
+/** Sin footer en pantallas de trabajo a pantalla completa (quiz y retos). */
+function FooterGate() {
+	const { pathname } = useLocation();
+	if (/^\/quiz\//.test(pathname) || /^\/editor\/[^/]+\/[^/]+/.test(pathname)) return null;
+	return <Footer />;
+}
+
 function NotFound() {
 	return (
 		<section className="mx-auto max-w-xl px-4 py-16 text-center space-y-4">
@@ -156,7 +163,7 @@ export default function AppRouter() {
 					</Routes>
 				</Suspense>
 			</main>
-			<Footer />
+			<FooterGate />
 		</BrowserRouter>
 	);
 }

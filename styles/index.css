@@ -243,20 +243,3 @@ pre,
 	font-feature-settings: "liga" 0, "calt" 0;
 }
 
-/* Resaltado de Prism en el editor, con los colores del tema */
-.code-editor .token.comment,
-.code-editor .token.prolog,
-.code-editor .token.doctype { color: rgb(var(--muted)); font-style: italic; }
-.code-editor .token.tag,
-.code-editor .token.keyword,
-.code-editor .token.selector { color: rgb(var(--accent)); }
-.code-editor .token.attr-name,
-.code-editor .token.property,
-.code-editor .token.function { color: rgb(var(--chart-4)); }
-.code-editor .token.attr-value,
-.code-editor .token.string { color: rgb(var(--chart-3)); }
-.code-editor .token.number,
-.code-editor .token.boolean { color: rgb(var(--warn)); }
-.code-editor .token.punctuation,
-.code-editor .token.operator { color: rgb(var(--muted)); }
-.code-editor textarea { caret-color: rgb(var(--accent)); }
