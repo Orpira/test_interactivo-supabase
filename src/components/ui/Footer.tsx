@@ -1,55 +1,44 @@
-import {
-	FaEnvelope,
-	FaGithub,
-	FaLinkedin,
-	FaMapMarkerAlt,
-} from "react-icons/fa";
+import { Github, Linkedin, Mail, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
+
+const LINK = "flex min-h-touch min-w-touch items-center justify-center rounded-full text-muted transition-colors hover:bg-surface2 hover:text-accent";
 
 export default function Footer() {
 	return (
-		<footer className="mt-0 py-3 px-4 border-t border-slate-200 bg-slate-50 text-center">
-			<div className="max-w-3xl mx-auto">
-				<div className="flex justify-center gap-5 mb-2">
-					<Link
-						to="/contacto"
-						className="text-slate-600 hover:text-indigo-700 transition-colors"
-						aria-label="Formulario de contacto"
-					>
-						<FaEnvelope className="w-5 h-5" />
+		<footer className="border-t border-line bg-surface px-4 py-4">
+			<div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 sm:flex-row">
+				<p className="flex items-center gap-2 text-sm text-muted">
+					<img src="/logo-96.webp" alt="" width="20" height="20" className="h-5 w-5" />
+					<span>
+						© {new Date().getFullYear()} OrPiRa · WebWiz Quiz
+					</span>
+					<span className="hidden items-center gap-1 sm:inline-flex">
+						· <MapPin className="h-3.5 w-3.5" aria-hidden="true" /> Bilbao, España
+					</span>
+				</p>
+				<nav aria-label="Contacto y redes" className="flex items-center gap-1">
+					<Link to="/contacto" className={LINK} aria-label="Formulario de contacto">
+						<Mail className="h-5 w-5" aria-hidden="true" />
 					</Link>
 					<a
 						href="https://www.linkedin.com/in/orlando-pineda-raad-273402257"
 						target="_blank"
 						rel="noopener noreferrer"
-						className="text-slate-600 hover:text-indigo-700 transition-colors"
+						className={LINK}
 						aria-label="LinkedIn"
 					>
-						<FaLinkedin className="w-5 h-5" />
+						<Linkedin className="h-5 w-5" aria-hidden="true" />
 					</a>
 					<a
 						href="https://github.com/Orpira"
 						target="_blank"
 						rel="noopener noreferrer"
-						className="text-slate-600 hover:text-indigo-700 transition-colors"
+						className={LINK}
 						aria-label="GitHub"
 					>
-						<FaGithub className="w-5 h-5" />
+						<Github className="h-5 w-5" aria-hidden="true" />
 					</a>
-				</div>
-
-				<p className="text-[11px] text-slate-500 font-medium leading-none">
-					<i className="fa fa-copyright" aria-hidden="true"></i> OrPiRa - WebWiz
-					Quizz
-				</p>
-
-				<p className="text-xs text-slate-600 mt-1 flex items-center justify-center gap-1 leading-none">
-					<FaMapMarkerAlt className="w-3.5 h-3.5" />
-					Bilbao, España
-				</p>
-				<p className="text-[11px] text-slate-500 mt-0.5 leading-none">
-					{new Date().getFullYear()}
-				</p>
+				</nav>
 			</div>
 		</footer>
 	);

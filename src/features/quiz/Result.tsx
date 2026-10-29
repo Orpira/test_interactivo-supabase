@@ -4,7 +4,7 @@ import type { User } from "@supabase/supabase-js";
 import { useAuth } from "../../services/auth";
 import { supabase } from "../../services/supabase";
 import { updateUserStats } from "../../services/userStats";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import type { AnswerResume } from "@/types/TestResult";
 import ExperienceFeedbackModal from "@/components/ui/ExperienceFeedbackModal";
 import {
@@ -245,14 +245,14 @@ export default function Result({ answers: answersProp }: Props) {
 	}
 
 	if (dbError) {
-		return <p className="p-6 text-center text-red-600">{dbError}</p>;
+		return <p className="p-6 text-center text-warn">{dbError}</p>;
 	}
 
 	if (!answers || answers.length === 0) {
 		return (
 			<section className="max-w-2xl mx-auto px-4 py-8 space-y-6">
 				<h1 className="text-3xl font-bold text-center mb-8">Resultados</h1>
-				<p className="text-center text-red-600">
+				<p className="text-center text-warn">
 					No hay respuestas disponibles.
 				</p>
 			</section>
@@ -305,36 +305,36 @@ export default function Result({ answers: answersProp }: Props) {
 				{/* Resumen */}
 				<div className="text-center space-y-3 mb-6">
 					{saveError && (
-						<p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded p-2">
+						<p className="text-sm text-warn bg-warn-soft border border-warn/40 rounded p-2">
 							{saveError}
 						</p>
 					)}
 					<p className="text-6xl">{message.emoji}</p>
 					<p className="text-2xl font-bold">
 						{scoreToShow} / {totalToShow}{" "}
-						<span className="text-lg font-normal text-gray-500">
+						<span className="text-lg font-normal text-muted">
 							({percentage}%)
 						</span>
 					</p>
 					{finalCategory && (
-						<p className="text-sm text-gray-500">
+						<p className="text-sm text-muted">
 							Categoría: <strong>{finalCategory}</strong>
 						</p>
 					)}
-					<p className="text-lg text-gray-700 dark:text-gray-300">
+					<p className="text-lg text-muted">
 						{message.text}
 					</p>
 					<div className="flex justify-center gap-3 pt-2">
 						<Link
 							to={retryQuizLink}
-							className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-sm"
+							className="px-4 py-2 bg-accent text-accent-fg rounded-lg hover:bg-accent/90 transition text-sm"
 						>
 							Intentar otro quiz
 						</Link>
 						{isAuthenticated && (
 							<Link
 								to="/dashboard"
-								className="px-4 py-2 bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200 rounded-lg hover:bg-gray-300 dark:hover:bg-slate-600 transition text-sm"
+								className="px-4 py-2 bg-surface2 text-fg rounded-lg hover:bg-line transition text-sm"
 							>
 								Ver Dashboard
 							</Link>
@@ -375,8 +375,8 @@ function ResultItem({ data }: { data: AnswerResume }) {
         rounded-xl border shadow
         ${
 					data.correct
-						? "border-green-300 bg-green-50/40"
-						: "border-red-300 bg-red-50/40"
+						? "border-accent/50 bg-accent-soft"
+						: "border-warn/50 bg-warn-soft"
 				}
       `}
 		>
@@ -394,8 +394,8 @@ function ResultItem({ data }: { data: AnswerResume }) {
 						<span
 							className={
 								data.correct
-									? "font-medium text-green-700"
-									: "font-medium text-red-700"
+									? "font-medium text-accent"
+									: "font-medium text-warn"
 							}
 						>
 							{data.userAnswer}
@@ -404,7 +404,7 @@ function ResultItem({ data }: { data: AnswerResume }) {
 					{!data.correct && (
 						<p className="text-sm mt-0.5">
 							Respuesta correcta:{" "}
-							<span className="font-medium text-green-700">
+							<span className="font-medium text-accent">
 								{data.correctAnswer}
 							</span>
 						</p>
@@ -432,7 +432,7 @@ function ResultItem({ data }: { data: AnswerResume }) {
 			{/* “Persiana” animada */}
 			<AnimatePresence initial={false}>
 				{open && (
-					<motion.div
+					<m.div
 						key="content"
 						initial={{ height: 0, opacity: 0 }}
 						animate={{ height: "auto", opacity: 1 }}
@@ -446,12 +446,12 @@ function ResultItem({ data }: { data: AnswerResume }) {
 								href={data.sourceUrl}
 								target="_blank"
 								rel="noopener noreferrer"
-								className="mt-2 inline-block text-indigo-600 underline text-sm"
+								className="mt-2 inline-block text-accent underline text-sm"
 							>
 								Ver explicación ampliada en {data.sourceName || "la fuente"}
 							</a>
 						)}
-					</motion.div>
+					</m.div>
 				)}
 			</AnimatePresence>
 		</article>

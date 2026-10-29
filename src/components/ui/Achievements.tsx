@@ -19,8 +19,8 @@ export default function Achievements({
           key={i}
           className={`p-4 rounded-xl border text-center shadow-md ${
             a.unlocked
-              ? "bg-green-100 border-green-400"
-              : "bg-gray-100 text-gray-400"
+              ? "bg-accent-soft border-accent"
+              : "bg-surface2 text-muted"
           }`}
         >
           <div className="text-3xl">{a.icon}</div>

@@ -48,8 +48,8 @@ function AuthCallback() {
 			<section className="mx-auto max-w-md px-4 py-16 text-center space-y-4">
 				<p className="text-5xl">⚠️</p>
 				<h1 className="text-2xl font-bold">No se pudo iniciar sesión</h1>
-				<p className="text-gray-600">{error}</p>
-				<Link to="/" className="text-indigo-600 underline">
+				<p className="text-muted">{error}</p>
+				<Link to="/" className="text-accent underline">
 					Volver al inicio
 				</Link>
 			</section>
@@ -81,12 +81,10 @@ function NotFound() {
 		<section className="mx-auto max-w-xl px-4 py-16 text-center space-y-4">
 			<p className="text-6xl">🧭</p>
 			<h1 className="text-2xl font-bold">Página no encontrada</h1>
-			<p className="text-gray-600">
-				La ruta que buscas no existe o ha cambiado.
-			</p>
+			<p className="text-muted">La ruta que buscas no existe o ha cambiado.</p>
 			<Link
 				to="/"
-				className="inline-block px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700"
+				className="inline-block px-4 py-2 rounded-lg bg-accent text-accent-fg hover:bg-accent/90"
 			>
 				Volver al inicio
 			</Link>
@@ -101,58 +99,63 @@ export default function AppRouter() {
 		<BrowserRouter>
 			<PasswordRecoveryRedirect />
 			<Navbar />
-			<Suspense fallback={<p className="p-6 text-center">Cargando...</p>}>
-				<Routes>
-					<Route path="/" element={<Hero />} />
-					<Route path="/auth/callback" element={<AuthCallback />} />
-					<Route path="/quiz/:category" element={<QuizRunner />} />
-					<Route path="/quiz/:category/:subcategory" element={<QuizRunner />} />
-					<Route path="/result" element={<Result />} />
-					<Route path="/summary" element={<Summary />} />
-					<Route path="/ranking" element={<Ranking />} />
-					<Route
-						path="/historial"
-						element={
-							<PrivateRoute>
-								<Historial />
-							</PrivateRoute>
-						}
-					/>
-					<Route
-						path="/editor"
-						element={
-							<PrivateRoute>
-								<ChallengeCategories />
-							</PrivateRoute>
-						}
-					/>
-					<Route
-						path="/editor/:categoria/:id"
-						element={
-							<PrivateRoute>
-								<ChallengeEditorPage />
-							</PrivateRoute>
-						}
-					/>
-					<Route path="/restablecer" element={<ResetPassword />} />
-					<Route path="/contacto" element={<ContactForm />} />
-					<Route path="/gracias" element={<Gracias />} />
-					<Route
-						path="/dashboard"
-						element={
-							<PrivateRoute>
-								<Dashboard />
-							</PrivateRoute>
-						}
-					/>
-					{/* Los logros reales se calculan en el dashboard */}
-					<Route
-						path="/logros"
-						element={<Navigate to="/dashboard" replace />}
-					/>
-					<Route path="*" element={<NotFound />} />
-				</Routes>
-			</Suspense>
+			<main id="contenido" tabIndex={-1} className="outline-none">
+				<Suspense fallback={<p className="p-6 text-center">Cargando...</p>}>
+					<Routes>
+						<Route path="/" element={<Hero />} />
+						<Route path="/auth/callback" element={<AuthCallback />} />
+						<Route path="/quiz/:category" element={<QuizRunner />} />
+						<Route
+							path="/quiz/:category/:subcategory"
+							element={<QuizRunner />}
+						/>
+						<Route path="/result" element={<Result />} />
+						<Route path="/summary" element={<Summary />} />
+						<Route path="/ranking" element={<Ranking />} />
+						<Route
+							path="/historial"
+							element={
+								<PrivateRoute>
+									<Historial />
+								</PrivateRoute>
+							}
+						/>
+						<Route
+							path="/editor"
+							element={
+								<PrivateRoute>
+									<ChallengeCategories />
+								</PrivateRoute>
+							}
+						/>
+						<Route
+							path="/editor/:categoria/:id"
+							element={
+								<PrivateRoute>
+									<ChallengeEditorPage />
+								</PrivateRoute>
+							}
+						/>
+						<Route path="/restablecer" element={<ResetPassword />} />
+						<Route path="/contacto" element={<ContactForm />} />
+						<Route path="/gracias" element={<Gracias />} />
+						<Route
+							path="/dashboard"
+							element={
+								<PrivateRoute>
+									<Dashboard />
+								</PrivateRoute>
+							}
+						/>
+						{/* Los logros reales se calculan en el dashboard */}
+						<Route
+							path="/logros"
+							element={<Navigate to="/dashboard" replace />}
+						/>
+						<Route path="*" element={<NotFound />} />
+					</Routes>
+				</Suspense>
+			</main>
 			<Footer />
 		</BrowserRouter>
 	);

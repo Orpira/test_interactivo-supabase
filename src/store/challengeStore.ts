@@ -1,60 +1,47 @@
 import { create } from "zustand";
 import { supabase } from "@/services/supabase";
-
-export type Challenge = {
-	id: string;
-	title: string;
-	instructions: string;
-	category: string;
-	difficulty?: string;
-	starterCode?: string;
-	initialCode?: string;
-	expectedOutput?: string;
-};
+import { challengeCatalog } from "@/content/challenges";
+import type { ChallengeSpec } from "@/features/challenges/engine/types";
 
 interface ChallengeStore {
-	challenges: Challenge[];
+	challenges: ChallengeSpec[];
 	loading: boolean;
 	loaded: boolean;
-	error: string | null;
 	fetchChallenges: () => Promise<void>;
-	getChallengeById: (id: string) => Challenge | undefined;
-	getByCategory: (category: string) => Challenge[];
 }
 
-// Orden natural: "html-2" antes que "html-10"
-const byId = (a: Challenge, b: Challenge) =>
-	a.id.localeCompare(b.id, undefined, { numeric: true });
-
+/**
+ * Catálogo de retos. La fuente principal son los retos versionados en el repo
+ * (verificados en CI); a ellos se suman los retos con `spec` de la tabla
+ * `challenges` que no estén ya incluidos. Los retos antiguos (legacy) no se
+ * muestran. Si la migración de la Fase 1 no se ha aplicado, se usan solo los
+ * del repo.
+ */
 export const useChallengeStore = create<ChallengeStore>((set, get) => ({
-	challenges: [],
+	challenges: challengeCatalog,
 	loading: false,
 	loaded: false,
-	error: null,
 	fetchChallenges: async () => {
-		if (get().loading) return;
-		set({ loading: true, error: null });
-		const { data, error } = await supabase.from("challenges").select("*");
-		if (error) {
-			console.error("Error cargando challenges:", error);
-			set({ loading: false, loaded: true, error: error.message });
-			return;
+		if (get().loading || get().loaded) return;
+		set({ loading: true });
+		const extra: ChallengeSpec[] = [];
+		try {
+			const { data, error } = await supabase
+				.from("challenges")
+				.select("id, spec")
+				.eq("legacy", false)
+				.not("spec", "is", null);
+			if (error) throw error;
+			const known = new Set(challengeCatalog.map((c) => c.id));
+			for (const row of data ?? []) {
+				const spec = row.spec as ChallengeSpec | null;
+				if (spec && !known.has(row.id) && Array.isArray(spec.tests)) {
+					extra.push({ ...spec, id: row.id });
+				}
+			}
+		} catch (error) {
+			console.warn("Retos de Supabase no disponibles; se usan los del repo.", error);
 		}
-		const challenges: Challenge[] = (data ?? [])
-			.map((row: Record<string, unknown>) => ({
-				id: String(row.id),
-				title: String(row.title ?? ""),
-				instructions: String(row.instructions ?? ""),
-				category: String(row.category ?? "").toLowerCase(),
-				difficulty: (row.difficulty as string) ?? undefined,
-				starterCode: (row.starterCode as string) ?? undefined,
-				initialCode: (row.initialCode as string) ?? undefined,
-				expectedOutput: (row.expectedOutput as string) ?? undefined,
-			}))
-			.sort(byId);
-		set({ challenges, loading: false, loaded: true });
+		set({ challenges: [...challengeCatalog, ...extra], loading: false, loaded: true });
 	},
-	getChallengeById: (id) => get().challenges.find((c) => c.id === id),
-	getByCategory: (category) =>
-		get().challenges.filter((c) => c.category === category.toLowerCase()),
 }));

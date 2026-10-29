@@ -8,7 +8,7 @@ interface ParticleProps {
 const Particle = ({ direction }: ParticleProps) => {
 	return (
 		<span
-			className="particle absolute w-3 h-3 bg-white rounded-full shadow-md"
+			className="particle absolute w-3 h-3 bg-surface rounded-full shadow-md"
 			style={{
 				//top: position === "top" ? "30%" : "70%",
 				left: direction === "left" ? "0" : undefined,

@@ -76,13 +76,13 @@ export default function ExperienceFeedbackModal({
 	};
 
 	return (
-		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-			<div className="w-full max-w-md rounded-xl bg-white p-6 shadow-2xl">
-				<h3 className="text-xl font-bold text-slate-900">Ayudanos a mejorar</h3>
-				<p className="mt-1 text-sm text-slate-600">{adaptiveQuestion}</p>
+		<div className="fixed inset-0 z-50 flex items-center justify-center bg-bg/80 px-4">
+			<div className="w-full max-w-md rounded-xl bg-surface p-6 shadow-2xl">
+				<h3 className="text-xl font-bold text-fg">Ayudanos a mejorar</h3>
+				<p className="mt-1 text-sm text-muted">{adaptiveQuestion}</p>
 
 				<div className="mt-4">
-					<p className="mb-2 text-sm font-medium text-slate-700">
+					<p className="mb-2 text-sm font-medium text-muted">
 						¿Qué tan útil fue este quiz?
 					</p>
 					<div className="flex gap-2">
@@ -93,8 +93,8 @@ export default function ExperienceFeedbackModal({
 								onClick={() => setRating(value)}
 								className={`h-10 w-10 rounded-lg border font-semibold transition ${
 									rating === value
-										? "border-indigo-600 bg-indigo-600 text-white"
-										: "border-slate-200 text-slate-700 hover:bg-slate-50"
+										? "border-accent bg-accent text-accent-fg"
+										: "border-line text-muted hover:bg-surface2"
 								}`}
 							>
 								{value}
@@ -104,7 +104,7 @@ export default function ExperienceFeedbackModal({
 				</div>
 
 				<div className="mt-4">
-					<label className="mb-2 block text-sm font-medium text-slate-700">
+					<label className="mb-2 block text-sm font-medium text-muted">
 						Comentario (opcional)
 					</label>
 					<textarea
@@ -112,13 +112,13 @@ export default function ExperienceFeedbackModal({
 						onChange={(event) => setComment(event.target.value)}
 						rows={3}
 						placeholder="Cuéntanos qué mejorarías"
-						className="w-full rounded-lg border border-slate-300 p-2 text-sm focus:border-indigo-500 focus:outline-none"
+						className="w-full rounded-lg border border-line p-2 text-sm focus:border-accent focus:outline-none"
 					/>
 				</div>
 
 				{shouldAskReason && (
 					<div className="mt-4">
-						<label className="mb-2 block text-sm font-medium text-slate-700">
+						<label className="mb-2 block text-sm font-medium text-muted">
 							Motivo principal
 						</label>
 						<select
@@ -126,7 +126,7 @@ export default function ExperienceFeedbackModal({
 							onChange={(event) =>
 								setReason(event.target.value as LowRatingReason | "")
 							}
-							className="w-full rounded-lg border border-slate-300 p-2 text-sm focus:border-indigo-500 focus:outline-none"
+							className="w-full rounded-lg border border-line p-2 text-sm focus:border-accent focus:outline-none"
 						>
 							<option value="">Selecciona una opción</option>
 							{LOW_RATING_REASONS.map((item) => (
@@ -139,7 +139,7 @@ export default function ExperienceFeedbackModal({
 				)}
 
 				{error && (
-					<p className="mt-3 rounded border border-red-200 bg-red-50 p-2 text-sm text-red-700">
+					<p className="mt-3 rounded border border-warn/40 bg-warn-soft p-2 text-sm text-warn">
 						{error}
 					</p>
 				)}
@@ -149,7 +149,7 @@ export default function ExperienceFeedbackModal({
 						type="button"
 						onClick={onClose}
 						disabled={loading}
-						className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed"
+						className="rounded-lg border border-line px-4 py-2 text-sm font-medium text-muted hover:bg-surface2 disabled:cursor-not-allowed"
 					>
 						Ahora no
 					</button>
@@ -157,7 +157,7 @@ export default function ExperienceFeedbackModal({
 						type="button"
 						onClick={handleSubmit}
 						disabled={loading || (shouldAskReason && !reason)}
-						className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-indigo-300"
+						className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-fg hover:bg-accent/90 disabled:cursor-not-allowed disabled:bg-accent/50"
 					>
 						{loading ? "Enviando..." : "Enviar"}
 					</button>

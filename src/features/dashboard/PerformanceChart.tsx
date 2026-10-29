@@ -13,7 +13,8 @@ type PerformanceChartProps = {
 	centerLabel?: string;
 };
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#AF19FF"];
+// Paleta categórica del sistema de diseño (variables --chart-N en styles/index.css)
+const COLORS = [1, 2, 3, 4, 5].map((n) => `rgb(var(--chart-${n}))`);
 
 const RADIAN = Math.PI / 180;
 
@@ -42,7 +43,7 @@ function SliceLabel({
 		<text
 			x={x}
 			y={y}
-			fill="white"
+			fill="rgb(var(--bg))"
 			textAnchor="middle"
 			dominantBaseline="central"
 			fontSize={12}
@@ -60,7 +61,7 @@ export default function PerformanceChart({
 }: PerformanceChartProps) {
 	if (!data || data.length === 0) {
 		return (
-			<div className="bg-white p-6 rounded shadow text-center text-slate-400">
+			<div className="bg-surface p-6 rounded-xl border border-line text-center text-muted">
 				Sin datos para mostrar
 			</div>
 		);
@@ -70,7 +71,7 @@ export default function PerformanceChart({
 	const lines = label.split(" ");
 
 	return (
-		<div className="bg-white p-6 rounded shadow">
+		<div className="bg-surface p-6 rounded-xl border border-line">
 			{/* Contenedor relativo para superponer el texto central */}
 			<div className="relative">
 				<ResponsiveContainer width="100%" height={300}>
@@ -95,6 +96,12 @@ export default function PerformanceChart({
 						</Pie>
 						<Tooltip
 							formatter={(value: number) => [`${value} / 10`, "Promedio"]}
+							contentStyle={{
+								background: "rgb(var(--surface))",
+								border: "1px solid rgb(var(--border))",
+								borderRadius: 10,
+								color: "rgb(var(--text))",
+							}}
 						/>
 						<Legend />
 					</PieChart>
@@ -105,7 +112,7 @@ export default function PerformanceChart({
 					{lines.map((line, i) => (
 						<span
 							key={i}
-							className="block text-sm font-bold text-slate-800 leading-tight text-center"
+							className="block text-sm font-bold text-fg leading-tight text-center"
 						>
 							{line}
 						</span>

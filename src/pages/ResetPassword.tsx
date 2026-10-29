@@ -29,13 +29,13 @@ export default function ResetPassword() {
 			<Card>
 				<p className="text-5xl">✅</p>
 				<h1 className="text-2xl font-bold">Contraseña actualizada</h1>
-				<p className="text-slate-600">
+				<p className="text-muted">
 					Ya puedes usar tu nueva contraseña para iniciar sesión.
 				</p>
 				<button
 					type="button"
 					onClick={() => navigate("/", { replace: true })}
-					className="rounded-lg bg-indigo-600 px-4 py-2 font-semibold text-white hover:bg-indigo-500"
+					className="rounded-lg bg-accent px-4 py-2 font-semibold text-accent-fg hover:bg-accent/90"
 				>
 					Ir al inicio
 				</button>
@@ -49,12 +49,12 @@ export default function ResetPassword() {
 			<Card>
 				<p className="text-5xl">⌛</p>
 				<h1 className="text-2xl font-bold">Enlace no válido</h1>
-				<p className="text-slate-600">
+				<p className="text-muted">
 					El enlace ha caducado, ya se usó o se abrió en un navegador distinto
 					al que lo solicitó. Pide uno nuevo desde «Iniciar sesión → ¿Olvidaste
 					tu contraseña?».
 				</p>
-				<Link to="/" className="text-indigo-600 underline">
+				<Link to="/" className="text-accent underline">
 					Volver al inicio
 				</Link>
 			</Card>
@@ -87,21 +87,21 @@ export default function ResetPassword() {
 
 	return (
 		<Card>
-			<div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-100">
-				<KeyRound className="h-6 w-6 text-indigo-600" aria-hidden="true" />
+			<div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-accent-soft">
+				<KeyRound className="h-6 w-6 text-accent" aria-hidden="true" />
 			</div>
 			<h1 className="text-2xl font-bold">
 				{passwordRecovery ? "Crea tu nueva contraseña" : "Cambiar contraseña"}
 			</h1>
-			<p className="text-sm text-slate-600">
+			<p className="text-sm text-muted">
 				Cuenta: <strong>{user.email}</strong>
 			</p>
 			<form onSubmit={handleSubmit} className="space-y-4 text-left">
 				<label className="block">
-					<span className="mb-1.5 block text-sm font-medium text-slate-700">
+					<span className="mb-1.5 block text-sm font-medium text-muted">
 						Nueva contraseña
 					</span>
-					<div className="flex items-center rounded-lg border border-slate-200 bg-slate-50 px-3 focus-within:border-indigo-400 focus-within:ring-2 focus-within:ring-indigo-100">
+					<div className="flex items-center rounded-lg border border-line bg-surface2 px-3 focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/20">
 						<input
 							type={show ? "text" : "password"}
 							autoComplete="new-password"
@@ -115,7 +115,7 @@ export default function ResetPassword() {
 						<button
 							type="button"
 							onClick={() => setShow((v) => !v)}
-							className="p-1 text-slate-400 hover:text-slate-600"
+							className="p-1 text-muted hover:text-fg"
 							aria-label={show ? "Ocultar contraseña" : "Mostrar contraseña"}
 						>
 							{show ? (
@@ -127,13 +127,13 @@ export default function ResetPassword() {
 					</div>
 				</label>
 				<label className="block">
-					<span className="mb-1.5 block text-sm font-medium text-slate-700">
+					<span className="mb-1.5 block text-sm font-medium text-muted">
 						Repite la contraseña
 					</span>
 					<input
 						type={show ? "text" : "password"}
 						autoComplete="new-password"
-						className="min-h-11 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 text-sm outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
+						className="min-h-11 w-full rounded-lg border border-line bg-surface2 px-3 text-sm outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
 						value={confirm}
 						onChange={(e) => setConfirm(e.target.value)}
 						required
@@ -141,7 +141,7 @@ export default function ResetPassword() {
 				</label>
 				<div aria-live="polite">
 					{error && (
-						<p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+						<p className="rounded-lg border border-warn/40 bg-warn-soft px-3 py-2 text-sm text-warn">
 							{error}
 						</p>
 					)}
@@ -149,7 +149,7 @@ export default function ResetPassword() {
 				<button
 					type="submit"
 					disabled={saving}
-					className="min-h-11 w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-60"
+					className="min-h-11 w-full rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-accent-fg hover:bg-accent/90 disabled:opacity-60"
 				>
 					{saving ? "Guardando..." : "Guardar contraseña"}
 				</button>
@@ -160,7 +160,7 @@ export default function ResetPassword() {
 
 function Card({ children }: { children: React.ReactNode }) {
 	return (
-		<section className="mx-auto my-10 w-full max-w-md space-y-4 rounded-2xl border bg-white px-6 py-8 text-center shadow-xl">
+		<section className="mx-auto my-10 w-full max-w-md space-y-4 rounded-2xl border bg-surface px-6 py-8 text-center shadow-xl">
 			{children}
 		</section>
 	);

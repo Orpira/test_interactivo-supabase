@@ -144,6 +144,25 @@ npx playwright test
 
 ## Cambios recientes
 
+### Fase 1: sistema de diseño, pantalla de quiz y motor de tests
+
+> ⚠️ **Supabase:** ejecuta en orden `supabase/migrations/20261029_fase1_retos.sql` y `supabase/migrations/20261029_fase1_retos_seed.sql`. La app funciona sin ellas (usa los retos del repo), pero los intentos no se guardan hasta aplicarlas.
+> 📱 **Android:** tras actualizar, ejecuta `npm run cap:sync` (nuevo plugin `@capacitor/haptics`).
+
+- **Diseño:** tokens de color en `styles/index.css` (tema oscuro por defecto, claro con contraste AA), tipografías locales Space Grotesk / Inter / JetBrains Mono, estados azul (correcto) y naranja (fallo).
+- **Quiz:** opciones en lista vertical, resaltado con Shiki, atajos `1-4`/`A-D`, `Enter`, `E` y `Esc`, barra de progreso, racha, salida con confirmación, progreso guardado al recargar y vibración en Android.
+- **Retos:** motor que ejecuta el código en un iframe aislado (DOM) o en un Web Worker (JS y consola), con 2 s por test y protección frente a bucles infinitos. 30 retos nuevos en `src/content/challenges`; los antiguos quedan como `legacy`.
+- **NavBar:** paleta de comandos con `Ctrl/⌘ + K`, menú de quizzes por áreas, menú de cuenta y menú móvil nuevo. Ventana de acceso rediseñada.
+- **Accesibilidad:** foco visible, radiogroup en opciones, zonas táctiles de 44 px, `prefers-reduced-motion`; axe sin violaciones y Lighthouse Accesibilidad 100 en el quiz.
+
+#### Añadir o cambiar retos
+
+1. Edita `src/content/challenges/{html,css,javascript}.ts` (tipado con `ChallengeSpec`).
+2. `npm run db:challenges-seed` regenera la migración con los retos.
+3. `npm run test:e2e -- tests/e2e/challenges.spec.ts` comprueba en Chromium que la solución pasa y el código inicial falla (también lo hace el CI).
+
+### Anteriores (PR #1)
+
 ### Octubre 2026: estabilidad, seguridad y retos
 
 > ⚠️ **Requiere ejecutar en Supabase** `supabase/migrations/20261028_harden_resultados.sql` (idempotente).

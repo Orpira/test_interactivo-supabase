@@ -2,6 +2,10 @@ import { useEffect, useId, useRef, useState } from "react";
 import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import {
 	ArrowLeft,
+	Check,
+	Code2,
+	Flame,
+	Trophy,
 	Eye,
 	EyeOff,
 	Github,
@@ -15,6 +19,8 @@ import { supabase } from "@/services/supabase";
 import { useAuth } from "@/services/auth";
 import { getAuthRedirectUrl } from "@/services/authRedirect";
 import { translateAuthError } from "@/services/authErrors";
+import { getStoredTheme } from "@/services/theme";
+import { m, useReducedMotion } from "framer-motion";
 
 export type LoginMode = "login" | "signup" | "forgot";
 
@@ -50,6 +56,7 @@ const TITLES: Record<LoginMode, { title: string; subtitle: string }> = {
 
 export default function LoginModal({ onClose, initialMode = "login" }: Props) {
 	const { loginWithGoogle, loginWithRedirect } = useAuth();
+	const reduceMotion = useReducedMotion();
 	const [mode, setMode] = useState<LoginMode>(initialMode);
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
@@ -188,268 +195,287 @@ export default function LoginModal({ onClose, initialMode = "login" }: Props) {
 
 	return (
 		<div
-			className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-slate-950/75 px-4 py-6 backdrop-blur-sm"
+			role="region"
+			aria-label="Acceso"
+			className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-bg/80 px-4 py-6 backdrop-blur-md"
 			onMouseDown={(e) => e.target === e.currentTarget && onClose()}
 		>
-			<div
+			<m.div
 				role="dialog"
 				aria-modal="true"
 				aria-labelledby="login-modal-title"
-				className="relative w-full max-w-md overflow-hidden rounded-2xl border border-white/10 bg-white shadow-2xl"
+				initial={reduceMotion ? false : { opacity: 0, y: 16, scale: 0.98 }}
+				animate={{ opacity: 1, y: 0, scale: 1 }}
+				transition={{ duration: 0.25, ease: "easeOut" }}
+				className="relative grid w-full max-w-4xl overflow-hidden rounded-2xl border border-line bg-surface shadow-[0_30px_80px_-20px_rgb(0_0_0/0.6)] md:grid-cols-[1fr_1.1fr]"
 			>
-				<div className="bg-slate-950 px-6 py-6 text-white">
-					<div className="flex items-start justify-between gap-4">
-						<div>
-							<div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-500/20 ring-1 ring-indigo-300/30">
-								<img src="/logo.png" alt="" className="h-9 w-9" />
-							</div>
-							<h2 id="login-modal-title" className="text-2xl font-bold">
-								{title}
-							</h2>
-							<p className="mt-2 text-sm leading-6 text-slate-300">
-								{subtitle}
-							</p>
+				<BrandPanel mode={mode} reduceMotion={!!reduceMotion} />
+
+				<div className="relative">
+					<button
+						type="button"
+						className="absolute right-3 top-3 z-10 flex min-h-touch min-w-touch items-center justify-center rounded-full text-muted transition hover:bg-surface2 hover:text-fg"
+						onClick={onClose}
+						aria-label="Cerrar"
+					>
+						<X className="h-5 w-5" aria-hidden="true" />
+					</button>
+
+					<div className="px-6 pb-2 pt-7 sm:px-8">
+						<div className="mb-4 flex items-center gap-2 md:hidden">
+							<img src="/logo-96.webp" alt="" width="32" height="32" className="h-8 w-8" />
+							<span className="font-display text-lg font-bold">WebWiz</span>
 						</div>
-						<button
-							type="button"
-							className="rounded-full p-2 text-slate-300 transition hover:bg-white/10 hover:text-white"
-							onClick={onClose}
-							aria-label="Cerrar"
+						<h2
+							id="login-modal-title"
+							className="pr-10 text-2xl font-bold sm:text-[1.75rem]"
 						>
-							<X className="h-5 w-5" aria-hidden="true" />
-						</button>
+							{title}
+						</h2>
+						<p className="mt-1.5 text-sm leading-6 text-muted">{subtitle}</p>
+
+						{mode !== "forgot" && (
+							<div
+								className="relative mt-5 grid grid-cols-2 rounded-xl border border-line bg-surface2 p-1 text-sm font-semibold"
+								role="tablist"
+							>
+								{(["login", "signup"] as const).map((tab) => (
+									<button
+										key={tab}
+										type="button"
+										role="tab"
+										aria-selected={mode === tab}
+										onClick={() => switchMode(tab)}
+										className={`relative min-h-10 rounded-lg px-3 py-2 transition-colors ${
+											mode === tab ? "text-fg" : "text-muted hover:text-fg"
+										}`}
+									>
+										{mode === tab && (
+											<m.span
+												layoutId="login-tab"
+												className="absolute inset-0 rounded-lg border border-line bg-surface shadow-sm"
+												transition={{
+													type: "spring",
+													stiffness: 500,
+													damping: 38,
+												}}
+											/>
+										)}
+										<span className="relative">
+											{tab === "login" ? "Entrar" : "Crear cuenta"}
+										</span>
+									</button>
+								))}
+							</div>
+						)}
 					</div>
 
-					{mode !== "forgot" && (
-						<div
-							className="mt-5 grid grid-cols-2 rounded-lg bg-white/10 p-1 text-sm font-semibold"
-							role="tablist"
-						>
-							{(["login", "signup"] as const).map((m) => (
-								<button
-									key={m}
-									type="button"
-									role="tab"
-									aria-selected={mode === m}
-									onClick={() => switchMode(m)}
-									className={`rounded-md px-3 py-2 transition ${
-										mode === m
-											? "bg-white text-slate-900 shadow"
-											: "text-slate-300 hover:text-white"
-									}`}
-								>
-									{m === "login" ? "Entrar" : "Crear cuenta"}
-								</button>
-							))}
-						</div>
-					)}
-				</div>
+					<div className="space-y-5 px-6 pb-7 pt-4 sm:px-8">
+						{mode !== "forgot" && (
+							<>
+								<div className="grid gap-3 sm:grid-cols-2">
+									<button
+										type="button"
+										onClick={() => run(loginWithGoogle)}
+										className="flex min-h-touch items-center justify-center gap-2 rounded-xl border border-line bg-surface px-4 py-2.5 text-sm font-semibold text-fg transition hover:-translate-y-px hover:border-accent/60 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60"
+										disabled={loading}
+									>
+										<GoogleIcon />
+										Google
+									</button>
+									<button
+										type="button"
+										onClick={() => run(loginWithRedirect)}
+										className="flex min-h-touch items-center justify-center gap-2 rounded-xl bg-fg px-4 py-2.5 text-sm font-semibold text-bg transition hover:-translate-y-px hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60"
+										disabled={loading}
+									>
+										<Github className="h-5 w-5" aria-hidden="true" />
+										GitHub
+									</button>
+								</div>
 
-				<div className="space-y-5 px-6 py-6">
-					{mode !== "forgot" && (
-						<>
-							<div className="grid gap-3 sm:grid-cols-2">
-								<button
-									type="button"
-									onClick={() => run(loginWithGoogle)}
-									className="flex min-h-11 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:border-indigo-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
-									disabled={loading}
-								>
-									<GoogleIcon />
-									Google
-								</button>
-								<button
-									type="button"
-									onClick={() => run(loginWithRedirect)}
-									className="flex min-h-11 items-center justify-center gap-2 rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
-									disabled={loading}
-								>
-									<Github className="h-5 w-5" aria-hidden="true" />
-									GitHub
-								</button>
-							</div>
+								<div className="flex items-center gap-3">
+									<div className="h-px flex-1 bg-line" />
+									<span className="font-mono text-[0.7rem] font-semibold uppercase tracking-widest text-muted">
+										o con email
+									</span>
+									<div className="h-px flex-1 bg-line" />
+								</div>
+							</>
+						)}
 
-							<div className="flex items-center gap-3">
-								<div className="h-px flex-1 bg-slate-200" />
-								<span className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-									o con email
-								</span>
-								<div className="h-px flex-1 bg-slate-200" />
-							</div>
-						</>
-					)}
+						<form onSubmit={handleSubmit} className="space-y-4">
+							{mode === "signup" && (
+								<Field label="Nombre (opcional)" icon={User}>
+									{(id) => (
+										<input
+											id={id}
+											type="text"
+											autoComplete="name"
+											className={INPUT}
+											placeholder="Cómo quieres aparecer en el ranking"
+											value={name}
+											onChange={(e) => setName(e.target.value)}
+											maxLength={60}
+										/>
+									)}
+								</Field>
+							)}
 
-					<form onSubmit={handleSubmit} className="space-y-4">
-						{mode === "signup" && (
-							<Field label="Nombre (opcional)" icon={User}>
+							<Field label="Correo electrónico" icon={Mail}>
 								{(id) => (
 									<input
 										id={id}
-										type="text"
-										autoComplete="name"
+										type="email"
+										autoComplete="email"
 										className={INPUT}
-										placeholder="Cómo quieres aparecer en el ranking"
-										value={name}
-										onChange={(e) => setName(e.target.value)}
-										maxLength={60}
+										placeholder="tu@email.com"
+										value={email}
+										onChange={(e) => setEmail(e.target.value)}
+										required
+										autoFocus
 									/>
 								)}
 							</Field>
-						)}
 
-						<Field label="Correo electrónico" icon={Mail}>
-							{(id) => (
-								<input
-									id={id}
-									type="email"
-									autoComplete="email"
-									className={INPUT}
-									placeholder="tu@email.com"
-									value={email}
-									onChange={(e) => setEmail(e.target.value)}
-									required
-									autoFocus
-								/>
+							{mode !== "forgot" && (
+								<Field
+									label="Contraseña"
+									icon={Lock}
+									action={
+										mode === "login" ? (
+											<button
+												type="button"
+												onClick={() => switchMode("forgot")}
+												className="text-xs font-semibold text-accent hover:text-accent/80"
+											>
+												¿Olvidaste tu contraseña?
+											</button>
+										) : null
+									}
+								>
+									{(id) => (
+										<>
+											<input
+												id={id}
+												type={showPassword ? "text" : "password"}
+												autoComplete={
+													mode === "login" ? "current-password" : "new-password"
+												}
+												className={INPUT}
+												placeholder={
+													mode === "login"
+														? "Tu contraseña"
+														: `Mínimo ${MIN_PASSWORD_LENGTH} caracteres`
+												}
+												value={password}
+												onChange={(e) => setPassword(e.target.value)}
+												minLength={
+													mode === "signup" ? MIN_PASSWORD_LENGTH : undefined
+												}
+												required
+											/>
+											<button
+												type="button"
+												onClick={() => setShowPassword((v) => !v)}
+												className="p-1 text-muted hover:text-fg"
+												aria-label={
+													showPassword
+														? "Ocultar contraseña"
+														: "Mostrar contraseña"
+												}
+											>
+												{showPassword ? (
+													<EyeOff className="h-4 w-4" aria-hidden="true" />
+												) : (
+													<Eye className="h-4 w-4" aria-hidden="true" />
+												)}
+											</button>
+										</>
+									)}
+								</Field>
 							)}
-						</Field>
 
-						{mode !== "forgot" && (
-							<Field
-								label="Contraseña"
-								icon={Lock}
-								action={
-									mode === "login" ? (
-										<button
-											type="button"
-											onClick={() => switchMode("forgot")}
-											className="text-xs font-semibold text-indigo-600 hover:text-indigo-500"
-										>
-											¿Olvidaste tu contraseña?
-										</button>
-									) : null
-								}
-							>
-								{(id) => (
-									<>
+							{mode === "signup" && (
+								<Field label="Repite la contraseña" icon={Lock}>
+									{(id) => (
 										<input
 											id={id}
 											type={showPassword ? "text" : "password"}
-											autoComplete={
-												mode === "login" ? "current-password" : "new-password"
-											}
+											autoComplete="new-password"
 											className={INPUT}
-											placeholder={
-												mode === "login"
-													? "Tu contraseña"
-													: `Mínimo ${MIN_PASSWORD_LENGTH} caracteres`
-											}
-											value={password}
-											onChange={(e) => setPassword(e.target.value)}
-											minLength={
-												mode === "signup" ? MIN_PASSWORD_LENGTH : undefined
-											}
+											placeholder="Repite la contraseña"
+											value={confirm}
+											onChange={(e) => setConfirm(e.target.value)}
 											required
 										/>
-										<button
-											type="button"
-											onClick={() => setShowPassword((v) => !v)}
-											className="p-1 text-slate-400 hover:text-slate-600"
-											aria-label={
-												showPassword
-													? "Ocultar contraseña"
-													: "Mostrar contraseña"
-											}
-										>
-											{showPassword ? (
-												<EyeOff className="h-4 w-4" aria-hidden="true" />
-											) : (
-												<Eye className="h-4 w-4" aria-hidden="true" />
-											)}
-										</button>
-									</>
-								)}
-							</Field>
-						)}
+									)}
+								</Field>
+							)}
 
-						{mode === "signup" && (
-							<Field label="Repite la contraseña" icon={Lock}>
-								{(id) => (
-									<input
-										id={id}
-										type={showPassword ? "text" : "password"}
-										autoComplete="new-password"
-										className={INPUT}
-										placeholder="Repite la contraseña"
-										value={confirm}
-										onChange={(e) => setConfirm(e.target.value)}
-										required
+							{TURNSTILE_SITE_KEY && (
+								<div className="flex justify-center">
+									<Turnstile
+										ref={captchaRef}
+										siteKey={TURNSTILE_SITE_KEY}
+										options={{ language: "es", theme: getStoredTheme() }}
+										onSuccess={(token) => {
+											setCaptchaToken(token);
+											setError("");
+										}}
+										onExpire={() => setCaptchaToken(null)}
+										onError={() => {
+											setCaptchaToken(null);
+											setError(
+												"No se pudo completar la verificación de seguridad. Recarga la página."
+											);
+										}}
 									/>
+								</div>
+							)}
+
+							<div aria-live="polite">
+								{error && (
+									<div className="rounded-lg border border-warn/40 bg-warn-soft px-3 py-2 text-sm text-warn">
+										{error}
+									</div>
 								)}
-							</Field>
-						)}
-
-						{TURNSTILE_SITE_KEY && (
-							<div className="flex justify-center">
-								<Turnstile
-									ref={captchaRef}
-									siteKey={TURNSTILE_SITE_KEY}
-									options={{ language: "es", theme: "light" }}
-									onSuccess={(token) => {
-										setCaptchaToken(token);
-										setError("");
-									}}
-									onExpire={() => setCaptchaToken(null)}
-									onError={() => {
-										setCaptchaToken(null);
-										setError(
-											"No se pudo completar la verificación de seguridad. Recarga la página."
-										);
-									}}
-								/>
+								{notice && (
+									<div className="rounded-lg border border-accent/40 bg-accent-soft px-3 py-2 text-sm text-accent">
+										{notice}
+									</div>
+								)}
 							</div>
-						)}
 
-						<div aria-live="polite">
-							{error && (
-								<div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-									{error}
-								</div>
-							)}
-							{notice && (
-								<div className="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-800">
-									{notice}
-								</div>
-							)}
-						</div>
-
-						<button
-							type="submit"
-							className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-60"
-							disabled={loading}
-						>
-							<UserCircle className="h-5 w-5" aria-hidden="true" />
-							{submitLabel}
-						</button>
-
-						{mode === "forgot" && (
 							<button
-								type="button"
-								onClick={() => switchMode("login")}
-								className="flex w-full items-center justify-center gap-1 text-sm font-semibold text-slate-600 hover:text-slate-900"
+								type="submit"
+								className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-accent px-4 py-2.5 font-semibold text-accent-fg shadow-[0_10px_30px_-10px_rgb(var(--accent)/0.7)] transition hover:-translate-y-px hover:bg-accent/90 disabled:cursor-not-allowed disabled:opacity-60"
+								disabled={loading}
 							>
-								<ArrowLeft className="h-4 w-4" aria-hidden="true" />
-								Volver a iniciar sesión
+								<UserCircle className="h-5 w-5" aria-hidden="true" />
+								{submitLabel}
 							</button>
-						)}
-					</form>
+
+							{mode === "forgot" && (
+								<button
+									type="button"
+									onClick={() => switchMode("login")}
+									className="flex w-full items-center justify-center gap-1 text-sm font-semibold text-muted hover:text-fg"
+								>
+									<ArrowLeft className="h-4 w-4" aria-hidden="true" />
+									Volver a iniciar sesión
+								</button>
+							)}
+						</form>
+					</div>
 				</div>
-			</div>
+			</m.div>
 		</div>
 	);
 }
 
 const INPUT =
-	"min-h-11 w-full bg-transparent px-3 text-sm text-slate-900 outline-none placeholder:text-slate-400";
+	"min-h-11 w-full bg-transparent px-3 text-sm text-fg outline-none placeholder:text-muted";
 
 function Field({
 	label,
@@ -467,13 +493,13 @@ function Field({
 	return (
 		<div>
 			<div className="mb-1.5 flex items-center justify-between">
-				<label htmlFor={id} className="text-sm font-medium text-slate-700">
+				<label htmlFor={id} className="text-sm font-medium text-muted">
 					{label}
 				</label>
 				{action}
 			</div>
-			<div className="flex items-center rounded-lg border border-slate-200 bg-slate-50 px-3 transition focus-within:border-indigo-400 focus-within:ring-2 focus-within:ring-indigo-100">
-				<Icon className="h-4 w-4 shrink-0 text-slate-400" aria-hidden="true" />
+			<div className="flex items-center rounded-xl border border-line bg-surface2 px-3 transition focus-within:border-accent focus-within:bg-surface focus-within:ring-4 focus-within:ring-accent/15">
+				<Icon className="h-4 w-4 shrink-0 text-muted" aria-hidden="true" />
 				{children(id)}
 			</div>
 		</div>
@@ -481,24 +507,115 @@ function Field({
 }
 
 function GoogleIcon() {
+	// Logo oficial de Google: sus colores de marca viven en el SVG, no en el componente
+	return <img src="/icons/google.svg" alt="" className="h-5 w-5 shrink-0" />;
+}
+
+const DEMO_TESTS = [
+	".card centrada en horizontal",
+	".card centrada en vertical",
+	"sin bucles infinitos",
+];
+
+/**
+ * Panel de marca (solo escritorio): propuesta de valor y una mini consola
+ * de tests que se van poniendo en verde.
+ */
+function BrandPanel({
+	mode,
+	reduceMotion,
+}: {
+	mode: LoginMode;
+	reduceMotion: boolean;
+}) {
+	const headline =
+		mode === "signup"
+			? "Empieza a entrenar como trabajarás."
+			: mode === "forgot"
+			? "Te ayudamos a volver."
+			: "No memorices respuestas. Entrena el trabajo.";
+
 	return (
-		<svg className="h-5 w-5 shrink-0" viewBox="0 0 48 48" aria-hidden="true">
-			<path
-				fill="#4285F4"
-				d="M44.5 20H24v8.5h11.7C34.7 33.1 29.9 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c2.7 0 5.2.9 7.2 2.4l6.4-6.4C33.5 5.1 28.1 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21c10.5 0 20-8.1 20-21 0-1.3-.1-2.1-.3-3z"
+		<aside
+			aria-hidden="true"
+			className="relative hidden flex-col justify-between overflow-hidden border-r border-line bg-bg p-8 md:flex"
+		>
+			{/* Fondo: brillo de marca y rejilla sutil */}
+			<div
+				className="pointer-events-none absolute inset-0"
+				style={{
+					backgroundImage:
+						"radial-gradient(600px circle at 0% 0%, rgb(var(--accent) / 0.22), transparent 55%), radial-gradient(500px circle at 100% 100%, rgb(var(--warn) / 0.16), transparent 55%), linear-gradient(rgb(var(--border) / 0.35) 1px, transparent 1px), linear-gradient(90deg, rgb(var(--border) / 0.35) 1px, transparent 1px)",
+					backgroundSize: "auto, auto, 28px 28px, 28px 28px",
+				}}
 			/>
-			<path
-				fill="#34A853"
-				d="M6.3 14.7l7 5.1C15.1 17.1 19.2 14 24 14c2.7 0 5.2.9 7.2 2.4l6.4-6.4C33.5 5.1 28.1 3 24 3c-7.2 0-13.4 3.1-17.7 8.1z"
-			/>
-			<path
-				fill="#FBBC05"
-				d="M24 44c5.9 0 10.7-1.9 14.3-5.1l-6.6-5.4C29.7 35.1 27 36 24 36c-5.8 0-10.7-3.9-12.5-9.3l-7 5.4C7.9 41.1 15.4 44 24 44z"
-			/>
-			<path
-				fill="#EA4335"
-				d="M44.5 20H24v8.5h11.7c-1.6 4.1-6.1 7.5-11.7 7.5-6.6 0-12-5.4-12-12s5.4-12 12-12c2.7 0 5.2.9 7.2 2.4l6.4-6.4C33.5 5.1 28.1 3 24 3c-7.2 0-13.4 3.1-17.7 8.1z"
-			/>
-		</svg>
+
+			<div className="relative">
+				<div className="flex items-center gap-2">
+					<img src="/logo-96.webp" alt="" width="36" height="36" className="h-9 w-9" />
+					<span className="font-display text-xl font-bold">WebWiz</span>
+					<span className="rounded-md border border-accent/40 px-1.5 font-mono text-[0.65rem] uppercase tracking-widest text-accent">
+						quiz
+					</span>
+				</div>
+				<p className="mt-8 font-display text-3xl font-bold leading-tight">
+					{headline}
+				</p>
+				<ul className="mt-6 space-y-3 text-sm">
+					{[
+						{
+							icon: Code2,
+							text: "Retos corregidos por comportamiento, no por texto",
+						},
+						{
+							icon: Flame,
+							text: "Rachas y progreso guardados en todos tus dispositivos",
+						},
+						{ icon: Trophy, text: "Ranking con la comunidad" },
+					].map(({ icon: Icon, text }) => (
+						<li key={text} className="flex items-center gap-3 text-muted">
+							<span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-line bg-surface">
+								<Icon className="h-4 w-4 text-accent" />
+							</span>
+							{text}
+						</li>
+					))}
+				</ul>
+			</div>
+
+			<div className="relative mt-10 rounded-xl border border-line bg-surface/80 p-4 font-mono text-xs backdrop-blur">
+				<div className="mb-3 flex items-center justify-between text-muted">
+					<span>styles.css · tests</span>
+					<m.span
+						initial={reduceMotion ? false : { opacity: 0 }}
+						animate={{ opacity: 1 }}
+						transition={{ delay: reduceMotion ? 0 : 1.6 }}
+						className="font-semibold text-accent"
+					>
+						3/3
+					</m.span>
+				</div>
+				<ul className="space-y-2">
+					{DEMO_TESTS.map((t, i) => (
+						<li key={t} className="flex items-center gap-2">
+							<m.span
+								initial={reduceMotion ? false : { scale: 0, opacity: 0 }}
+								animate={{ scale: 1, opacity: 1 }}
+								transition={{
+									delay: reduceMotion ? 0 : 0.5 + i * 0.4,
+									type: "spring",
+									stiffness: 400,
+									damping: 20,
+								}}
+								className="flex h-4 w-4 items-center justify-center rounded-full bg-accent text-accent-fg"
+							>
+								<Check className="h-3 w-3" strokeWidth={3} />
+							</m.span>
+							<span className="text-fg">{t}</span>
+						</li>
+					))}
+				</ul>
+			</div>
+		</aside>
 	);
 }

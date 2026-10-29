@@ -103,7 +103,7 @@ export default function Ranking() {
 
 	if (!isAuthenticated) {
 		return (
-			<p className="p-6 text-center text-red-600 font-semibold">
+			<p className="p-6 text-center text-warn font-semibold">
 				Debes iniciar sesión para ver el ranking.
 			</p>
 		);
@@ -113,7 +113,7 @@ export default function Ranking() {
 		<>
 			<section className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-6">
 				{queryError && (
-					<p className="mb-4 text-center text-red-600 bg-red-50 border border-red-200 rounded p-2">
+					<p className="mb-4 text-center text-warn bg-warn-soft border border-warn/40 rounded p-2">
 						{queryError}
 					</p>
 				)}
@@ -126,8 +126,8 @@ export default function Ranking() {
 						<button
 							className={`px-4 py-2 rounded font-bold border transition ${
 								topCount === 5
-									? "bg-blue-600 text-white border-blue-700"
-									: "bg-white text-blue-700 border-blue-300 hover:bg-blue-100"
+									? "bg-accent text-accent-fg border-accent"
+									: "bg-surface text-accent border-accent/50 hover:bg-accent-soft"
 							}`}
 							onClick={() => setTopCount(5)}
 						>
@@ -136,8 +136,8 @@ export default function Ranking() {
 						<button
 							className={`px-4 py-2 rounded font-bold border transition ${
 								topCount === 10
-									? "bg-blue-600 text-white border-blue-700"
-									: "bg-white text-blue-700 border-blue-300 hover:bg-blue-100"
+									? "bg-accent text-accent-fg border-accent"
+									: "bg-surface text-accent border-accent/50 hover:bg-accent-soft"
 							}`}
 							onClick={() => setTopCount(10)}
 						>
@@ -158,7 +158,7 @@ export default function Ranking() {
 					<div className="-mx-4 mb-8 overflow-x-auto sm:mx-0">
 						<table className="w-full min-w-[40rem] table-auto border">
 							<thead>
-								<tr className="bg-gray-100 text-left">
+								<tr className="bg-surface2 text-left">
 									<th className="p-2">#</th>
 									<th className="p-2">Nombre</th>
 									<th className="p-2">Categoría</th>
@@ -176,11 +176,11 @@ export default function Ranking() {
 											key={res.id ?? i}
 											className={`border-t ${
 												i === 0
-													? "bg-yellow-100 font-extrabold text-blue-900"
+													? "bg-warn-soft font-extrabold text-fg"
 													: i === 1
-													? "bg-gray-200 font-bold text-gray-800"
+													? "bg-surface2 font-bold text-fg"
 													: i === 2
-													? "bg-yellow-300 font-semibold text-yellow-900"
+													? "bg-warn-soft font-semibold text-warn"
 													: ""
 											}`}
 										>
@@ -224,7 +224,7 @@ export default function Ranking() {
 						<div className="-mx-4 overflow-x-auto sm:mx-0">
 							<table className="w-full min-w-[40rem] table-auto border">
 								<thead>
-									<tr className="bg-gray-100 text-left">
+									<tr className="bg-surface2 text-left">
 										<th className="p-2">Fecha</th>
 										<th className="p-2">Nombre</th>
 										<th className="p-2">Categoría</th>
@@ -264,7 +264,7 @@ export default function Ranking() {
 						{/* Paginación */}
 						<div className="flex justify-center gap-2 mt-4">
 							<button
-								className="px-3 py-1 rounded bg-gray-200 text-gray-700 font-bold disabled:opacity-50"
+								className="px-3 py-1 rounded bg-surface2 text-muted font-bold disabled:opacity-50"
 								onClick={() => setRecientesPage((p) => Math.max(1, p - 1))}
 								disabled={recientesPage === 1}
 							>
@@ -274,7 +274,7 @@ export default function Ranking() {
 								Página {recientesPage} de {Math.max(1, recientesTotalPages)}
 							</span>
 							<button
-								className="px-3 py-1 rounded bg-gray-200 text-gray-700 font-bold disabled:opacity-50"
+								className="px-3 py-1 rounded bg-surface2 text-muted font-bold disabled:opacity-50"
 								onClick={() =>
 									setRecientesPage((p) => Math.min(recientesTotalPages, p + 1))
 								}

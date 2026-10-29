@@ -1,57 +1,48 @@
-{
-  "categories": [
-    {
-      "category": "Frontend",
-      "subcategories": [
-        {
-          "name": "Responsive Design",
-          "questions": [
-            {
-              "question": "¿Qué es el viewport en diseño web responsive?",
-              "options": [
-                "El área visible de una página web en un dispositivo",
-                "Un tipo de layout en CSS",
-                "Una propiedad de color en CSS",
-                "Un framework de javascript"
-              ],
-              "correctAnswer": "El área visible de una página web en un dispositivo",
-              "category": "responsive",
-              "shortExplanation": "El viewport es el área visible de una página web en un dispositivo.",
-              "sourceUrl": "https://developer.mozilla.org/es/docs/Web/CSS/@viewport",
-              "sourceName": "MDN"
-            },
-            {
-              "question": "¿Para qué sirve la etiqueta <meta name=viewport>?",
-              "options": [
-                "Para definir el título de la página",
-                "Para ajustar la escala y el tamaño de la página en dispositivos móviles",
-                "Para incluir archivos CSS",
-                "Para agregar scripts externos"
-              ],
-              "correctAnswer": "Para ajustar la escala y el tamaño de la página en dispositivos móviles",
-              "category": "responsive",
-              "shortExplanation": "El viewport es el área visible de una página web en un dispositivo.",
-              "sourceUrl": "https://developer.mozilla.org/es/docs/Web/HTML/Elemento/meta",
-              "sourceName": "MDN"
-            },
-            {
-              "question": "¿Cuál es el valor recomendado para el atributo 'width' en la meta viewport?",
-              "options": ["device-width", "100px", "screen-width", "auto"],
-              "correctAnswer": "device-width",
-              "category": "responsive",
-              "shortExplanation": "El valor recomendado para el atributo 'width' es 'device-width'.",
-              "sourceUrl": "https://developer.mozilla.org/es/docs/Web/HTML/Elemento/meta",
-              "sourceName": "MDN"
-            }
-            // ...agregar aquí el resto de preguntas de la categoría Responsive Design
-          ]
-        }
-        // ...agregar aquí otras subcategorías de Frontend como HTML, CSS, JavaScript, Frameworks Frontend
-      ]
-    }
-    // ...agregar aquí otras categorías como Backend, Testing, DevOps, etc.
-  ]
-}
+[
+  {
+    "question": "¿Qué es el viewport en diseño web responsive?",
+    "options": [
+      "El área visible de una página web en un dispositivo",
+      "Un tipo de layout en CSS",
+      "Una propiedad de color en CSS",
+      "Un framework de javascript"
+    ],
+    "correctAnswer": "El área visible de una página web en un dispositivo",
+    "category": "responsive",
+    "shortExplanation": "El viewport es el área visible de una página web en un dispositivo.",
+    "sourceUrl": "https://developer.mozilla.org/es/docs/Web/CSS/@viewport",
+    "sourceName": "MDN"
+  },
+  {
+    "question": "¿Para qué sirve la etiqueta <meta name=viewport>?",
+    "options": [
+      "Para definir el título de la página",
+      "Para ajustar la escala y el tamaño de la página en dispositivos móviles",
+      "Para incluir archivos CSS",
+      "Para agregar scripts externos"
+    ],
+    "correctAnswer": "Para ajustar la escala y el tamaño de la página en dispositivos móviles",
+    "category": "responsive",
+    "shortExplanation": "El viewport es el área visible de una página web en un dispositivo.",
+    "sourceUrl": "https://developer.mozilla.org/es/docs/Web/HTML/Elemento/meta",
+    "sourceName": "MDN"
+  },
+  {
+    "question": "¿Cuál es el valor recomendado para el atributo 'width' en la meta viewport?",
+    "options": [
+      "device-width",
+      "100px",
+      "screen-width",
+      "auto"
+    ],
+    "correctAnswer": "device-width",
+    "category": "responsive",
+    "shortExplanation": "El valor recomendado para el atributo 'width' es 'device-width'.",
+    "sourceUrl": "https://developer.mozilla.org/es/docs/Web/HTML/Elemento/meta",
+    "sourceName": "MDN"
+  },
+  {
+    "question": "¿Qué hace initial-scale=1.0 en la etiqueta <meta name=\"viewport\">?",
     "options": [
       "Establece el zoom inicial al cargar la página",
       "Define el color de fondo",
@@ -94,7 +85,12 @@
   },
   {
     "question": "¿Qué propiedad se usa para detectar el ancho de la pantalla en una media query?",
-    "options": ["width", "screen-width", "device-width", "max-width"],
+    "options": [
+      "width",
+      "screen-width",
+      "device-width",
+      "max-width"
+    ],
     "correctAnswer": "max-width",
     "category": "responsive",
     "shortExplanation": "La propiedad 'max-width' se utiliza para detectar el ancho de la pantalla en una media query.",
@@ -103,7 +99,12 @@
   },
   {
     "question": "¿Qué unidad es absoluta en CSS?",
-    "options": ["px", "%", "em", "rem"],
+    "options": [
+      "px",
+      "%",
+      "em",
+      "rem"
+    ],
     "correctAnswer": "px",
     "category": "responsive",
     "shortExplanation": "La unidad 'px' es una unidad absoluta en CSS.",
@@ -112,7 +113,12 @@
   },
   {
     "question": "¿Cuál de las siguientes es una unidad relativa?",
-    "options": ["cm", "mm", "em", "in"],
+    "options": [
+      "cm",
+      "mm",
+      "em",
+      "in"
+    ],
     "correctAnswer": "em",
     "category": "responsive",
     "shortExplanation": "La unidad 'em' es una unidad relativa en CSS.",
@@ -191,7 +197,12 @@
   },
   {
     "question": "¿Qué propiedad de flexbox alinea los elementos verticalmente?",
-    "options": ["align-items", "justify-content", "flex-basis", "order"],
+    "options": [
+      "align-items",
+      "justify-content",
+      "flex-basis",
+      "order"
+    ],
     "correctAnswer": "align-items",
     "category": "responsive",
     "shortExplanation": "La propiedad 'align-items' alinea los elementos hijos en el eje vertical.",
@@ -200,7 +211,12 @@
   },
   {
     "question": "¿Qué valor de 'display' activa flexbox en un contenedor?",
-    "options": ["flex", "block", "inline", "grid"],
+    "options": [
+      "flex",
+      "block",
+      "inline",
+      "grid"
+    ],
     "correctAnswer": "flex",
     "category": "responsive",
     "shortExplanation": "El valor 'flex' activa el modo flexbox en un contenedor.",
@@ -237,7 +253,12 @@
   },
   {
     "question": "¿Qué propiedad define el número de filas en CSS Grid?",
-    "options": ["grid-template-rows", "grid-rows", "rows", "flex-rows"],
+    "options": [
+      "grid-template-rows",
+      "grid-rows",
+      "rows",
+      "flex-rows"
+    ],
     "correctAnswer": "grid-template-rows",
     "category": "responsive",
     "shortExplanation": "La propiedad 'grid-template-rows' define el número y tamaño de las filas en un contenedor grid.",
@@ -288,7 +309,12 @@
   },
   {
     "question": "¿Qué propiedad de flexbox define la dirección de los elementos?",
-    "options": ["flex-direction", "flex-flow", "direction", "align-direction"],
+    "options": [
+      "flex-direction",
+      "flex-flow",
+      "direction",
+      "align-direction"
+    ],
     "correctAnswer": "flex-direction",
     "category": "responsive",
     "shortExplanation": "La propiedad 'flex-direction' define la dirección en la que se colocan los elementos flexibles.",
@@ -297,7 +323,12 @@
   },
   {
     "question": "¿Qué valor de 'flex-direction' coloca los elementos en columna?",
-    "options": ["column", "row", "vertical", "block"],
+    "options": [
+      "column",
+      "row",
+      "vertical",
+      "block"
+    ],
     "correctAnswer": "column",
     "category": "responsive",
     "shortExplanation": "El valor 'column' coloca los elementos en una columna.",
@@ -362,7 +393,12 @@
   },
   {
     "question": "¿Cuál es el valor por defecto de 'flex-direction'?",
-    "options": ["row", "column", "block", "inline"],
+    "options": [
+      "row",
+      "column",
+      "block",
+      "inline"
+    ],
     "correctAnswer": "row",
     "category": "responsive",
     "shortExplanation": "El valor por defecto de 'flex-direction' es 'row', lo que significa que los elementos se colocan en una fila.",
@@ -385,7 +421,12 @@
   },
   {
     "question": "¿Qué propiedad de grid permite espaciar columnas?",
-    "options": ["grid-column-gap", "column-gap", "gap", "margin"],
+    "options": [
+      "grid-column-gap",
+      "column-gap",
+      "gap",
+      "margin"
+    ],
     "correctAnswer": "gap",
     "category": "responsive",
     "shortExplanation": "La propiedad 'gap' en un contenedor grid define el espacio entre las columnas.",
@@ -394,7 +435,12 @@
   },
   {
     "question": "¿Qué propiedad de grid permite espaciar filas?",
-    "options": ["grid-row-gap", "row-gap", "gap", "padding"],
+    "options": [
+      "grid-row-gap",
+      "row-gap",
+      "gap",
+      "padding"
+    ],
     "correctAnswer": "gap",
     "category": "responsive",
     "shortExplanation": "La propiedad 'gap' en un contenedor grid define el espacio entre las filas.",
@@ -403,7 +449,12 @@
   },
   {
     "question": "¿Qué unidad es mejor para fuentes escalables?",
-    "options": ["rem", "px", "cm", "in"],
+    "options": [
+      "rem",
+      "px",
+      "cm",
+      "in"
+    ],
     "correctAnswer": "rem",
     "category": "responsive",
     "shortExplanation": "La unidad 'rem' es mejor para fuentes escalables porque se basa en el tamaño de fuente raíz del documento.",
@@ -426,7 +477,12 @@
   },
   {
     "question": "¿Qué propiedad de flexbox distribuye el espacio sobrante?",
-    "options": ["justify-content", "align-items", "flex-basis", "order"],
+    "options": [
+      "justify-content",
+      "align-items",
+      "flex-basis",
+      "order"
+    ],
     "correctAnswer": "justify-content",
     "category": "responsive",
     "shortExplanation": "La propiedad 'justify-content' se utiliza para alinear y distribuir el espacio entre los elementos flexibles en un contenedor.",
@@ -435,7 +491,12 @@
   },
   {
     "question": "¿Qué valor de 'justify-content' centra los elementos?",
-    "options": ["center", "flex-start", "flex-end", "space-between"],
+    "options": [
+      "center",
+      "flex-start",
+      "flex-end",
+      "space-between"
+    ],
     "correctAnswer": "center",
     "category": "responsive",
     "shortExplanation": "El valor 'center' de 'justify-content' alinea los elementos en el centro del contenedor.",
@@ -444,7 +505,12 @@
   },
   {
     "question": "¿Qué valor de 'align-items' alinea los elementos al final?",
-    "options": ["flex-end", "center", "flex-start", "stretch"],
+    "options": [
+      "flex-end",
+      "center",
+      "flex-start",
+      "stretch"
+    ],
     "correctAnswer": "flex-end",
     "category": "responsive",
     "shortExplanation": "El valor 'flex-end' de 'align-items' alinea los elementos al final del contenedor.",
@@ -467,7 +533,12 @@
   },
   {
     "question": "¿Qué propiedad de grid posiciona un elemento en una columna específica?",
-    "options": ["grid-column", "column", "grid-row", "row"],
+    "options": [
+      "grid-column",
+      "column",
+      "grid-row",
+      "row"
+    ],
     "correctAnswer": "grid-column",
     "category": "responsive",
     "shortExplanation": "La propiedad 'grid-column' se utiliza para posicionar un elemento en una columna específica dentro de un contenedor grid.",
@@ -476,7 +547,12 @@
   },
   {
     "question": "¿Qué propiedad de grid posiciona un elemento en una fila específica?",
-    "options": ["grid-row", "row", "grid-column", "column"],
+    "options": [
+      "grid-row",
+      "row",
+      "grid-column",
+      "column"
+    ],
     "correctAnswer": "grid-row",
     "category": "responsive",
     "shortExplanation": "La propiedad 'grid-row' se utiliza para posicionar un elemento en una fila específica dentro de un contenedor grid.",
@@ -527,7 +603,12 @@
   },
   {
     "question": "¿Qué valor de 'flex-direction' coloca los elementos en fila?",
-    "options": ["row", "column", "horizontal", "vertical"],
+    "options": [
+      "row",
+      "column",
+      "horizontal",
+      "vertical"
+    ],
     "correctAnswer": "row",
     "category": "responsive",
     "shortExplanation": "El valor 'row' de 'flex-direction' coloca los elementos en una fila.",
@@ -536,7 +617,12 @@
   },
   {
     "question": "¿Qué unidad es recomendable para márgenes en diseño responsive?",
-    "options": ["rem", "px", "cm", "mm"],
+    "options": [
+      "rem",
+      "px",
+      "cm",
+      "mm"
+    ],
     "correctAnswer": "rem",
     "category": "responsive",
     "shortExplanation": "La unidad 'rem' es mejor para fuentes escalables porque se basa en el tamaño de fuente raíz del documento.",
@@ -545,7 +631,12 @@
   },
   {
     "question": "¿Qué propiedad de grid permite definir espacios entre filas y columnas a la vez?",
-    "options": ["gap", "spacing", "margin", "padding"],
+    "options": [
+      "gap",
+      "spacing",
+      "margin",
+      "padding"
+    ],
     "correctAnswer": "gap",
     "category": "responsive",
     "shortExplanation": "La propiedad 'gap' en un contenedor grid define el espacio entre las filas y columnas.",
@@ -596,7 +687,12 @@
   },
   {
     "question": "¿Qué propiedad de flexbox controla el crecimiento de los elementos?",
-    "options": ["flex-grow", "flex-shrink", "flex-basis", "order"],
+    "options": [
+      "flex-grow",
+      "flex-shrink",
+      "flex-basis",
+      "order"
+    ],
     "correctAnswer": "flex-grow",
     "category": "responsive",
     "shortExplanation": "La propiedad 'flex-grow' define la capacidad de un elemento para crecer si hay espacio disponible en el contenedor.",
@@ -605,7 +701,12 @@
   },
   {
     "question": "¿Qué propiedad de flexbox controla el encogimiento de los elementos?",
-    "options": ["flex-shrink", "flex-grow", "flex-basis", "order"],
+    "options": [
+      "flex-shrink",
+      "flex-grow",
+      "flex-basis",
+      "order"
+    ],
     "correctAnswer": "flex-shrink",
     "category": "responsive",
     "shortExplanation": "La propiedad 'flex-shrink' define la capacidad de un elemento para encogerse si es necesario.",
@@ -614,7 +715,12 @@
   },
   {
     "question": "¿Qué unidad se usa para definir porcentajes en CSS?",
-    "options": ["%", "px", "em", "rem"],
+    "options": [
+      "%",
+      "px",
+      "em",
+      "rem"
+    ],
     "correctAnswer": "%",
     "category": "responsive",
     "shortExplanation": "La unidad '%' se utiliza para definir porcentajes en CSS.",
@@ -693,7 +799,12 @@
   },
   {
     "question": "¿Qué propiedad de grid permite repetir columnas automáticamente?",
-    "options": ["repeat()", "auto-repeat", "grid-repeat", "columns-repeat"],
+    "options": [
+      "repeat()",
+      "auto-repeat",
+      "grid-repeat",
+      "columns-repeat"
+    ],
     "correctAnswer": "repeat()",
     "category": "responsive",
     "shortExplanation": "La función 'repeat()' se utiliza para crear columnas o filas repetitivas en un contenedor grid.",
@@ -716,7 +827,12 @@
   },
   {
     "question": "¿Qué valor de 'display' se usa para layouts de una sola columna en móviles?",
-    "options": ["block", "flex", "grid", "inline"],
+    "options": [
+      "block",
+      "flex",
+      "grid",
+      "inline"
+    ],
     "correctAnswer": "block",
     "category": "responsive",
     "shortExplanation": "El valor 'block' permite que un elemento ocupe todo el ancho disponible, creando un layout de una sola columna.",
@@ -725,7 +841,12 @@
   },
   {
     "question": "¿Qué propiedad de flexbox permite alinear elementos en varias líneas?",
-    "options": ["flex-wrap", "justify-content", "align-items", "align-content"],
+    "options": [
+      "flex-wrap",
+      "justify-content",
+      "align-items",
+      "align-content"
+    ],
     "correctAnswer": "flex-wrap",
     "category": "responsive",
     "shortExplanation": "La propiedad 'flex-wrap' permite que los elementos flexibles se envuelvan en varias líneas.",
@@ -748,7 +869,12 @@
   },
   {
     "question": "¿Qué unidad es mejor para definir el ancho de imágenes en responsive?",
-    "options": ["%", "px", "cm", "mm"],
+    "options": [
+      "%",
+      "px",
+      "cm",
+      "mm"
+    ],
     "correctAnswer": "%",
     "category": "responsive",
     "shortExplanation": "La unidad '%' permite que las imágenes se escalen proporcionalmente al contenedor, lo que es ideal para diseños responsivos.",
@@ -771,7 +897,12 @@
   },
   {
     "question": "¿Qué valor de 'display' permite crear layouts bidimensionales?",
-    "options": ["grid", "flex", "block", "inline"],
+    "options": [
+      "grid",
+      "flex",
+      "block",
+      "inline"
+    ],
     "correctAnswer": "grid",
     "category": "responsive",
     "shortExplanation": "El valor 'grid' permite crear un contenedor grid, que puede tener filas y columnas.",
@@ -794,7 +925,12 @@
   },
   {
     "question": "¿Qué propiedad de grid define el tamaño de las filas?",
-    "options": ["grid-template-rows", "rows", "row-size", "grid-rows"],
+    "options": [
+      "grid-template-rows",
+      "rows",
+      "row-size",
+      "grid-rows"
+    ],
     "correctAnswer": "grid-template-rows",
     "category": "responsive",
     "shortExplanation": "La propiedad 'grid-template-rows' define el tamaño de las filas en un contenedor grid.",
@@ -817,7 +953,12 @@
   },
   {
     "question": "¿Qué propiedad de grid define el espacio entre filas y columnas?",
-    "options": ["gap", "margin", "padding", "spacing"],
+    "options": [
+      "gap",
+      "margin",
+      "padding",
+      "spacing"
+    ],
     "correctAnswer": "gap",
     "category": "responsive",
     "shortExplanation": "La propiedad 'gap' define el espacio entre filas y columnas en un contenedor grid.",
@@ -826,7 +967,12 @@
   },
   {
     "question": "¿Qué valor de 'display' se recomienda para layouts adaptables modernos?",
-    "options": ["flex o grid", "block", "inline", "table"],
+    "options": [
+      "flex o grid",
+      "block",
+      "inline",
+      "table"
+    ],
     "correctAnswer": "flex o grid",
     "category": "responsive",
     "shortExplanation": "Se recomienda usar 'flex' o 'grid' para layouts adaptables modernos debido a su capacidad para manejar el espacio de manera eficiente.",
@@ -849,7 +995,12 @@
   },
   {
     "question": "¿Qué operador se usa para combinar condiciones en media queries?",
-    "options": ["and", "or", "not", "xor"],
+    "options": [
+      "and",
+      "or",
+      "not",
+      "xor"
+    ],
     "correctAnswer": "and",
     "category": "responsive",
     "shortExplanation": "El operador 'and' se utiliza para combinar múltiples condiciones en una media query.",
@@ -872,7 +1023,12 @@
   },
   {
     "question": "¿Qué propiedad de grid permite superponer elementos?",
-    "options": ["z-index", "grid-area", "order", "position"],
+    "options": [
+      "z-index",
+      "grid-area",
+      "order",
+      "position"
+    ],
     "correctAnswer": "z-index",
     "category": "responsive",
     "shortExplanation": "La propiedad 'z-index' controla el apilamiento de los elementos, permitiendo que algunos se superpongan a otros.",
@@ -881,7 +1037,12 @@
   },
   {
     "question": "¿Qué valor de 'width' hace que un elemento ocupe todo el ancho disponible?",
-    "options": ["100%", "auto", "inherit", "fit-content"],
+    "options": [
+      "100%",
+      "auto",
+      "inherit",
+      "fit-content"
+    ],
     "correctAnswer": "100%",
     "category": "responsive",
     "shortExplanation": "El valor '100%' hace que un elemento ocupe todo el ancho disponible de su contenedor.",
@@ -932,7 +1093,12 @@
   },
   {
     "question": "¿Qué unidad es mejor para definir el tamaño de fuente en responsive?",
-    "options": ["rem", "px", "cm", "mm"],
+    "options": [
+      "rem",
+      "px",
+      "cm",
+      "mm"
+    ],
     "correctAnswer": "rem",
     "category": "responsive",
     "shortExplanation": "La unidad 'rem' es relativa al tamaño de fuente del elemento raíz, lo que la hace más flexible y adecuada para diseños responsivos.",
@@ -1011,7 +1177,12 @@
   },
   {
     "question": "¿Qué propiedad permite cambiar el orden de los elementos en grid?",
-    "options": ["grid-row y grid-column", "order", "z-index", "position"],
+    "options": [
+      "grid-row y grid-column",
+      "order",
+      "z-index",
+      "position"
+    ],
     "correctAnswer": "grid-row y grid-column",
     "category": "responsive",
     "shortExplanation": "Las propiedades 'grid-row' y 'grid-column' permiten cambiar la posición de un elemento en un contenedor grid.",
@@ -1020,7 +1191,12 @@
   },
   {
     "question": "¿Qué valor de 'display' elimina el espacio entre elementos?",
-    "options": ["flex", "block", "inline", "table"],
+    "options": [
+      "flex",
+      "block",
+      "inline",
+      "table"
+    ],
     "correctAnswer": "flex",
     "category": "responsive",
     "shortExplanation": "El valor 'flex' en la propiedad 'display' permite que los elementos hijos se alineen en una fila o columna, eliminando el espacio entre ellos.",
@@ -1071,7 +1247,12 @@
   },
   {
     "question": "¿Qué valor de 'display' se usa para layouts de varias columnas en escritorio?",
-    "options": ["grid", "flex", "block", "inline"],
+    "options": [
+      "grid",
+      "flex",
+      "block",
+      "inline"
+    ],
     "correctAnswer": "grid",
     "category": "responsive",
     "shortExplanation": "El valor 'grid' en la propiedad 'display' se utiliza para crear layouts de varias columnas en escritorio.",
@@ -1136,7 +1317,12 @@
   },
   {
     "question": "¿Qué unidad es mejor para layouts fluidos?",
-    "options": ["%", "px", "cm", "mm"],
+    "options": [
+      "%",
+      "px",
+      "cm",
+      "mm"
+    ],
     "correctAnswer": "%",
     "category": "responsive",
     "shortExplanation": "La unidad '%' permite que los elementos se ajusten al tamaño del contenedor, lo que es ideal para diseños fluidos.",
@@ -1187,7 +1373,12 @@
   },
   {
     "question": "¿Qué valor de 'display' se usa para ocultar elementos?",
-    "options": ["none", "block", "flex", "grid"],
+    "options": [
+      "none",
+      "block",
+      "flex",
+      "grid"
+    ],
     "correctAnswer": "none",
     "category": "responsive",
     "shortExplanation": "El valor 'none' en la propiedad 'display' oculta un elemento y elimina su espacio en el flujo del documento.",
@@ -1210,7 +1401,12 @@
   },
   {
     "question": "¿Qué etiqueta se utiliza para crear un formulario en HTML?",
-    "options": ["<formulate>", "<form>", "<inputForm>", "<createForm>"],
+    "options": [
+      "<formulate>",
+      "<form>",
+      "<inputForm>",
+      "<createForm>"
+    ],
     "correctAnswer": "<form>",
     "category": "form",
     "shortExplanation": "La etiqueta <form> se utiliza para crear un formulario en HTML.",
@@ -1219,7 +1415,12 @@
   },
   {
     "question": "¿Qué atributo especifica el método de envío de datos del formulario?",
-    "options": ["methodType", "send", "method", "submitType"],
+    "options": [
+      "methodType",
+      "send",
+      "method",
+      "submitType"
+    ],
     "correctAnswer": "method",
     "category": "form",
     "shortExplanation": "El atributo 'method' especifica el método HTTP que se utilizará al enviar el formulario.",
@@ -1228,7 +1429,12 @@
   },
   {
     "question": "Para crear un campo de texto, ¿qué valor de atributo type se usa en la etiqueta `<input>`?",
-    "options": ["textfield", "text", "textbox", "string"],
+    "options": [
+      "textfield",
+      "text",
+      "textbox",
+      "string"
+    ],
     "correctAnswer": "text",
     "category": "form",
     "shortExplanation": "El valor 'text' en el atributo 'type' de la etiqueta `<input>` se utiliza para crear un campo de texto.",
@@ -1251,7 +1457,12 @@
   },
   {
     "question": "Para hacer un campo obligatorio, ¿qué atributo se debería añadir?",
-    "options": ["required", "need", "must", "necessary"],
+    "options": [
+      "required",
+      "need",
+      "must",
+      "necessary"
+    ],
     "correctAnswer": "required",
     "category": "form",
     "shortExplanation": "El atributo 'required' se utiliza para indicar que un campo es obligatorio.",
@@ -1260,7 +1471,12 @@
   },
   {
     "question": "¿Qué etiqueta se utiliza para agrupar elementos visualmente en un formulario?",
-    "options": ["<group>", "<fieldset>", "<section>", "<div>"],
+    "options": [
+      "<group>",
+      "<fieldset>",
+      "<section>",
+      "<div>"
+    ],
     "correctAnswer": "<fieldset>",
     "category": "form",
     "shortExplanation": "El elemento `<fieldset>` se utiliza para agrupar elementos relacionados dentro de un formulario.",
@@ -1297,7 +1513,12 @@
   },
   {
     "question": "¿Qué atributo de `<input>` define un control preseleccionado en un grupo de botones de radio?",
-    "options": ["select", "default", "checked", "active"],
+    "options": [
+      "select",
+      "default",
+      "checked",
+      "active"
+    ],
     "correctAnswer": "checked",
     "category": "form",
     "shortExplanation": "El atributo 'checked' se utiliza para indicar que un botón de radio está seleccionado por defecto.",
@@ -1306,7 +1527,12 @@
   },
   {
     "question": "¿Qué tipo de `<input>` se utiliza para cargar archivos?",
-    "options": ["file", "upload", "attach", "document"],
+    "options": [
+      "file",
+      "upload",
+      "attach",
+      "document"
+    ],
     "correctAnswer": "file",
     "category": "form",
     "shortExplanation": "El tipo 'file' permite al usuario seleccionar uno o más archivos para cargar.",
@@ -1315,7 +1541,12 @@
   },
   {
     "question": "¿Qué atributo se utiliza para agrupar botones de radio que pertenecen a la misma categoría?",
-    "options": ["name", "group", "class", "type"],
+    "options": [
+      "name",
+      "group",
+      "class",
+      "type"
+    ],
     "correctAnswer": "name",
     "category": "form",
     "shortExplanation": "El atributo 'name' se utiliza para agrupar botones de radio que pertenecen a la misma categoría.",
@@ -1352,7 +1583,12 @@
   },
   {
     "question": "¿Qué elemento se usa para definir una etiqueta para otro elemento del formulario?",
-    "options": ["<label>", "<legend>", "<tag>", "<title>"],
+    "options": [
+      "<label>",
+      "<legend>",
+      "<tag>",
+      "<title>"
+    ],
     "correctAnswer": "<label>",
     "category": "form",
     "shortExplanation": "La etiqueta `<label>` se utiliza para definir una etiqueta para otro elemento del formulario.",
@@ -1375,7 +1611,12 @@
   },
   {
     "question": "¿Qué atributo especifica el valor que será enviado de un campo de formulario?",
-    "options": ["send", "submit", "value", "post"],
+    "options": [
+      "send",
+      "submit",
+      "value",
+      "post"
+    ],
     "correctAnswer": "value",
     "category": "form",
     "shortExplanation": "El atributo 'value' especifica el valor que será enviado de un campo de formulario.",
@@ -1440,7 +1681,12 @@
   },
   {
     "question": "¿Cuál es el atributo de `<form>` que define el tipo de contenido que se utiliza al enviar el formulario al servidor?",
-    "options": ["enctype", "method", "action", "type"],
+    "options": [
+      "enctype",
+      "method",
+      "action",
+      "type"
+    ],
     "correctAnswer": "enctype",
     "category": "form",
     "shortExplanation": "El atributo `enctype` especifica cómo se codifican los datos del formulario al enviarlos al servidor.",
@@ -1463,7 +1709,12 @@
   },
   {
     "question": "¿Qué atributo se utiliza para deshabilitar un campo de formulario, impidiendo que el usuario interactúe con él?",
-    "options": ["disabled", "inactive", "readonly", "nonactive"],
+    "options": [
+      "disabled",
+      "inactive",
+      "readonly",
+      "nonactive"
+    ],
     "correctAnswer": "disabled",
     "category": "form",
     "shortExplanation": "El atributo 'disabled' se utiliza para deshabilitar un campo de formulario.",
@@ -1486,7 +1737,12 @@
   },
   {
     "question": "¿Qué valor del atributo `type` se usa para crear un botón de opción (radio button)?",
-    "options": ["radio", "option", "select-one", "checkbox"],
+    "options": [
+      "radio",
+      "option",
+      "select-one",
+      "checkbox"
+    ],
     "correctAnswer": "radio",
     "category": "form",
     "shortExplanation": "El valor 'radio' se utiliza para crear un botón de opción (radio button) en un formulario.",
@@ -1523,7 +1779,12 @@
   },
   {
     "question": "¿Cuál de los siguientes valores del atributo `type` NO es válido para el elemento `<input>`?",
-    "options": ["email", "text", "submit", "paragraph"],
+    "options": [
+      "email",
+      "text",
+      "submit",
+      "paragraph"
+    ],
     "correctAnswer": "paragraph",
     "category": "form",
     "shortExplanation": "El valor 'paragraph' no es un tipo válido para el elemento `<input>`. Los tipos válidos incluyen 'email', 'text' y 'submit'.",
@@ -1546,7 +1807,12 @@
   },
   {
     "question": "¿Qué atributo de un formulario HTML especifica cómo codificar los datos del formulario al enviarlos al servidor?",
-    "options": ["method", "encoding", "enctype", "contentType"],
+    "options": [
+      "method",
+      "encoding",
+      "enctype",
+      "contentType"
+    ],
     "correctAnswer": "enctype",
     "category": "form",
     "shortExplanation": "El atributo `enctype` especifica cómo se codifican los datos del formulario al enviarlos al servidor.",
@@ -1555,7 +1821,12 @@
   },
   {
     "question": "¿Qué atributo de `<input>` permite especificar un patrón contra el cual se valida el valor del campo?",
-    "options": ["pattern", "match", "regex", "validation"],
+    "options": [
+      "pattern",
+      "match",
+      "regex",
+      "validation"
+    ],
     "correctAnswer": "pattern",
     "category": "form",
     "shortExplanation": "El atributo `pattern` permite definir una expresión regular que el valor del campo debe cumplir para ser considerado válido.",
@@ -1592,7 +1863,12 @@
   },
   {
     "question": "¿Qué atributo se usa para limitar la cantidad máxima de caracteres permitidos en un campo de texto?",
-    "options": ["maxlength", "maxchars", "limit", "charsmax"],
+    "options": [
+      "maxlength",
+      "maxchars",
+      "limit",
+      "charsmax"
+    ],
     "correctAnswer": "maxlength",
     "category": "form",
     "shortExplanation": "El atributo 'maxlength' se utiliza para establecer el número máximo de caracteres que un usuario puede ingresar en un campo de texto.",
@@ -1629,7 +1905,12 @@
   },
   {
     "question": "¿Cuál de los siguientes NO es un valor válido para el atributo `target` de un formulario?",
-    "options": ["_self", "_blank", "_top", "_none"],
+    "options": [
+      "_self",
+      "_blank",
+      "_top",
+      "_none"
+    ],
     "correctAnswer": "_none",
     "category": "form",
     "shortExplanation": "El valor '_none' no es un destino válido para el atributo 'target'.",
@@ -1680,7 +1961,12 @@
   },
   {
     "question": "¿Cuál es el atributo de `<input>` que define un valor inicial para el campo?",
-    "options": ["value", "placeholder", "default", "init"],
+    "options": [
+      "value",
+      "placeholder",
+      "default",
+      "init"
+    ],
     "correctAnswer": "value",
     "category": "form",
     "shortExplanation": "El atributo `value` se utiliza para definir un valor inicial para un campo de entrada.",
@@ -1717,7 +2003,12 @@
   },
   {
     "question": "¿Qué atributo de `<form>` se utiliza para especificar dónde responder después de enviar el formulario?",
-    "options": ["redirect", "forward", "action", "return"],
+    "options": [
+      "redirect",
+      "forward",
+      "action",
+      "return"
+    ],
     "correctAnswer": "action",
     "category": "form",
     "shortExplanation": "El atributo 'action' especifica la URL a la que se enviará el formulario.",
@@ -1754,7 +2045,12 @@
   },
   {
     "question": "¿Qué atributo especifica que un campo de formulario debe ser verificado antes de enviar el formulario?",
-    "options": ["verify", "required", "check", "validate"],
+    "options": [
+      "verify",
+      "required",
+      "check",
+      "validate"
+    ],
     "correctAnswer": "required",
     "category": "form",
     "shortExplanation": "El atributo `required` se utiliza para indicar que un campo de formulario es obligatorio y debe ser completado antes de enviar el formulario.",
@@ -1805,7 +2101,12 @@
   },
   {
     "question": "¿Qué valor de atributo `type` se utiliza en `<input>` para crear un botón de envío de formulario?",
-    "options": ["send", "submit", "button", "go"],
+    "options": [
+      "send",
+      "submit",
+      "button",
+      "go"
+    ],
     "correctAnswer": "submit",
     "category": "form",
     "shortExplanation": "El valor `submit` en el atributo `type` de la etiqueta `<input>` se utiliza para crear un botón que envía el formulario.",
@@ -1814,7 +2115,12 @@
   },
   {
     "question": "¿Cuál de los siguientes elementos se utiliza para agregar una lista de opciones en un campo de entrada de texto, permitiendo autocompletado?",
-    "options": ["<select>", "<option>", "<datalist>", "<autocomplete>"],
+    "options": [
+      "<select>",
+      "<option>",
+      "<datalist>",
+      "<autocomplete>"
+    ],
     "correctAnswer": "<datalist>",
     "category": "form",
     "shortExplanation": "El elemento `<datalist>` se utiliza para proporcionar una lista de opciones predefinidas para un campo de entrada de texto, permitiendo autocompletado.",
@@ -1823,7 +2129,12 @@
   },
   {
     "question": "¿Qué atributo de `<input>` se utiliza para controlar el número máximo de caracteres en un campo de tipo `text`?",
-    "options": ["length", "maxlength", "max", "limit"],
+    "options": [
+      "length",
+      "maxlength",
+      "max",
+      "limit"
+    ],
     "correctAnswer": "maxlength",
     "category": "form",
     "shortExplanation": "El atributo `maxlength` se utiliza para establecer el número máximo de caracteres que un usuario puede ingresar en un campo de texto.",
@@ -1846,7 +2157,12 @@
   },
   {
     "question": "¿Qué atributo se debe usar para preseleccionar una opción en un grupo de botones de opción (radio buttons)?",
-    "options": ["selected", "default", "checked", "active"],
+    "options": [
+      "selected",
+      "default",
+      "checked",
+      "active"
+    ],
     "correctAnswer": "checked",
     "category": "form",
     "shortExplanation": "El atributo `checked` se utiliza para marcar un botón de radio como seleccionado por defecto.",
@@ -1897,7 +2213,12 @@
   },
   {
     "question": "¿Qué atributo de `<input>` permite definir un control como desactivado, impidiendo la interacción del usuario?",
-    "options": ["disabled", "inactive", "readonly", "nonactive"],
+    "options": [
+      "disabled",
+      "inactive",
+      "readonly",
+      "nonactive"
+    ],
     "correctAnswer": "disabled",
     "category": "form",
     "shortExplanation": "El atributo `disabled` se utiliza para desactivar un campo de entrada, impidiendo que el usuario interactúe con él.",
@@ -1948,7 +2269,12 @@
   },
   {
     "question": "¿Qué atributo de `<input>` se usa para definir que un campo debe tener un valor antes de enviar el formulario?",
-    "options": ["necessary", "mandatory", "required", "needed"],
+    "options": [
+      "necessary",
+      "mandatory",
+      "required",
+      "needed"
+    ],
     "correctAnswer": "required",
     "category": "form",
     "shortExplanation": "El atributo `required` se utiliza para indicar que un campo de formulario debe ser completado antes de enviar el formulario.",
@@ -1985,7 +2311,12 @@
   },
   {
     "question": "¿Qué atributo de `<textarea>` especifica el número de filas visibles?",
-    "options": ["rows", "lines", "height", "size"],
+    "options": [
+      "rows",
+      "lines",
+      "height",
+      "size"
+    ],
     "correctAnswer": "rows",
     "category": "form",
     "shortExplanation": "El atributo `rows` se utiliza para especificar el número de filas visibles en un elemento `<textarea>`.",
@@ -2008,7 +2339,12 @@
   },
   {
     "question": "¿Qué atributo se usa en `<input>` para limitar la selección a archivos de tipos específicos (p. ej., solo imágenes)?",
-    "options": ["filetype", "accept", "typefilter", "mime"],
+    "options": [
+      "filetype",
+      "accept",
+      "typefilter",
+      "mime"
+    ],
     "correctAnswer": "accept",
     "category": "form",
     "shortExplanation": "El atributo `accept` se utiliza para especificar los tipos de archivos que el servidor acepta, permitiendo filtrar los archivos seleccionables en un `<input type=\"file\">`.",
@@ -2045,7 +2381,12 @@
   },
   {
     "question": "¿Qué atributo de `<input>` permite preseleccionar un botón de chequeo (checkbox)?",
-    "options": ["select", "default", "checked", "active"],
+    "options": [
+      "select",
+      "default",
+      "checked",
+      "active"
+    ],
     "correctAnswer": "checked",
     "category": "form",
     "shortExplanation": "El atributo `checked` se utiliza para preseleccionar un botón de chequeo (checkbox) cuando se carga la página.",
@@ -2124,7 +2465,12 @@
   },
   {
     "question": "¿Qué atributo de `<input>` es útil para proporcionar una pista sobre el tipo de información que se espera en el campo?",
-    "options": ["placeholder", "hint", "type", "title"],
+    "options": [
+      "placeholder",
+      "hint",
+      "type",
+      "title"
+    ],
     "correctAnswer": "placeholder",
     "category": "form",
     "shortExplanation": "El atributo `placeholder` se utiliza para mostrar un texto de ejemplo o pista dentro de un campo de entrada, indicando al usuario qué tipo de información se espera.",
@@ -2147,7 +2493,12 @@
   },
   {
     "question": "¿Qué elemento se utiliza para especificar opciones en un `<datalist>`?",
-    "options": ["<select>", "<option>", "<item>", "<choice>"],
+    "options": [
+      "<select>",
+      "<option>",
+      "<item>",
+      "<choice>"
+    ],
     "correctAnswer": "<option>",
     "category": "form",
     "shortExplanation": "El elemento `<option>` se utiliza dentro de un `<datalist>` para definir las opciones que el usuario puede seleccionar.",
@@ -2296,7 +2647,12 @@
   },
   {
     "question": "¿Qué elemento HTML se usa comúnmente para estructurar un grupo de campos relacionados en un formulario, proporcionando un encabezado para el grupo?",
-    "options": ["<fieldset>", "<group>", "<section>", "<header>"],
+    "options": [
+      "<fieldset>",
+      "<group>",
+      "<section>",
+      "<header>"
+    ],
     "correctAnswer": "<fieldset>",
     "category": "form",
     "shortExplanation": "El elemento `<fieldset>` se utiliza para agrupar campos relacionados en un formulario y proporciona una estructura semántica, además de permitir el uso de `<legend>` para un encabezado.",
@@ -2305,7 +2661,12 @@
   },
   {
     "question": "¿Qué atributo de `<input>` se utiliza para hacer que un campo sea no editable por el usuario pero aún así enviable con el formulario?",
-    "options": ["readonly", "disabled", "fixed", "static"],
+    "options": [
+      "readonly",
+      "disabled",
+      "fixed",
+      "static"
+    ],
     "correctAnswer": "readonly",
     "category": "form",
     "shortExplanation": "El atributo `readonly` se utiliza para hacer que un campo de entrada no sea editable por el usuario, pero su valor aún se enviará con el formulario.",
@@ -2314,7 +2675,12 @@
   },
   {
     "question": "¿Qué valor del atributo `type` en `<input>` se utiliza para controlar la entrada de una dirección de correo electrónico?",
-    "options": ["text", "mail", "email", "e-mail"],
+    "options": [
+      "text",
+      "mail",
+      "email",
+      "e-mail"
+    ],
     "correctAnswer": "email",
     "category": "form",
     "shortExplanation": "El valor `email` del atributo `type` se utiliza para controlar la entrada de direcciones de correo electrónico, proporcionando validación automática.",
@@ -2351,7 +2717,12 @@
   },
   {
     "question": "¿Qué atributo de `<input>` se usa para agregar un límite inferior al valor que los usuarios pueden introducir en un campo de tipo `number`?",
-    "options": ["min", "lower", "minimum", "bottom"],
+    "options": [
+      "min",
+      "lower",
+      "minimum",
+      "bottom"
+    ],
     "correctAnswer": "min",
     "category": "form",
     "shortExplanation": "El atributo `min` se utiliza para establecer un valor mínimo en un campo de entrada de tipo `number`.",
@@ -2360,7 +2731,12 @@
   },
   {
     "question": "¿Qué elemento se usa para agregar un título a un `<fieldset>` dentro de un formulario HTML?",
-    "options": ["<legend>", "<label>", "<caption>", "<title>"],
+    "options": [
+      "<legend>",
+      "<label>",
+      "<caption>",
+      "<title>"
+    ],
     "correctAnswer": "<legend>",
     "category": "form",
     "shortExplanation": "El elemento `<legend>` se utiliza para proporcionar un título o una descripción para el contenido de un `<fieldset>`, mejorando la accesibilidad y la usabilidad.",
@@ -2397,7 +2773,12 @@
   },
   {
     "question": "¿Qué atributo de `<form>` indica a dónde enviar los datos del formulario para su procesamiento?",
-    "options": ["sendto", "destination", "action", "target"],
+    "options": [
+      "sendto",
+      "destination",
+      "action",
+      "target"
+    ],
     "correctAnswer": "action",
     "category": "form",
     "shortExplanation": "El atributo `action` se utiliza para especificar la URL a la que se enviarán los datos del formulario.",
@@ -2476,7 +2857,12 @@
   },
   {
     "question": "¿Qué propiedad se utiliza para cambiar el color de fondo?",
-    "options": ["bgcolor", "color", "background-color", "fondo"],
+    "options": [
+      "bgcolor",
+      "color",
+      "background-color",
+      "fondo"
+    ],
     "correctAnswer": "background-color",
     "category": "css",
     "shortExplanation": "La propiedad `background-color` se utiliza para establecer el color de fondo de un elemento.",
@@ -2499,7 +2885,12 @@
   },
   {
     "question": "¿Cómo se selecciona un elemento con el id \"demo\"?",
-    "options": [".demo", "#demo", "demo", "%demo"],
+    "options": [
+      ".demo",
+      "#demo",
+      "demo",
+      "%demo"
+    ],
     "correctAnswer": "#demo",
     "category": "css",
     "shortExplanation": "Para seleccionar un elemento por su ID en CSS, se utiliza el símbolo `#` seguido del nombre del ID.",
@@ -2508,7 +2899,12 @@
   },
   {
     "question": "¿Qué propiedad se usa para cambiar el tipo de letra?",
-    "options": ["font-family", "font-type", "typeface", "font-style"],
+    "options": [
+      "font-family",
+      "font-type",
+      "typeface",
+      "font-style"
+    ],
     "correctAnswer": "font-family",
     "category": "css",
     "shortExplanation": "La propiedad `font-family` se utiliza para especificar la fuente de texto de un elemento.",
@@ -2531,7 +2927,12 @@
   },
   {
     "question": "¿Cuál es la propiedad correcta para establecer el espaciado entre palabras?",
-    "options": ["word-spacing", "spacing", "letter-spacing", "text-spacing"],
+    "options": [
+      "word-spacing",
+      "spacing",
+      "letter-spacing",
+      "text-spacing"
+    ],
     "correctAnswer": "word-spacing",
     "category": "css",
     "shortExplanation": "La propiedad `word-spacing` se utiliza para aumentar o disminuir el espacio entre palabras en un texto.",
@@ -2554,7 +2955,12 @@
   },
   {
     "question": "¿Qué unidad NO es una unidad de medida en CSS?",
-    "options": ["px", "cm", "mm", "inches"],
+    "options": [
+      "px",
+      "cm",
+      "mm",
+      "inches"
+    ],
     "correctAnswer": "inches",
     "category": "css",
     "shortExplanation": "La unidad `inches` no es una unidad de medida válida en CSS.",
@@ -2563,7 +2969,12 @@
   },
   {
     "question": "¿Cuál es la propiedad correcta para establecer el grosor de una fuente?",
-    "options": ["font-weight", "font-style", "font-size", "font-thickness"],
+    "options": [
+      "font-weight",
+      "font-style",
+      "font-size",
+      "font-thickness"
+    ],
     "correctAnswer": "font-weight",
     "category": "css",
     "shortExplanation": "La propiedad `font-weight` se utiliza para establecer el grosor de la fuente.",
@@ -2586,7 +2997,12 @@
   },
   {
     "question": "¿Cuál propiedad se utiliza para establecer la altura de un elemento?",
-    "options": ["width", "height", "length", "size"],
+    "options": [
+      "width",
+      "height",
+      "length",
+      "size"
+    ],
     "correctAnswer": "height",
     "category": "css",
     "shortExplanation": "La propiedad `height` se utiliza para establecer la altura de un elemento.",
@@ -2595,7 +3011,12 @@
   },
   {
     "question": "¿Cómo se seleccionan todos los párrafos (`<p>`) que son directamente hijos de un `<div>`?",
-    "options": ["div > p", "div + p", "div p", "p > div"],
+    "options": [
+      "div > p",
+      "div + p",
+      "div p",
+      "p > div"
+    ],
     "correctAnswer": "div > p",
     "category": "css",
     "shortExplanation": "El selector `div > p` selecciona todos los elementos `<p>` que son hijos directos de un elemento `<div>`.",
@@ -2604,7 +3025,12 @@
   },
   {
     "question": "¿Qué función CSS se utiliza para crear transiciones entre estados de un elemento?",
-    "options": ["transition()", "animate()", "change()", "transform()"],
+    "options": [
+      "transition()",
+      "animate()",
+      "change()",
+      "transform()"
+    ],
     "correctAnswer": "transition()",
     "category": "css",
     "shortExplanation": "La función `transition()` se utiliza para crear transiciones suaves entre diferentes estados de un elemento.",
@@ -2655,7 +3081,12 @@
   },
   {
     "question": "¿Qué propiedad se utiliza para establecer la opacidad de un elemento?",
-    "options": ["visibility", "filter", "transparency", "opacity"],
+    "options": [
+      "visibility",
+      "filter",
+      "transparency",
+      "opacity"
+    ],
     "correctAnswer": "opacity",
     "category": "css",
     "shortExplanation": "La propiedad `opacity` se utiliza para establecer la opacidad de un elemento.",
@@ -2678,7 +3109,12 @@
   },
   {
     "question": "¿Qué selector se utiliza para apuntar a un elemento con un atributo específico?",
-    "options": ["[atributo]", "{atributo}", "(atributo)", "@atributo"],
+    "options": [
+      "[atributo]",
+      "{atributo}",
+      "(atributo)",
+      "@atributo"
+    ],
     "correctAnswer": "[atributo]",
     "category": "css",
     "shortExplanation": "El selector `[atributo]` se utiliza para seleccionar elementos que tienen un atributo específico.",
@@ -2687,7 +3123,12 @@
   },
   {
     "question": "¿Cuál de las siguientes NO es una propiedad de flexbox?",
-    "options": ["flex-grow", "flex-basis", "flex-wrap", "flex-color"],
+    "options": [
+      "flex-grow",
+      "flex-basis",
+      "flex-wrap",
+      "flex-color"
+    ],
     "correctAnswer": "flex-color",
     "category": "css",
     "shortExplanation": "Flexbox no tiene una propiedad llamada `flex-color`. Las propiedades de flexbox incluyen `flex-grow`, `flex-basis`, y `flex-wrap`.",
@@ -2696,7 +3137,12 @@
   },
   {
     "question": "¿Cómo se establece el espaciado entre las líneas de texto?",
-    "options": ["text-height", "line-spacing", "line-height", "text-spacing"],
+    "options": [
+      "text-height",
+      "line-spacing",
+      "line-height",
+      "text-spacing"
+    ],
     "correctAnswer": "line-height",
     "category": "css",
     "shortExplanation": "La propiedad `line-height` se utiliza para establecer el espaciado entre las líneas de texto.",
@@ -2705,7 +3151,12 @@
   },
   {
     "question": "¿Qué propiedad se usa para crear sombras alrededor de un elemento?",
-    "options": ["box-shadow", "text-shadow", "shadow", "border-shadow"],
+    "options": [
+      "box-shadow",
+      "text-shadow",
+      "shadow",
+      "border-shadow"
+    ],
     "correctAnswer": "box-shadow",
     "category": "css",
     "shortExplanation": "La propiedad `box-shadow` se utiliza para aplicar sombras a los elementos de bloque.",
@@ -2798,7 +3249,12 @@
   },
   {
     "question": "¿Qué propiedad CSS se utiliza para establecer el espaciado entre bordes de elementos adyacentes?",
-    "options": ["margin", "border", "padding", "space"],
+    "options": [
+      "margin",
+      "border",
+      "padding",
+      "space"
+    ],
     "correctAnswer": "margin",
     "category": "css",
     "shortExplanation": "La propiedad `margin` se utiliza para crear espacio alrededor de los elementos, fuera de sus bordes.",
@@ -2807,7 +3263,12 @@
   },
   {
     "question": "¿Qué propiedad permite controlar el tamaño de la fuente?",
-    "options": ["text-size", "font-weight", "font-style", "font-size"],
+    "options": [
+      "text-size",
+      "font-weight",
+      "font-style",
+      "font-size"
+    ],
     "correctAnswer": "font-size",
     "category": "css",
     "shortExplanation": "La propiedad `font-size` se utiliza para establecer el tamaño de la fuente.",
@@ -2830,7 +3291,12 @@
   },
   {
     "question": "¿Qué propiedad se usa para cambiar la dirección del texto?",
-    "options": ["text-align", "text-direction", "direction", "text-flow"],
+    "options": [
+      "text-align",
+      "text-direction",
+      "direction",
+      "text-flow"
+    ],
     "correctAnswer": "direction",
     "category": "css",
     "shortExplanation": "La propiedad `direction` se utiliza para establecer la dirección del texto en un elemento.",
@@ -2937,7 +3403,12 @@
   },
   {
     "question": "¿Qué selector se usa para apuntar al primer párrafo dentro de cualquier elemento?",
-    "options": ["p:first-of-type", "p:child", "first:p", "p:first"],
+    "options": [
+      "p:first-of-type",
+      "p:child",
+      "first:p",
+      "p:first"
+    ],
     "correctAnswer": "p:first-of-type",
     "category": "css",
     "shortExplanation": "El selector `p:first-of-type` se utiliza para seleccionar el primer párrafo dentro de cualquier elemento.",
@@ -3058,7 +3529,12 @@
   },
   {
     "question": "¿Qué propiedad se utiliza para establecer el tipo de lista en un elemento `<ul>` o `<ol>`?",
-    "options": ["list-style-type", "list-type", "bullet-type", "type-list"],
+    "options": [
+      "list-style-type",
+      "list-type",
+      "bullet-type",
+      "type-list"
+    ],
     "correctAnswer": "list-style-type",
     "category": "css",
     "shortExplanation": "La propiedad `list-style-type` se utiliza para especificar el tipo de marcador para los elementos de lista.",
@@ -3081,7 +3557,12 @@
   },
   {
     "question": "¿Qué propiedad CSS se utiliza para especificar el espaciado entre las celdas de una tabla?",
-    "options": ["cell-spacing", "table-spacing", "border-spacing", "spacing"],
+    "options": [
+      "cell-spacing",
+      "table-spacing",
+      "border-spacing",
+      "spacing"
+    ],
     "correctAnswer": "border-spacing",
     "category": "css",
     "shortExplanation": "La propiedad `border-spacing` se utiliza para establecer el espaciado entre las celdas de una tabla.",
@@ -3104,7 +3585,12 @@
   },
   {
     "question": "¿Cuál es el valor predeterminado de la propiedad `position`?",
-    "options": ["absolute", "fixed", "relative", "static"],
+    "options": [
+      "absolute",
+      "fixed",
+      "relative",
+      "static"
+    ],
     "correctAnswer": "static",
     "category": "css",
     "shortExplanation": "El valor predeterminado de la propiedad `position` es `static`, lo que significa que los elementos se posicionan en el flujo normal del documento.",
@@ -3113,7 +3599,12 @@
   },
   {
     "question": "¿Qué propiedad CSS permite el desplazamiento de elementos dentro de su caja si el contenido es más grande que la caja misma?",
-    "options": ["overflow", "scroll", "overflow-scroll", "box-scroll"],
+    "options": [
+      "overflow",
+      "scroll",
+      "overflow-scroll",
+      "box-scroll"
+    ],
     "correctAnswer": "overflow",
     "category": "css",
     "shortExplanation": "La propiedad `overflow` se utiliza para controlar el comportamiento del contenido que desborda el área de un elemento.",
@@ -3150,7 +3641,12 @@
   },
   {
     "question": "¿Qué propiedad CSS se utiliza para cambiar el estilo del puntero del ratón?",
-    "options": ["cursor", "pointer", "mouse-style", "pointer-style"],
+    "options": [
+      "cursor",
+      "pointer",
+      "mouse-style",
+      "pointer-style"
+    ],
     "correctAnswer": "cursor",
     "category": "css",
     "shortExplanation": "La propiedad `cursor` se utiliza para cambiar el estilo del puntero del ratón cuando se encuentra sobre un elemento.",
@@ -3285,7 +3781,12 @@
   },
   {
     "question": "¿Qué propiedad se utiliza para mostrar u ocultar el borde de las columnas?",
-    "options": ["column-rule", "column-border", "column-edge", "column-line"],
+    "options": [
+      "column-rule",
+      "column-border",
+      "column-edge",
+      "column-line"
+    ],
     "correctAnswer": "column-rule",
     "category": "css",
     "shortExplanation": "La propiedad `column-rule` se utiliza para definir el estilo, el ancho y el color de la línea que separa las columnas.",
@@ -3322,7 +3823,12 @@
   },
   {
     "question": "¿Qué propiedad se utiliza para establecer la transparencia de un elemento?",
-    "options": ["alpha", "opacity", "transparent", "clear"],
+    "options": [
+      "alpha",
+      "opacity",
+      "transparent",
+      "clear"
+    ],
     "correctAnswer": "opacity",
     "category": "css",
     "shortExplanation": "La propiedad `opacity` se utiliza para establecer el nivel de transparencia de un elemento.",
@@ -3373,7 +3879,12 @@
   },
   {
     "question": "¿Qué selector se utiliza para aplicar un estilo a todos los elementos pares dentro de un contenedor?",
-    "options": [":nth-child(even)", ":nth-of-type(odd)", ":even", ":odd"],
+    "options": [
+      ":nth-child(even)",
+      ":nth-of-type(odd)",
+      ":even",
+      ":odd"
+    ],
     "correctAnswer": ":nth-child(even)",
     "category": "css",
     "shortExplanation": "El selector `:nth-child(even)` se utiliza para seleccionar todos los elementos hijos pares de un contenedor.",
@@ -3396,7 +3907,12 @@
   },
   {
     "question": "¿Qué propiedad se utiliza para añadir espacio dentro de los bordes de un elemento?",
-    "options": ["padding", "margin", "border", "spacing"],
+    "options": [
+      "padding",
+      "margin",
+      "border",
+      "spacing"
+    ],
     "correctAnswer": "padding",
     "category": "css",
     "shortExplanation": "La propiedad `padding` se utiliza para crear espacio dentro de los bordes de un elemento.",
@@ -3405,7 +3921,12 @@
   },
   {
     "question": "¿Qué propiedad CSS se utiliza para cambiar el tipo de cursor que se muestra al pasar el ratón sobre un elemento?",
-    "options": ["cursor", "pointer", "mouse", "hand"],
+    "options": [
+      "cursor",
+      "pointer",
+      "mouse",
+      "hand"
+    ],
     "correctAnswer": "cursor",
     "category": "css",
     "shortExplanation": "La propiedad `cursor` se utiliza para especificar el tipo de cursor que se muestra al pasar el ratón sobre un elemento.",
@@ -3526,7 +4047,12 @@
   },
   {
     "question": "¿Qué función CSS se utiliza para mezclar colores basándose en su opacidad?",
-    "options": ["rgba()", "alpha()", "opacity()", "blend()"],
+    "options": [
+      "rgba()",
+      "alpha()",
+      "opacity()",
+      "blend()"
+    ],
     "correctAnswer": "rgba()",
     "category": "css",
     "shortExplanation": "La función `rgba()` se utiliza para definir colores en CSS con un canal alfa (opacidad).",
@@ -3647,7 +4173,12 @@
   },
   {
     "question": "¿Qué función CSS se utiliza para incluir archivos CSS condicionales o recursos basados en ciertas condiciones?",
-    "options": ["@use", "@import", "@include", "@media"],
+    "options": [
+      "@use",
+      "@import",
+      "@include",
+      "@media"
+    ],
     "correctAnswer": "@media",
     "category": "css",
     "shortExplanation": "La regla `@media` se utiliza para aplicar estilos CSS en función de ciertas condiciones, como el tamaño de la pantalla o la orientación del dispositivo.",
@@ -3698,7 +4229,12 @@
   },
   {
     "question": "¿Cual de las siguientes etiquetas es usada para insertar una imagen en HTML?",
-    "options": ["<img>", "<image>", "<pic>", "<picture>"],
+    "options": [
+      "<img>",
+      "<image>",
+      "<pic>",
+      "<picture>"
+    ],
     "correctAnswer": "<img>",
     "category": "html",
     "shortExplanation": "La etiqueta `<img>` se utiliza para insertar imágenes en un documento HTML.",
@@ -3721,7 +4257,12 @@
   },
   {
     "question": "¿Que etiqueta se utiliza para definir una lista numerada en HTML?",
-    "options": ["<ul>", "<ol>", "<li>", "<dl>"],
+    "options": [
+      "<ul>",
+      "<ol>",
+      "<li>",
+      "<dl>"
+    ],
     "correctAnswer": "<ol>",
     "category": "html",
     "shortExplanation": "La etiqueta `<ol>` se utiliza para definir una lista ordenada (numerada) en HTML.",
@@ -3744,7 +4285,12 @@
   },
   {
     "question": "¿Que etiqueta HTML se utiliza para definir un parrafo?",
-    "options": ["<paragraph>", "<pg>", "<p>", "<para>"],
+    "options": [
+      "<paragraph>",
+      "<pg>",
+      "<p>",
+      "<para>"
+    ],
     "correctAnswer": "<p>",
     "category": "html",
     "shortExplanation": "La etiqueta `<p>` se utiliza para definir un párrafo en HTML.",
@@ -3781,7 +4327,12 @@
   },
   {
     "question": "¿Que etiqueta se usa para definir el encabezado de una tabla en HTML?",
-    "options": ["<thead>", "<th>", "<header>", "<tfoot>"],
+    "options": [
+      "<thead>",
+      "<th>",
+      "<header>",
+      "<tfoot>"
+    ],
     "correctAnswer": "<thead>",
     "category": "html",
     "shortExplanation": "La etiqueta `<thead>` se utiliza para agrupar el contenido del encabezado de una tabla en HTML.",
@@ -3790,7 +4341,12 @@
   },
   {
     "question": "¿Que etiqueta se utiliza para el título mas grande en HTML?",
-    "options": ["<h6>", "<heading>", "<h1>", "<head>"],
+    "options": [
+      "<h6>",
+      "<heading>",
+      "<h1>",
+      "<head>"
+    ],
     "correctAnswer": "<h1>",
     "category": "html",
     "shortExplanation": "La etiqueta `<h1>` se utiliza para definir el título más grande en HTML.",
@@ -3799,7 +4355,12 @@
   },
   {
     "question": "¿Que atributo se utiliza para proporcionar informacion adicional sobre un elemento?",
-    "options": ["tooltip", "alt", "title", "description"],
+    "options": [
+      "tooltip",
+      "alt",
+      "title",
+      "description"
+    ],
     "correctAnswer": "title",
     "category": "html",
     "shortExplanation": "El atributo `title` se utiliza para proporcionar información adicional sobre un elemento en HTML.",
@@ -3808,7 +4369,12 @@
   },
   {
     "question": "¿Cual de las siguientes etiquetas se usa para agregar un salto de línea?",
-    "options": ["<break>", "<lb>", "<br>", "<linebreak>"],
+    "options": [
+      "<break>",
+      "<lb>",
+      "<br>",
+      "<linebreak>"
+    ],
     "correctAnswer": "<br>",
     "category": "html",
     "shortExplanation": "La etiqueta `<br>` se utiliza para insertar un salto de línea en el contenido de un documento HTML.",
@@ -3831,7 +4397,12 @@
   },
   {
     "question": "¿Que atributo se usa para especificar la URL en la etiqueta <a>?",
-    "options": ["link", "href", "url", "src"],
+    "options": [
+      "link",
+      "href",
+      "url",
+      "src"
+    ],
     "correctAnswer": "href",
     "category": "html",
     "shortExplanation": "El atributo `href` se utiliza para especificar la URL de destino en un enlace.",
@@ -3840,7 +4411,12 @@
   },
   {
     "question": "¿Que etiqueta HTML se usa para definir una lista desordenada?",
-    "options": ["<ul>", "<ol>", "<li>", "<dl>"],
+    "options": [
+      "<ul>",
+      "<ol>",
+      "<li>",
+      "<dl>"
+    ],
     "correctAnswer": "<ul>",
     "category": "html",
     "shortExplanation": "La etiqueta `<ul>` se utiliza para definir una lista desordenada (con viñetas) en HTML.",
@@ -3849,7 +4425,12 @@
   },
   {
     "question": "¿Que etiqueta se utiliza para insertar una imagen?",
-    "options": ["<src>", "<image>", "<img>", "<pic>"],
+    "options": [
+      "<src>",
+      "<image>",
+      "<img>",
+      "<pic>"
+    ],
     "correctAnswer": "<img>",
     "category": "html",
     "shortExplanation": "La etiqueta `<img>` se utiliza para insertar imágenes en un documento HTML.",
@@ -3872,7 +4453,12 @@
   },
   {
     "question": "¿Que etiqueta se utiliza para definir el pie de pagina de un documento o sección?",
-    "options": ["<footer>", "<bottom>", "<foot>", "<end>"],
+    "options": [
+      "<footer>",
+      "<bottom>",
+      "<foot>",
+      "<end>"
+    ],
     "correctAnswer": "<footer>",
     "category": "html",
     "shortExplanation": "La etiqueta `<footer>` se utiliza para definir el pie de página de un documento o sección en HTML.",
@@ -3881,7 +4467,12 @@
   },
   {
     "question": "¿Que significa la etiqueta <em>?",
-    "options": ["Insertar", "enfasis", "Ejemplo", "Eliminar"],
+    "options": [
+      "Insertar",
+      "enfasis",
+      "Ejemplo",
+      "Eliminar"
+    ],
     "correctAnswer": "enfasis",
     "category": "html",
     "shortExplanation": "La etiqueta `<em>` se utiliza para aplicar énfasis a un texto en HTML.",
@@ -3890,7 +4481,12 @@
   },
   {
     "question": "¿Que atributo especifica el destino de un enlace en la etiqueta <a>?",
-    "options": ["target", "dest", "href", "link"],
+    "options": [
+      "target",
+      "dest",
+      "href",
+      "link"
+    ],
     "correctAnswer": "target",
     "category": "html",
     "shortExplanation": "El atributo `target` se utiliza para especificar el destino de un enlace en HTML.",
@@ -3899,7 +4495,12 @@
   },
   {
     "question": "¿Que etiqueta se utiliza para crear un formulario en HTML?",
-    "options": ["<form>", "<input>", "<fieldset>", "<formulary>"],
+    "options": [
+      "<form>",
+      "<input>",
+      "<fieldset>",
+      "<formulary>"
+    ],
     "correctAnswer": "<form>",
     "category": "html",
     "shortExplanation": "La etiqueta `<form>` se utiliza para crear un formulario en HTML.",
@@ -3908,7 +4509,12 @@
   },
   {
     "question": "¿Que atributo de la etiqueta <input> define el tipo de control a mostrar?",
-    "options": ["type", "control", "inputType", "display"],
+    "options": [
+      "type",
+      "control",
+      "inputType",
+      "display"
+    ],
     "correctAnswer": "type",
     "category": "html",
     "shortExplanation": "El atributo `type` se utiliza para definir el tipo de control a mostrar en un elemento `<input>`.",
@@ -3917,7 +4523,12 @@
   },
   {
     "question": "¿Como se define un encabezado de seccion en HTML?",
-    "options": ["<header>", "<head>", "<section>", "<top>"],
+    "options": [
+      "<header>",
+      "<head>",
+      "<section>",
+      "<top>"
+    ],
     "correctAnswer": "<header>",
     "category": "html",
     "shortExplanation": "La etiqueta `<header>` se utiliza para definir un encabezado de sección en HTML.",
@@ -3926,7 +4537,12 @@
   },
   {
     "question": "¿Que etiqueta HTML se utiliza para mostrar datos tabulares?",
-    "options": ["<table>", "<data>", "<td>", "<tab>"],
+    "options": [
+      "<table>",
+      "<data>",
+      "<td>",
+      "<tab>"
+    ],
     "correctAnswer": "<table>",
     "category": "html",
     "shortExplanation": "La etiqueta `<table>` se utiliza para definir una tabla en HTML.",
@@ -3935,7 +4551,12 @@
   },
   {
     "question": "¿Que atributo de la etiqueta <meta> especifica la codificacion de caracteres de la página web?",
-    "options": ["charset", "encoding", "lang", "character"],
+    "options": [
+      "charset",
+      "encoding",
+      "lang",
+      "character"
+    ],
     "correctAnswer": "charset",
     "category": "html",
     "shortExplanation": "El atributo `charset` se utiliza para especificar la codificación de caracteres de la página web.",
@@ -3944,7 +4565,12 @@
   },
   {
     "question": "¿Que etiqueta se utiliza para definir un ítem en una lista?",
-    "options": ["<li>", "<item>", "<list>", "<il>"],
+    "options": [
+      "<li>",
+      "<item>",
+      "<list>",
+      "<il>"
+    ],
     "correctAnswer": "<li>",
     "category": "html",
     "shortExplanation": "La etiqueta `<li>` se utiliza para definir un ítem en una lista en HTML.",
@@ -3953,7 +4579,12 @@
   },
   {
     "question": "¿Que atributo se utiliza para definir el nombre de un elemento de formulario?",
-    "options": ["name", "formName", "id", "type"],
+    "options": [
+      "name",
+      "formName",
+      "id",
+      "type"
+    ],
     "correctAnswer": "name",
     "category": "html",
     "shortExplanation": "El atributo `name` se utiliza para definir el nombre de un elemento de formulario en HTML.",
@@ -3962,7 +4593,12 @@
   },
   {
     "question": "¿Que etiqueta se usa para agrupar columnas en una tabla?",
-    "options": ["<colgroup>", "<col>", "<column>", "<group>"],
+    "options": [
+      "<colgroup>",
+      "<col>",
+      "<column>",
+      "<group>"
+    ],
     "correctAnswer": "<colgroup>",
     "category": "html",
     "shortExplanation": "La etiqueta `<colgroup>` se utiliza para agrupar columnas en una tabla en HTML.",
@@ -3971,7 +4607,12 @@
   },
   {
     "question": "¿Que etiqueta se utiliza para definir una seccion de un documento?",
-    "options": ["<section>", "<div>", "<part>", "<segment>"],
+    "options": [
+      "<section>",
+      "<div>",
+      "<part>",
+      "<segment>"
+    ],
     "correctAnswer": "<section>",
     "category": "html",
     "shortExplanation": "La etiqueta `<section>` se utiliza para definir una sección en un documento HTML.",
@@ -3979,22 +4620,13 @@
     "sourceName": "MDN"
   },
   {
-    "question": "¿Cual es el proposito de la etiqueta <title> en HTML?",
-    "options": [
-      "Cambiar el color de fondo de la pagina.",
-      "Crear un titulo visible en el cuerpo de la pagina.",
-      "Definir el titulo del documento, que se muestra en la pestaña del navegador.",
-      "Insertar imagenes."
-    ],
-    "correctAnswer": "Definir el titulo del documento, que se muestra en la pestaña del navegador.",
-    "category": "html",
-    "shortExplanation": "La etiqueta `<title>` se utiliza para definir el título del documento HTML.",
-    "sourceUrl": "https://developer.mozilla.org/es/docs/Web/HTML/Element/title",
-    "sourceName": "MDN"
-  },
-  {
     "question": "¿Que atributo de la etiqueta <a> se utiliza para definir la URL del enlace?",
-    "options": ["src", "href", "link", "url"],
+    "options": [
+      "src",
+      "href",
+      "link",
+      "url"
+    ],
     "correctAnswer": "href",
     "category": "html",
     "shortExplanation": "El atributo `href` se utiliza para especificar la URL de destino de un enlace en HTML.",
@@ -4003,7 +4635,12 @@
   },
   {
     "question": "¿Cual de estas etiquetas HTML se utiliza para añadir una imagen a una página web?",
-    "options": ["<image>", "<img>", "<pic>", "<src>"],
+    "options": [
+      "<image>",
+      "<img>",
+      "<pic>",
+      "<src>"
+    ],
     "correctAnswer": "<img>",
     "category": "html",
     "shortExplanation": "La etiqueta `<img>` se utiliza para insertar una imagen en una página web.",
@@ -4026,7 +4663,12 @@
   },
   {
     "question": "¿Que etiqueta HTML se utiliza para definir una lista ordenada?",
-    "options": ["<ul>", "<li>", "<ol>", "<dl>"],
+    "options": [
+      "<ul>",
+      "<li>",
+      "<ol>",
+      "<dl>"
+    ],
     "correctAnswer": "<ol>",
     "category": "html",
     "shortExplanation": "La etiqueta `<ol>` se utiliza para definir una lista ordenada en HTML.",
@@ -4049,7 +4691,12 @@
   },
   {
     "question": "¿Que etiqueta se usa para definir el pie de pagina de un documento o sección?",
-    "options": ["<footer>", "<bottom>", "<foot>", "<endpage>"],
+    "options": [
+      "<footer>",
+      "<bottom>",
+      "<foot>",
+      "<endpage>"
+    ],
     "correctAnswer": "<footer>",
     "category": "html",
     "shortExplanation": "La etiqueta `<footer>` se utiliza para definir el pie de página de un documento o sección en HTML.",
@@ -4058,7 +4705,12 @@
   },
   {
     "question": "¿Que etiqueta se utiliza para representar la importancia de un texto en HTML?",
-    "options": ["<strong>", "<em>", "<mark>", "<important>"],
+    "options": [
+      "<strong>",
+      "<em>",
+      "<mark>",
+      "<important>"
+    ],
     "correctAnswer": "<strong>",
     "category": "html",
     "shortExplanation": "La etiqueta `<strong>` se utiliza para indicar que un texto es de gran importancia.",
@@ -4067,7 +4719,12 @@
   },
   {
     "question": "¿Cual de estas etiquetas HTML se utiliza para insertar un vídeo en una página web?",
-    "options": ["<video>", "<media>", "<movie>", "<mp4>"],
+    "options": [
+      "<video>",
+      "<media>",
+      "<movie>",
+      "<mp4>"
+    ],
     "correctAnswer": "<video>",
     "category": "html",
     "shortExplanation": "La etiqueta `<video>` se utiliza para insertar un vídeo en una página web.",
@@ -4076,7 +4733,12 @@
   },
   {
     "question": "¿Que etiqueta se utiliza para agregar un salto de linea en HTML?",
-    "options": ["<br>", "<lb>", "<break>", "<linebreak>"],
+    "options": [
+      "<br>",
+      "<lb>",
+      "<break>",
+      "<linebreak>"
+    ],
     "correctAnswer": "<br>",
     "category": "html",
     "shortExplanation": "La etiqueta `<br>` se utiliza para insertar un salto de línea en HTML.",
@@ -4085,7 +4747,12 @@
   },
   {
     "question": "¿Que etiqueta se utiliza para crear un enlace en HTML?",
-    "options": ["<link>", "<a>", "<href>", "<navigate>"],
+    "options": [
+      "<link>",
+      "<a>",
+      "<href>",
+      "<navigate>"
+    ],
     "correctAnswer": "<a>",
     "category": "html",
     "shortExplanation": "La etiqueta `<a>` se utiliza para crear un enlace en HTML.",
@@ -4094,7 +4761,12 @@
   },
   {
     "question": "¿Que atributo se usa con la etiqueta <img> para proporcionar texto alternativo para la imagen?",
-    "options": ["alt", "title", "description", "text"],
+    "options": [
+      "alt",
+      "title",
+      "description",
+      "text"
+    ],
     "correctAnswer": "alt",
     "category": "html",
     "shortExplanation": "El atributo `alt` se utiliza para proporcionar texto alternativo para una imagen en HTML.",
@@ -4103,7 +4775,12 @@
   },
   {
     "question": "¿Cual de las siguientes etiquetas HTML se usa para definir un párrafo?",
-    "options": ["<paragraph>", "<p>", "<pg>", "<para>"],
+    "options": [
+      "<paragraph>",
+      "<p>",
+      "<pg>",
+      "<para>"
+    ],
     "correctAnswer": "<p>",
     "category": "html",
     "shortExplanation": "La etiqueta `<p>` se utiliza para definir un párrafo en HTML.",
@@ -4112,7 +4789,12 @@
   },
   {
     "question": "¿Que etiqueta se utiliza para definir una cabecera en un documento HTML?",
-    "options": ["<header>", "<head>", "<top>", "<heading>"],
+    "options": [
+      "<header>",
+      "<head>",
+      "<top>",
+      "<heading>"
+    ],
     "correctAnswer": "<head>",
     "category": "html",
     "shortExplanation": "La etiqueta `<head>` se utiliza para definir la sección de encabezado de un documento HTML.",
@@ -4135,7 +4817,12 @@
   },
   {
     "question": "¿Que etiqueta HTML se utiliza para definir una lista desordenada?",
-    "options": ["<ul>", "<ol>", "<li>", "<dl>"],
+    "options": [
+      "<ul>",
+      "<ol>",
+      "<li>",
+      "<dl>"
+    ],
     "correctAnswer": "<ul>",
     "category": "html",
     "shortExplanation": "La etiqueta `<ul>` se utiliza para definir una lista desordenada en HTML.",
@@ -4172,7 +4859,12 @@
   },
   {
     "question": "¿Que etiqueta se usa para agregar meta informacion al head de un documento HTML?",
-    "options": ["<meta>", "<info>", "<data>", "<details>"],
+    "options": [
+      "<meta>",
+      "<info>",
+      "<data>",
+      "<details>"
+    ],
     "correctAnswer": "<meta>",
     "category": "html",
     "shortExplanation": "La etiqueta `<meta>` se utiliza para agregar metainformación en el `<head>` de un documento HTML.",
@@ -4181,7 +4873,12 @@
   },
   {
     "question": "¿Cual de las siguientes etiquetas se usa para definir texto importante en HTML?",
-    "options": ["<important>", "<strong>", "<em>", "<mark>"],
+    "options": [
+      "<important>",
+      "<strong>",
+      "<em>",
+      "<mark>"
+    ],
     "correctAnswer": "<strong>",
     "category": "html",
     "shortExplanation": "La etiqueta `<strong>` se utiliza para indicar que un texto es de gran importancia.",
@@ -4190,7 +4887,12 @@
   },
   {
     "question": "¿Que etiqueta HTML se utiliza para insertar una tabla?",
-    "options": ["<table>", "<tbl>", "<tab>", "<tables>"],
+    "options": [
+      "<table>",
+      "<tbl>",
+      "<tab>",
+      "<tables>"
+    ],
     "correctAnswer": "<table>",
     "category": "html",
     "shortExplanation": "La etiqueta `<table>` se utiliza para definir una tabla en HTML.",
@@ -4199,7 +4901,12 @@
   },
   {
     "question": "¿Cual de las siguientes etiquetas es correcta para definir un encabezado de sección en HTML5?",
-    "options": ["<section>", "<header>", "<head>", "<sectionhead>"],
+    "options": [
+      "<section>",
+      "<header>",
+      "<head>",
+      "<sectionhead>"
+    ],
     "correctAnswer": "<header>",
     "category": "html",
     "shortExplanation": "La etiqueta `<header>` se utiliza para definir un encabezado de sección en HTML5.",
@@ -4208,7 +4915,12 @@
   },
   {
     "question": "¿Que etiqueta se utiliza para agregar un pie de pagina a un documento o sección en HTML5?",
-    "options": ["<footer>", "<bottom>", "<foot>", "<end>"],
+    "options": [
+      "<footer>",
+      "<bottom>",
+      "<foot>",
+      "<end>"
+    ],
     "correctAnswer": "<footer>",
     "category": "html",
     "shortExplanation": "La etiqueta `<footer>` se utiliza para definir un pie de página en HTML5.",
@@ -4217,7 +4929,12 @@
   },
   {
     "question": "¿Cual de las siguientes etiquetas define un texto que debe ser marcado o resaltado por su relevancia o importancia en HTML5?",
-    "options": ["<highlight>", "<mark>", "<important>", "<em>"],
+    "options": [
+      "<highlight>",
+      "<mark>",
+      "<important>",
+      "<em>"
+    ],
     "correctAnswer": "<mark>",
     "category": "html",
     "shortExplanation": "La etiqueta `<mark>` se utiliza para resaltar texto que es relevante o importante.",
@@ -4226,7 +4943,12 @@
   },
   {
     "question": "¿Que atributo de la etiqueta <a> especifica el medio utilizado para abrir el enlace?",
-    "options": ["target", "media", "mode", "method"],
+    "options": [
+      "target",
+      "media",
+      "mode",
+      "method"
+    ],
     "correctAnswer": "target",
     "category": "html",
     "shortExplanation": "El atributo `target` especifica dónde se abrirá el enlace.",
@@ -4235,7 +4957,12 @@
   },
   {
     "question": "¿Que etiqueta se utiliza para definir una cita larga en HTML?",
-    "options": ["<quote>", "<blockquote>", "<q>", "<cite>"],
+    "options": [
+      "<quote>",
+      "<blockquote>",
+      "<q>",
+      "<cite>"
+    ],
     "correctAnswer": "<blockquote>",
     "category": "html",
     "shortExplanation": "La etiqueta `<blockquote>` se utiliza para definir una cita larga en HTML.",
@@ -4244,7 +4971,12 @@
   },
   {
     "question": "¿Cual etiqueta HTML se utiliza para especificar un campo de entrada independiente?",
-    "options": ["<input>", "<field>", "<enter>", "<text>"],
+    "options": [
+      "<input>",
+      "<field>",
+      "<enter>",
+      "<text>"
+    ],
     "correctAnswer": "<input>",
     "category": "html",
     "shortExplanation": "La etiqueta `<input>` se utiliza para definir un campo de entrada en un formulario HTML.",
@@ -4253,7 +4985,12 @@
   },
   {
     "question": "¿Que etiqueta HTML se utiliza para representar un control de formulario para seleccionar entre múltiples options?",
-    "options": ["<select>", "<option>", "<dropdown>", "<choose>"],
+    "options": [
+      "<select>",
+      "<option>",
+      "<dropdown>",
+      "<choose>"
+    ],
     "correctAnswer": "<select>",
     "category": "html",
     "shortExplanation": "La etiqueta `<select>` se utiliza para crear un menú desplegable en un formulario HTML.",
@@ -4262,7 +4999,12 @@
   },
   {
     "question": "¿Cual de las siguientes etiquetas HTML se utiliza para incluir un archivo javascript en una página web?",
-    "options": ["<javascript>", "<script>", "<js>", "<java>"],
+    "options": [
+      "<javascript>",
+      "<script>",
+      "<js>",
+      "<java>"
+    ],
     "correctAnswer": "<script>",
     "category": "html",
     "shortExplanation": "La etiqueta `<script>` se utiliza para incluir un archivo JavaScript en una página web.",
@@ -4271,7 +5013,12 @@
   },
   {
     "question": "¿Que etiqueta se usa para especificar un encabezado de columna en una tabla HTML?",
-    "options": ["<th>", "<td>", "<thead>", "<column>"],
+    "options": [
+      "<th>",
+      "<td>",
+      "<thead>",
+      "<column>"
+    ],
     "correctAnswer": "<th>",
     "category": "html",
     "shortExplanation": "La etiqueta `<th>` se utiliza para definir un encabezado de columna en una tabla HTML.",
@@ -4294,7 +5041,12 @@
   },
   {
     "question": "¿Que elemento se utiliza para representar la navegacion en un documento HTML?",
-    "options": ["<navigate>", "<nav>", "<navigation>", "<dir>"],
+    "options": [
+      "<navigate>",
+      "<nav>",
+      "<navigation>",
+      "<dir>"
+    ],
     "correctAnswer": "<nav>",
     "category": "html",
     "shortExplanation": "La etiqueta `<nav>` se utiliza para definir un área de navegación en un documento HTML.",
@@ -4303,7 +5055,12 @@
   },
   {
     "question": "¿Que etiqueta HTML se usa para definir un texto preformateado?",
-    "options": ["<pre>", "<format>", "<code>", "<text>"],
+    "options": [
+      "<pre>",
+      "<format>",
+      "<code>",
+      "<text>"
+    ],
     "correctAnswer": "<pre>",
     "category": "html",
     "shortExplanation": "La etiqueta `<pre>` se utiliza para definir un texto preformateado en HTML.",
@@ -4312,7 +5069,12 @@
   },
   {
     "question": "¿Que etiqueta se utiliza para definir un encabezado de nivel 3",
-    "options": ["<h3>", "<heading3>", "<head3>", "<h3rd>"],
+    "options": [
+      "<h3>",
+      "<heading3>",
+      "<head3>",
+      "<h3rd>"
+    ],
     "correctAnswer": "<h3>",
     "category": "html",
     "shortExplanation": "La etiqueta `<h3>` se utiliza para definir un encabezado de nivel 3 en HTML.",
@@ -4363,7 +5125,12 @@
   },
   {
     "question": "¿Que etiqueta se utiliza para agrupar elementos en un formulario que se pueden manejar como un solo bloque?",
-    "options": ["<fieldset>", "<group>", "<formgroup>", "<set>"],
+    "options": [
+      "<fieldset>",
+      "<group>",
+      "<formgroup>",
+      "<set>"
+    ],
     "correctAnswer": "<fieldset>",
     "category": "html",
     "shortExplanation": "La etiqueta `<fieldset>` se utiliza para agrupar elementos en un formulario.",
@@ -4372,7 +5139,12 @@
   },
   {
     "question": "¿Que atributo de la etiqueta <meta> es utilizado para especificar la clave de caracteres de una página web?",
-    "options": ["charset", "encoding", "character-set", "setchar"],
+    "options": [
+      "charset",
+      "encoding",
+      "character-set",
+      "setchar"
+    ],
     "correctAnswer": "charset",
     "category": "html",
     "shortExplanation": "El atributo `charset` se utiliza para especificar la codificación de caracteres de un documento HTML.",
@@ -4395,7 +5167,12 @@
   },
   {
     "question": "¿Que etiqueta se usa para definir el cuerpo de un documento HTML?",
-    "options": ["<body>", "<main>", "<content>", "<documentBody>"],
+    "options": [
+      "<body>",
+      "<main>",
+      "<content>",
+      "<documentBody>"
+    ],
     "correctAnswer": "<body>",
     "category": "html",
     "shortExplanation": "La etiqueta `<body>` se utiliza para definir el cuerpo de un documento HTML.",
@@ -4404,7 +5181,12 @@
   },
   {
     "question": "¿Que atributo de la etiqueta <a> define la URL a la que el enlace apunta?",
-    "options": ["link", "href", "src", "url"],
+    "options": [
+      "link",
+      "href",
+      "src",
+      "url"
+    ],
     "correctAnswer": "href",
     "category": "html",
     "shortExplanation": "El atributo `href` se utiliza para especificar la URL de destino de un enlace.",
@@ -4427,7 +5209,12 @@
   },
   {
     "question": "¿Cual de las siguientes etiquetas es correcta para hacer que el texto esté en negrita?",
-    "options": ["<bold>", "<strong>", "<b>", "B y C son correctas"],
+    "options": [
+      "<bold>",
+      "<strong>",
+      "<b>",
+      "B y C son correctas"
+    ],
     "correctAnswer": "B y C son correctas",
     "category": "html",
     "shortExplanation": "Las etiquetas `<strong>` y `<b>` se utilizan para hacer que el texto esté en negrita.",
@@ -4436,7 +5223,12 @@
   },
   {
     "question": "¿Que etiqueta se utiliza para insertar un salto de linea en HTML?",
-    "options": ["<lb>", "<break>", "<br>", "<linebreak>"],
+    "options": [
+      "<lb>",
+      "<break>",
+      "<br>",
+      "<linebreak>"
+    ],
     "correctAnswer": "<br>",
     "category": "html",
     "shortExplanation": "La etiqueta `<br>` se utiliza para insertar un salto de línea en HTML.",
@@ -4459,7 +5251,12 @@
   },
   {
     "question": "¿Cual de estas etiquetas HTML se usa para definir una lista ordenada alfabéticamente?",
-    "options": ["<ul>", "<ol type=\"A\">", "<ol>", "<list type=\"alpha\">"],
+    "options": [
+      "<ul>",
+      "<ol type=\"A\">",
+      "<ol>",
+      "<list type=\"alpha\">"
+    ],
     "correctAnswer": "<ol type=\"A\">",
     "category": "html",
     "shortExplanation": "La etiqueta `<ol type=\"A\">` se utiliza para definir una lista ordenada alfabéticamente.",
@@ -4468,7 +5265,12 @@
   },
   {
     "question": "¿Que etiqueta HTML se utiliza para especificar un pie de página para un documento o sección?",
-    "options": ["<footer>", "<bottom>", "<foot>", "<end>"],
+    "options": [
+      "<footer>",
+      "<bottom>",
+      "<foot>",
+      "<end>"
+    ],
     "correctAnswer": "<footer>",
     "category": "html",
     "shortExplanation": "La etiqueta `<footer>` se utiliza para definir un pie de página en un documento HTML.",
@@ -4477,7 +5279,12 @@
   },
   {
     "question": "¿Que atributo se utiliza para hacer que un campo de formulario no sea editable?",
-    "options": ["immutable", "fixed", "readonly", "locked"],
+    "options": [
+      "immutable",
+      "fixed",
+      "readonly",
+      "locked"
+    ],
     "correctAnswer": "readonly",
     "category": "html",
     "shortExplanation": "El atributo `readonly` se utiliza para hacer que un campo de formulario no sea editable.",
@@ -4486,7 +5293,12 @@
   },
   {
     "question": "¿Que etiqueta se usa para agregar informacion sobre la pagina en la cabecera del documento, como el conjunto de caracteres o las palabras clave?",
-    "options": ["<meta>", "<info>", "<data>", "<headinfo>"],
+    "options": [
+      "<meta>",
+      "<info>",
+      "<data>",
+      "<headinfo>"
+    ],
     "correctAnswer": "<meta>",
     "category": "html",
     "shortExplanation": "La etiqueta `<meta>` se utiliza para proporcionar metadatos sobre el documento HTML.",
@@ -4495,7 +5307,12 @@
   },
   {
     "question": "¿Que etiqueta HTML se utiliza para definir una seccion dentro de un documento?",
-    "options": ["<div>", "<section>", "<part>", "<segment>"],
+    "options": [
+      "<div>",
+      "<section>",
+      "<part>",
+      "<segment>"
+    ],
     "correctAnswer": "<section>",
     "category": "html",
     "shortExplanation": "La etiqueta `<section>` se utiliza para definir una sección en un documento HTML.",
@@ -4518,7 +5335,12 @@
   },
   {
     "question": "¿Que atributo se utiliza con <img> para describir la imagen?",
-    "options": ["src", "alt", "desc", "title"],
+    "options": [
+      "src",
+      "alt",
+      "desc",
+      "title"
+    ],
     "correctAnswer": "alt",
     "category": "html",
     "shortExplanation": "El atributo `alt` se utiliza para proporcionar una descripción alternativa de la imagen.",
@@ -4541,7 +5363,12 @@
   },
   {
     "question": "¿Que etiqueta HTML se utiliza para reproducir un video?",
-    "options": ["<media>", "<video>", "<movie>", "<mp4>"],
+    "options": [
+      "<media>",
+      "<video>",
+      "<movie>",
+      "<mp4>"
+    ],
     "correctAnswer": "<video>",
     "category": "html",
     "shortExplanation": "La etiqueta `<video>` se utiliza para incrustar un video en un documento HTML.",
@@ -4564,7 +5391,12 @@
   },
   {
     "question": "¿Que etiqueta se usa para especificar independientemente un grupo de estilos en HTML?",
-    "options": ["<styles>", "<css>", "<style>", "<format>"],
+    "options": [
+      "<styles>",
+      "<css>",
+      "<style>",
+      "<format>"
+    ],
     "correctAnswer": "<style>",
     "category": "html",
     "shortExplanation": "La etiqueta `<style>` se utiliza para definir estilos CSS en un documento HTML.",
@@ -4587,7 +5419,12 @@
   },
   {
     "question": "¿Que etiqueta se usa para agregar un pie de pagina a una sección o documento?",
-    "options": ["<footer>", "<bottom>", "<foot>", "<end>"],
+    "options": [
+      "<footer>",
+      "<bottom>",
+      "<foot>",
+      "<end>"
+    ],
     "correctAnswer": "<footer>",
     "category": "html",
     "shortExplanation": "La etiqueta `<footer>` se utiliza para definir un pie de página en un documento HTML.",
@@ -4596,7 +5433,12 @@
   },
   {
     "question": "¿Que atributo de la etiqueta <ol> cambia el tipo de numeracion de la lista?",
-    "options": ["num", "type", "style", "format"],
+    "options": [
+      "num",
+      "type",
+      "style",
+      "format"
+    ],
     "correctAnswer": "type",
     "category": "html",
     "shortExplanation": "El atributo `type` se utiliza para especificar el tipo de numeración de una lista ordenada.",
@@ -4605,7 +5447,12 @@
   },
   {
     "question": "¿Que etiqueta se utiliza para definir el encabezamiento de un documento HTML?",
-    "options": ["<head>", "<header>", "<heading>", "<top>"],
+    "options": [
+      "<head>",
+      "<header>",
+      "<heading>",
+      "<top>"
+    ],
     "correctAnswer": "<head>",
     "category": "html",
     "shortExplanation": "La etiqueta `<head>` se utiliza para contener metadatos sobre el documento HTML.",
@@ -4614,7 +5461,12 @@
   },
   {
     "question": "¿Que atributo de la etiqueta <link> se utiliza para relacionar una hoja de estilos CSS con un documento HTML?",
-    "options": ["src", "rel", "type", "href"],
+    "options": [
+      "src",
+      "rel",
+      "type",
+      "href"
+    ],
     "correctAnswer": "rel",
     "category": "html",
     "shortExplanation": "El atributo `rel` se utiliza para especificar la relación entre el documento actual y el recurso vinculado.",
@@ -4637,7 +5489,12 @@
   },
   {
     "question": "¿Que etiqueta HTML se usa para definir texto con un significado más fuerte?",
-    "options": ["<bold>", "<strong>", "<important>", "<b>"],
+    "options": [
+      "<bold>",
+      "<strong>",
+      "<important>",
+      "<b>"
+    ],
     "correctAnswer": "<strong>",
     "category": "html",
     "shortExplanation": "La etiqueta `<strong>` se utiliza para definir texto con un significado más fuerte.",
@@ -4660,7 +5517,12 @@
   },
   {
     "question": "¿Cual de las siguientes etiquetas se utiliza para representar un articulo en HTML5?",
-    "options": ["<article>", "<item>", "<section>", "<content>"],
+    "options": [
+      "<article>",
+      "<item>",
+      "<section>",
+      "<content>"
+    ],
     "correctAnswer": "<article>",
     "category": "html",
     "shortExplanation": "La etiqueta `<article>` se utiliza para representar un artículo independiente en un documento HTML5.",
@@ -4669,7 +5531,12 @@
   },
   {
     "question": "¿Que etiqueta HTML se utiliza para definir datos con un valor y un nombre en una lista de descripciones?",
-    "options": ["<dd>", "<dl>", "<dt>", "<list>"],
+    "options": [
+      "<dd>",
+      "<dl>",
+      "<dt>",
+      "<list>"
+    ],
     "correctAnswer": "<dt>",
     "category": "html",
     "shortExplanation": "La etiqueta `<dt>` se utiliza para definir un término en una lista de definiciones.",
@@ -4678,7 +5545,12 @@
   },
   {
     "question": "¿Que elemento HTML5 se utiliza para especificar figuras independientes, como ilustraciones, diagramas, fotos, código, etc., con contenido opcional?",
-    "options": ["<figure>", "<image>", "<figcaption>", "<photo>"],
+    "options": [
+      "<figure>",
+      "<image>",
+      "<figcaption>",
+      "<photo>"
+    ],
     "correctAnswer": "<figure>",
     "category": "html",
     "shortExplanation": "La etiqueta `<figure>` se utiliza para representar contenido independiente, como ilustraciones o diagramas, junto con su leyenda opcional.",
@@ -4701,7 +5573,12 @@
   },
   {
     "question": "¿Que etiqueta HTML se utiliza para especificar un encabezado para un documento o sección?",
-    "options": ["<header>", "<head>", "<top>", "<section title>"],
+    "options": [
+      "<header>",
+      "<head>",
+      "<top>",
+      "<section title>"
+    ],
     "correctAnswer": "<header>",
     "category": "html",
     "shortExplanation": "La etiqueta `<header>` se utiliza para definir un encabezado para un documento o sección.",
@@ -4724,7 +5601,11 @@
   },
   {
     "question": "¿Qué devuelve la siguiente función?\nfor (var i = 0; i < 3; i++) {\n  setTimeout(() => console.log(i), 1);\n}\n\nfor (let i = 0; i < 3; i++) {\n  setTimeout(() => console.log(i), 1);\n}",
-    "options": ["0 1 2 y 0 1 2", "0 1 2 y 3 3 3", "3 3 3 y 0 1 2"],
+    "options": [
+      "0 1 2 y 0 1 2",
+      "0 1 2 y 3 3 3",
+      "3 3 3 y 0 1 2"
+    ],
     "correctAnswer": "3 3 3 y 0 1 2",
     "category": "javascript",
     "shortExplanation": "En el primer bucle, `i` es una variable de función, por lo que su valor final (3) se imprime tres veces. En el segundo bucle, `i` es una variable de bloque, por lo que se captura su valor en cada iteración.",
@@ -4733,7 +5614,12 @@
   },
   {
     "question": "¿Qué devuelve la siguiente función?\nconst shape = {\n  radius: 10,\n  diameter() {\n    return this.radius * 2;\n  },\n  perimeter: () => 2 * Math.PI * this.radius\n};\n\nshape.diameter();\nshape.perimeter();",
-    "options": ["20 y 62.83185307179586", "20 y NaN", "20 y 63", "NaN y 63"],
+    "options": [
+      "20 y 62.83185307179586",
+      "20 y NaN",
+      "20 y 63",
+      "NaN y 63"
+    ],
     "correctAnswer": "20 y NaN",
     "category": "javascript",
     "shortExplanation": "La función `diameter` utiliza `this` para acceder al radio, mientras que `perimeter` utiliza una función de flecha, que no tiene su propio `this`.",
@@ -4742,7 +5628,11 @@
   },
   {
     "question": "¿Qué devuelve la siguiente función?\n+true;\n!\"Lydia\";",
-    "options": ["1 y false", "false y NaN", "false y false"],
+    "options": [
+      "1 y false",
+      "false y NaN",
+      "false y false"
+    ],
     "correctAnswer": "1 y false",
     "category": "javascript",
     "shortExplanation": "La operación unaria `+` convierte `true` en `1`, mientras que `!` convierte la cadena \"Lydia\" en `false`.",
@@ -4765,7 +5655,12 @@
   },
   {
     "question": "¿Qué devuelve la siguiente función?\nlet c = { greeting: \"Hey!\" };\nlet d;\n\nd = c;\nc.greeting = \"Hello\";\nconsole.log(d.greeting);",
-    "options": ["Hello", "undefined", "ReferenceError", "TypeError"],
+    "options": [
+      "Hello",
+      "undefined",
+      "ReferenceError",
+      "TypeError"
+    ],
     "correctAnswer": "Hello",
     "category": "javascript",
     "shortExplanation": "La variable `d` se asigna a `c`, por lo que cualquier cambio en `c` también se reflejará en `d`.",
@@ -4788,7 +5683,12 @@
   },
   {
     "question": "¿Qué devuelve la siguiente función?\nclass Chameleon {\n  static colorChange(newColor) {\n    this.newColor = newColor;\n    return this.newColor;\n  }\n\n  constructor({ newColor = \"green\" } = {}) {\n    this.newColor = newColor;\n  }\n}\n\nconst freddie = new Chameleon({ newColor: \"purple\" });\nfreddie.colorChange(\"orange\");",
-    "options": ["orange", "purple", "green", "TypeError"],
+    "options": [
+      "orange",
+      "purple",
+      "green",
+      "TypeError"
+    ],
     "correctAnswer": "TypeError",
     "category": "javascript",
     "shortExplanation": "El método `colorChange` es estático, por lo que no se puede llamar en una instancia de la clase. Debe ser llamado en la propia clase `Chameleon`.",
@@ -4797,7 +5697,11 @@
   },
   {
     "question": "¿Qué devuelve la siguiente función?\nlet greeting;\ngreetign = {}; // Typo!\nconsole.log(greetign);",
-    "options": ["{}", "ReferenceError: greetign is not defined", "undefined"],
+    "options": [
+      "{}",
+      "ReferenceError: greetign is not defined",
+      "undefined"
+    ],
     "correctAnswer": "{}",
     "category": "javascript",
     "shortExplanation": "El objeto se crea correctamente, a pesar del error tipográfico en la variable.",
@@ -4861,7 +5765,12 @@
   },
   {
     "question": "¿Qué devuelve la siguiente función?\nfunction sum(a, b) {\n  return a + b;\n}\n\nsum(1, \"2\");",
-    "options": ["NaN", "TypeError", "\"12\"", "3"],
+    "options": [
+      "NaN",
+      "TypeError",
+      "\"12\"",
+      "3"
+    ],
     "correctAnswer": "\"12\"",
     "category": "javascript",
     "shortExplanation": "La suma de un número y una cadena se realiza mediante la concatenación de cadenas.",
@@ -4870,7 +5779,12 @@
   },
   {
     "question": "¿Qué devuelve la siguiente función?\nlet number = 0;\nconsole.log(number++);\nconsole.log(++number);\nconsole.log(number);",
-    "options": ["1 1 2", "1 2 2", "0 2 2", "0 1 2"],
+    "options": [
+      "1 1 2",
+      "1 2 2",
+      "0 2 2",
+      "0 1 2"
+    ],
     "correctAnswer": "0 2 2",
     "category": "javascript",
     "shortExplanation": "El operador `++` se utiliza para incrementar el valor de una variable. En este caso, `number++` devuelve el valor original de `number` (0) y luego lo incrementa. Por otro lado, `++number` incrementa el valor de `number` antes de devolverlo.",
@@ -4905,7 +5819,12 @@
   },
   {
     "question": "¿Qué devuelve la siguiente función?\nfunction getAge(...args) {\n  console.log(typeof args);\n}\n\ngetAge(21);",
-    "options": ["\"number\"", "\"array\"", "\"object\"", "\"NaN\""],
+    "options": [
+      "\"number\"",
+      "\"array\"",
+      "\"object\"",
+      "\"NaN\""
+    ],
     "correctAnswer": "\"object\"",
     "category": "javascript",
     "shortExplanation": "El operador `...` (spread) convierte los argumentos en un array, por lo que `typeof args` devuelve \"object\".",
@@ -4914,7 +5833,12 @@
   },
   {
     "question": "¿Qué devuelve la siguiente función?\nfunction getAge() {\n  \"use strict\";\n  age = 21;\n  console.log(age);\n}\n\ngetAge();",
-    "options": ["21", "undefined", "ReferenceError", "TypeError"],
+    "options": [
+      "21",
+      "undefined",
+      "ReferenceError",
+      "TypeError"
+    ],
     "correctAnswer": "ReferenceError",
     "category": "javascript",
     "shortExplanation": "En modo estricto, las variables deben ser declaradas antes de ser utilizadas. Aquí, `age` no está declarada, lo que provoca un `ReferenceError`.",
@@ -4923,7 +5847,12 @@
   },
   {
     "question": "¿Cuál es el valor de sum?\nconst sum = eval(\"10*10+5\");",
-    "options": ["105", "\"105\"", "TypeError", "\"10*10+5\""],
+    "options": [
+      "105",
+      "\"105\"",
+      "TypeError",
+      "\"10*10+5\""
+    ],
     "correctAnswer": "105",
     "category": "javascript",
     "shortExplanation": "La función `eval` evalúa el código JavaScript representado como una cadena. En este caso, evalúa \"10*10+5\" y devuelve 105.",
@@ -4946,7 +5875,12 @@
   },
   {
     "question": "¿Qué devuelve la siguiente función?\nvar num = 8;\nvar num = 10;\n\nconsole.log(num);",
-    "options": ["8", "10", "SyntaxError", "ReferenceError"],
+    "options": [
+      "8",
+      "10",
+      "SyntaxError",
+      "ReferenceError"
+    ],
     "correctAnswer": "10",
     "category": "javascript",
     "shortExplanation": "La segunda declaración `var num = 10;` sobrescribe el valor anterior de `num`.",
@@ -4983,7 +5917,11 @@
   },
   {
     "question": "El contexto de ejecución de JS crea dos cosas: el objecto global y la palabra reservada \"this\".",
-    "options": ["true", "false", "it depends"],
+    "options": [
+      "true",
+      "false",
+      "it depends"
+    ],
     "correctAnswer": "false",
     "category": "javascript",
     "shortExplanation": "El contexto de ejecución de JavaScript crea un objeto global y una referencia a `this`, pero no crea un objeto `this` global.",
@@ -4992,7 +5930,12 @@
   },
   {
     "question": "¿Qué devuelve la siguiente función?\nfor (let i = 1; i < 5; i++) {\n  if (i === 3) continue;\n  console.log(i);\n}",
-    "options": ["1 2", "1 2 3", "1 2 4", "1 3 4"],
+    "options": [
+      "1 2",
+      "1 2 3",
+      "1 2 4",
+      "1 3 4"
+    ],
     "correctAnswer": "1 2 4",
     "category": "javascript",
     "shortExplanation": "El bucle `for` itera sobre los números del 1 al 4. Cuando `i` es 3, la instrucción `continue` salta a la siguiente iteración, por lo que 3 no se imprime.",
@@ -5015,7 +5958,12 @@
   },
   {
     "question": "¿Qué devuelve la siguiente función?\nconst a = {};\nconst b = { key: \"b\" };\nconst c = { key: \"c\" };\n\na[b] = 123;\na[c] = 456;\n\nconsole.log(a[b]);",
-    "options": ["123", "456", "undefined", "ReferenceError"],
+    "options": [
+      "123",
+      "456",
+      "undefined",
+      "ReferenceError"
+    ],
     "correctAnswer": "456",
     "category": "javascript",
     "shortExplanation": "Cuando se utilizan objetos como claves en otro objeto, JavaScript convierte el objeto en una cadena. En este caso, `a[b]` y `a[c]` se convierten en `a['[object Object]']`, por lo que `a[b]` y `a[c]` se refieren a la misma propiedad.",
@@ -5052,7 +6000,12 @@
   },
   {
     "question": "Al hacer click en el párrafo, ¿qué se muestra por pantalla?\n<div onclick=\"console.log('div')\">\n  <p onclick=\"console.log('p')\">\n    Click here!\n  </p>\n</div>",
-    "options": ["p div", "div p", "p", "div"],
+    "options": [
+      "p div",
+      "div p",
+      "p",
+      "div"
+    ],
     "correctAnswer": "p div",
     "category": "javascript",
     "shortExplanation": "Cuando se hace click en el párrafo, el evento se lanza desde el elemento que lo originó, que en este caso es el párrafo. Sin embargo, el evento también burbujea hacia arriba, por lo que el `div` externo también recibe el evento.",
@@ -5075,7 +6028,12 @@
   },
   {
     "question": "¿Qué devuelve la siguiente función?\nfunction sayHi() {\n  return (() => 0)();\n}\n\ntypeof sayHi();",
-    "options": ["\"object\"", "\"number\"", "\"function\"", "\"undefined\""],
+    "options": [
+      "\"object\"",
+      "\"number\"",
+      "\"function\"",
+      "\"undefined\""
+    ],
     "correctAnswer": "\"number\"",
     "category": "javascript",
     "shortExplanation": "La función `sayHi` devuelve el resultado de la función de flecha, que es `0`. Por lo tanto, `typeof sayHi()` devuelve `\"number\"`.",
@@ -5098,7 +6056,12 @@
   },
   {
     "question": "¿Qué devuelve la siguiente función?\nconsole.log(typeof typeof 1);",
-    "options": ["\"number\"", "\"string\"", "\"object\"", "\"undefined\""],
+    "options": [
+      "\"number\"",
+      "\"string\"",
+      "\"object\"",
+      "\"undefined\""
+    ],
     "correctAnswer": "\"string\"",
     "category": "javascript",
     "shortExplanation": "El operador `typeof` siempre devuelve una cadena que representa el tipo del operando. En este caso, `typeof 1` devuelve `\"number\"`, y luego `typeof \"number\"` devuelve `\"string\"`.",
@@ -5205,7 +6168,12 @@
   },
   {
     "question": "¿Cuál es el resultado?\nfunction* generator(i) {\n  yield i;\n  yield i * 2;\n}\n\nconst gen = generator(10);\n\nconsole.log(gen.next().value);\nconsole.log(gen.next().value);",
-    "options": ["[0, 10], [10, 20]", "20, 20", "10, 20", "0, 10 y 10, 20"],
+    "options": [
+      "[0, 10], [10, 20]",
+      "20, 20",
+      "10, 20",
+      "0, 10 y 10, 20"
+    ],
     "correctAnswer": "10, 20",
     "category": "javascript",
     "shortExplanation": "La función generadora `generator` utiliza `yield` para devolver valores de forma paulatina. Al llamar a `gen.next().value`, se obtiene el primer valor `10`, y al llamar de nuevo se obtiene `20`.",
@@ -5214,7 +6182,12 @@
   },
   {
     "question": "¿Qué devuelve esto?\nconst firstPromise = new Promise((res, rej) => {\n  setTimeout(res, 500, \"one\");\n});\n\nconst secondPromise = new Promise((res, rej) => {\n  setTimeout(res, 100, \"two\");\n});\n\nPromise.race([firstPromise, secondPromise]).then(res => console.log(res));",
-    "options": ["\"one\"", "\"two\"", "\"two\" \"one\"", "\"one\" \"two\""],
+    "options": [
+      "\"one\"",
+      "\"two\"",
+      "\"two\" \"one\"",
+      "\"one\" \"two\""
+    ],
     "correctAnswer": "\"two\"",
     "category": "javascript",
     "shortExplanation": "El método `Promise.race` devuelve una nueva promesa que se resuelve o se rechaza tan pronto como una de las promesas en el iterable se resuelve o se rechaza. En este caso, `secondPromise` se resuelve antes que `firstPromise`, por lo que el resultado es \"two\".",
@@ -5223,7 +6196,12 @@
   },
   {
     "question": "¿Cuál es el resultado?\nlet person = { name: \"Lydia\" };\nconst members = [person];\nperson = null;\n\nconsole.log(members);",
-    "options": ["null", "[null]", "[{}]", "[{ name: \"Lydia\" }]"],
+    "options": [
+      "null",
+      "[null]",
+      "[{}]",
+      "[{ name: \"Lydia\" }]"
+    ],
     "correctAnswer": "[{ name: \"Lydia\" }]",
     "category": "javascript",
     "shortExplanation": "Aunque la variable `person` se establece en `null`, el array `members` todavía contiene una referencia al objeto original. Por lo tanto, al imprimir `members`, se muestra el objeto con su propiedad `name`.",
@@ -5246,7 +6224,12 @@
   },
   {
     "question": "¿Cuál es el resultado?\nconsole.log(3 + 4 + \"5\");",
-    "options": ["\"345\"", "\"75\"", "12", "\"12\""],
+    "options": [
+      "\"345\"",
+      "\"75\"",
+      "12",
+      "\"12\""
+    ],
     "correctAnswer": "\"75\"",
     "category": "javascript",
     "shortExplanation": "En JavaScript, cuando se suma un número y una cadena, el número se convierte en una cadena y se realiza la concatenación. Por lo tanto, `3 + 4` se evalúa como `7`, y luego `7 + \"5\"` se convierte en `\"75\"`.",
@@ -5255,7 +6238,12 @@
   },
   {
     "question": "¿Cuál es el valor de num?\nconst num = parseInt(\"7*6\", 10);",
-    "options": ["42", "\"42\"", "7", "NaN"],
+    "options": [
+      "42",
+      "\"42\"",
+      "7",
+      "NaN"
+    ],
     "correctAnswer": "7",
     "category": "javascript",
     "shortExplanation": "La función `parseInt` analiza una cadena y devuelve un entero. En este caso, `parseInt` detiene el análisis al encontrar el carácter `*`, por lo que solo convierte `7` a un número entero.",
@@ -5362,7 +6350,12 @@
   },
   {
     "question": "¿Cuál es el resultado?\n// counter.js\nlet counter = 10;\nexport default counter;\n// index.js\nimport myCounter from \"./counter\";\n\nmyCounter += 1;\n\nconsole.log(myCounter);",
-    "options": ["10", "11", "Error", "NaN"],
+    "options": [
+      "10",
+      "11",
+      "Error",
+      "NaN"
+    ],
     "correctAnswer": "Error",
     "category": "javascript",
     "shortExplanation": "El valor importado `myCounter` es una copia del valor original, no una referencia. Por lo tanto, intentar modificar `myCounter` no afecta al valor exportado en `counter.js`.",
@@ -5385,7 +6378,12 @@
   },
   {
     "question": "¿Cuál es el resultado?\nconst numbers = [1, 2, 3, 4, 5];\nconst [y] = numbers;\n\nconsole.log(y);",
-    "options": ["[[1, 2, 3, 4, 5]]", "[1, 2, 3, 4, 5]", "1", "[1]"],
+    "options": [
+      "[[1, 2, 3, 4, 5]]",
+      "[1, 2, 3, 4, 5]",
+      "1",
+      "[1]"
+    ],
     "correctAnswer": "1",
     "category": "javascript",
     "shortExplanation": "La desestructuración de arrays permite extraer valores de un array y asignarlos a variables. En este caso, `y` toma el primer valor del array `numbers`, que es `1`.",
@@ -5422,7 +6420,12 @@
   },
   {
     "question": "¿Cuál es el resultado?\nlet num = 10;\n\nconst increaseNumber = () => num++;\nconst increasePassedNumber = number => number++;\n\nconst num1 = increaseNumber();\nconst num2 = increasePassedNumber(num1);\n\nconsole.log(num1);\nconsole.log(num2);",
-    "options": ["10, 10", "10, 11", "11, 11", "11, 12"],
+    "options": [
+      "10, 10",
+      "10, 11",
+      "11, 11",
+      "11, 12"
+    ],
     "correctAnswer": "10, 10",
     "category": "javascript",
     "shortExplanation": "La función `increaseNumber` incrementa la variable `num` y devuelve su valor antes de incrementarlo. La función `increasePassedNumber` recibe un argumento y también devuelve su valor antes de incrementarlo. Por lo tanto, ambas funciones devuelven `10` en este caso.",
@@ -5459,7 +6462,12 @@
   },
   {
     "question": "¿Con qué constructor podemos extender correctamente la clase Dog?\nclass Dog {\n  constructor(name) {\n    this.name = name;\n  }\n};\n\nclass Labrador extends Dog {\n  // 1 \n  constructor(name, size) {\n    this.size = size;\n  }\n  // 2\n  constructor(name, size) {\n    super(name);\n    this.size = size;\n  }\n  // 3\n  constructor(size) {\n    super(name);\n    this.size = size;\n  }\n  // 4 \n  constructor(name, size) {\n    this.name = name;\n    this.size = size;\n  }\n\n};",
-    "options": ["1", "2", "3", "4"],
+    "options": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
     "correctAnswer": "2",
     "category": "javascript",
     "shortExplanation": "La opción 2 es la única que llama al constructor de la clase padre (`Dog`) correctamente utilizando `super(name)`.",
@@ -5566,7 +6574,12 @@
   },
   {
     "question": "¿Cuál es el resultado?\nfunction addToList(item, list) {\n  return list.push(item);\n}\n\nconst result = addToList(\"apple\", [\"banana\"]);\nconsole.log(result);",
-    "options": ["['apple', 'banana']", "2", "true", "undefined"],
+    "options": [
+      "['apple', 'banana']",
+      "2",
+      "true",
+      "undefined"
+    ],
     "correctAnswer": "2",
     "category": "javascript",
     "shortExplanation": "El método `push` devuelve la nueva longitud del array después de agregar el elemento, que en este caso es `2`.",
@@ -5589,7 +6602,12 @@
   },
   {
     "question": "¿Cuál es el resultado?\nconst { name: myName } = { name: \"Lydia\" };\n\nconsole.log(name);",
-    "options": ["\"Lydia\"", "\"myName\"", "undefined", "ReferenceError"],
+    "options": [
+      "\"Lydia\"",
+      "\"myName\"",
+      "undefined",
+      "ReferenceError"
+    ],
     "correctAnswer": "undefined",
     "category": "javascript",
     "shortExplanation": "La variable `name` no está definida en el ámbito actual, por lo que se produce un error de referencia.",
@@ -5710,7 +6728,12 @@
   },
   {
     "question": "¿Qué opción es una forma de igualar hasName a true, teniendo en cuenta que no se puede pasar true como argumento?\nfunction getName(name) {\n  const hasName = //\n}",
-    "options": ["!!name", "name", "new Boolean(name)", "name.length"],
+    "options": [
+      "!!name",
+      "name",
+      "new Boolean(name)",
+      "name.length"
+    ],
     "correctAnswer": "!!name",
     "category": "javascript",
     "shortExplanation": "La doble negación `!!` convierte cualquier valor en un booleano. Si `name` tiene un valor truthy (es decir, no es `null`, `undefined`, `0`, `NaN`, o una cadena vacía), `!!name` será `true`.",
@@ -5719,7 +6742,12 @@
   },
   {
     "question": "¿Cuál es el resultado?\nconsole.log(\"I want pizza\"[0])",
-    "options": ["\"\"\"", "\"I\"", "SyntaxError", "undefined"],
+    "options": [
+      "\"\"\"",
+      "\"I\"",
+      "SyntaxError",
+      "undefined"
+    ],
     "correctAnswer": "\"I\"",
     "category": "javascript",
     "shortExplanation": "Las cadenas en JavaScript son objetos similares a arrays, por lo que se puede acceder a sus caracteres mediante índices. En este caso, el índice `0` corresponde al primer carácter de la cadena, que es `\"I\"`.",
@@ -5728,7 +6756,12 @@
   },
   {
     "question": "¿Cuál es el resultado?\nfunction sum(num1, num2 = num1) {\n  console.log(num1 + num2)\n}\n\nsum(10)",
-    "options": ["NaN", "20", "ReferenceError", "undefined"],
+    "options": [
+      "NaN",
+      "20",
+      "ReferenceError",
+      "undefined"
+    ],
     "correctAnswer": "20",
     "category": "javascript",
     "shortExplanation": "La función `sum` tiene un parámetro `num2` con un valor predeterminado de `num1`. Cuando se llama a `sum(10)`, `num1` es `10` y `num2` también es `10`, por lo que la suma es `20`.",
@@ -5751,7 +6784,12 @@
   },
   {
     "question": "¿Cuál es el resultado?\nclass Person {\n  constructor(name) {\n    this.name = name\n  }\n}\n\nconst member = new Person(\"John\")\nconsole.log(typeof member)",
-    "options": ["\"class\"", "\"function\"", "\"object\"", "\"string\""],
+    "options": [
+      "\"class\"",
+      "\"function\"",
+      "\"object\"",
+      "\"string\""
+    ],
     "correctAnswer": "\"object\"",
     "category": "javascript",
     "shortExplanation": "Los objetos creados a partir de clases en JavaScript son de tipo \"object\".",
@@ -5760,7 +6798,12 @@
   },
   {
     "question": "¿Cuál es el resultado?\nlet newList = [1, 2, 3].push(4)\n\nconsole.log(newList.push(5))",
-    "options": ["[1, 2, 3, 4, 5]", "[1, 2, 3, 5]", "[1, 2, 3, 4]", "Error"],
+    "options": [
+      "[1, 2, 3, 4, 5]",
+      "[1, 2, 3, 5]",
+      "[1, 2, 3, 4]",
+      "Error"
+    ],
     "correctAnswer": "Error",
     "category": "javascript",
     "shortExplanation": "El método `push` devuelve la nueva longitud del array, no el array en sí. Por lo tanto, `newList` es un número (la longitud del array original más uno), y no tiene el método `push`.",
@@ -5867,7 +6910,12 @@
   },
   {
     "question": "¿Cuál es el resultado?\nconst name = \"Lydia\"\n\nconsole.log(name())",
-    "options": ["SyntaxError", "ReferenceError", "TypeError", "undefined"],
+    "options": [
+      "SyntaxError",
+      "ReferenceError",
+      "TypeError",
+      "undefined"
+    ],
     "correctAnswer": "TypeError",
     "category": "javascript",
     "shortExplanation": "Se intenta llamar a una cadena como si fuera una función, lo que provoca un error de tipo.",

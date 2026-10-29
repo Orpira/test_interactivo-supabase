@@ -96,33 +96,33 @@ export default function QuizCategoryModal({
 		)
 			return "/icons/javascript.svg";
 
-		return "/logo.png";
+		return "/logo-96.webp";
 	};
 
 	if (!open) return null;
 
 	return (
-		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-			<div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md relative">
+		<div className="fixed inset-0 z-50 flex items-center justify-center bg-bg/70">
+			<div className="bg-surface rounded-lg shadow-xl p-6 w-full max-w-md relative">
 				<button
 					onClick={onClose}
-					className="absolute top-3 right-3 text-gray-500 hover:text-red-500 text-2xl font-bold focus:outline-none"
+					className="absolute top-3 right-3 text-muted hover:text-warn text-2xl font-bold focus:outline-none"
 					aria-label="Cerrar"
 				>
 					×
 				</button>
 				<h2 className="text-xl font-bold mb-4 text-center">{category}</h2>
 				{loading ? (
-					<p className="text-center text-slate-600">
+					<p className="text-center text-muted">
 						Cargando subcategorias...
 					</p>
 				) : (
 					<>
 						{error ? (
-							<p className="text-sm text-red-600 text-center mb-3">{error}</p>
+							<p className="text-sm text-warn text-center mb-3">{error}</p>
 						) : null}
 						{subcategories.length === 0 ? (
-							<p className="text-center text-slate-600">
+							<p className="text-center text-muted">
 								No hay subcategorias disponibles para esta categoria.
 							</p>
 						) : (
@@ -133,21 +133,21 @@ export default function QuizCategoryModal({
 											key={sub.slug}
 											className={`w-full flex items-center gap-3 px-3 py-3 rounded border transition text-left ${
 												selectedSubcategory === sub.name
-													? "border-indigo-500 bg-indigo-50"
-													: "border-slate-200 hover:bg-indigo-50"
+													? "border-accent bg-accent-soft"
+													: "border-line hover:bg-accent-soft"
 											}`}
 											onClick={() => setSelectedSubcategory(sub.name)}
 										>
 											<img
 												src={getSubcategoryImage(sub.name)}
 												alt={formatSubcategoryName(sub.name)}
-												className="w-10 h-10 rounded-md object-contain bg-white border border-slate-200 p-1"
+												className="w-10 h-10 rounded-md object-contain bg-surface border border-line p-1"
 											/>
 											<div className="flex-1 min-w-0">
-												<p className="font-medium text-slate-800 truncate">
+												<p className="font-medium text-fg truncate">
 													{formatSubcategoryName(sub.name)}
 												</p>
-												<p className="text-xs text-slate-500">
+												<p className="text-xs text-muted">
 													{sub.questionCount} preguntas disponibles
 												</p>
 											</div>
@@ -156,11 +156,11 @@ export default function QuizCategoryModal({
 								</div>
 
 								<div className="mb-4">
-									<label className="block text-sm font-medium text-slate-700 mb-1">
+									<label className="block text-sm font-medium text-muted mb-1">
 										Numero de preguntas
 									</label>
 									<select
-										className="w-full border border-slate-300 rounded px-3 py-2"
+										className="w-full border border-line rounded px-3 py-2"
 										value={count}
 										onChange={(e) => setCount(Number(e.target.value))}
 										disabled={!selectedSubcategory || countOptions.length === 0}
@@ -174,7 +174,7 @@ export default function QuizCategoryModal({
 								</div>
 
 								<button
-									className="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-2 rounded disabled:opacity-50"
+									className="w-full bg-accent hover:bg-accent/90 text-accent-fg py-2 rounded disabled:opacity-50"
 									onClick={() => onStartQuiz(selectedSubcategory, count)}
 									disabled={!selectedSubcategory || countOptions.length === 0}
 								>

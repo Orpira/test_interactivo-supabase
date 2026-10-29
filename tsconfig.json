@@ -4,7 +4,7 @@
     "target": "ESNext",
     "module": "esnext",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "moduleResolution": "node", // ← antes “bundler”
+    "moduleResolution": "bundler", // resolución de Vite (respeta "exports" de los paquetes)
     "jsx": "react-jsx",
     /* Calidad --------------------------------------------------- */
     "strict": true,
