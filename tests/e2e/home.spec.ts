@@ -1,53 +1,53 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 
-test("la página de inicio muestra el título", async ({ page }) => {
-	await page.goto("/");
-	// Usa getByRole para evitar ambigüedad
-	await expect(
-		page.getByRole("heading", { name: /WebWiz Quiz/i }),
-	).toBeVisible();
-});
-
-test("Home público no muestra enlace a Retos", async ({ page }) => {
-	await page.goto("/");
-	const editorLink = page.getByRole("link", { name: /editor/i });
-	await expect(editorLink).toHaveCount(0); // ✅ debería ser 0
-});
-
-test("La página de inicio tiene un boton a los quizzes", async ({ page }) => {
-	await page.goto("/");
-
-	// Boton que dice exactamente ¡Empieza ahora! (ignora mayúsculas/minúsculas)
-	const quizzesButton = page.getByRole("button", { name: /¡Empieza ahora!/i });
-	await expect(quizzesButton).toBeVisible();
-
-	await quizzesButton.click();
-	await expect(page).toHaveURL(/\/quiz/);
-});
-
-test("la página de inicio tiene un enlace a contactenos", async ({ page }) => {
-	await page.goto("/");
-	// Verifica que el enlace a contactenos esté presente
-	const contactLink = page.getByRole("link", { name: /contactenos/i });
-	await expect(contactLink).toBeVisible();
-	// Verifica que el enlace apunte a la ruta correcta
-	await expect(contactLink).toHaveAttribute("href", "/contacto");
-});
-
-test("la página de inicio tiene un boton a Iniciar sesión", async ({
-	page,
-}) => {
-	await page.goto("/");
-	// Verifica que el botón a Iniciar sesión esté presente
-	const loginBtn = page.getByRole("button", { name: /Iniciar sesión/i });
-	await expect(loginBtn).toBeVisible();
-
-	await Promise.all([
-		page.waitForNavigation(), // espera la navegación real
-		loginBtn.click(),
-	]);
-
-	await expect(page).toHaveURL(
-		/ptfarbvcspjtxsugbuer\.supabase\.co/i, // dominio Supabase Auth
+/** Portada para visitantes sin cuenta. */
+async function guest(page: Page) {
+	await page.route("https://e2e.supabase.co/**", (r) =>
+		r.request().method() === "HEAD"
+			? r.fulfill({ status: 200, headers: { "content-range": "*/437", "access-control-allow-origin": "*", "access-control-expose-headers": "content-range" }, body: "" })
+			: r.fulfill({ json: [] }),
 	);
+	await page.goto("/");
+}
+
+test("la portada explica lo que hace la app y sus cifras", async ({ page }) => {
+	await guest(page);
+	await expect(page.getByRole("heading", { level: 1 })).toContainText("Entrena el trabajo de un dev");
+	await expect(page.getByText("400+")).toBeVisible();
+	for (const h of ["Modo Incidencia", "Retos con IDE y tests en vivo", "Revisa el código de la IA", "Laboratorios de SQL y Git", "Explícalo tú"]) {
+		await expect(page.getByRole("heading", { name: h })).toBeVisible();
+	}
+	// Ningún enlace a zonas que requieren cuenta
+	await expect(page.getByRole("link", { name: /editor/i })).toHaveCount(0);
+});
+
+test("pregunta de muestra jugable sin cuenta", async ({ page }) => {
+	await guest(page);
+	const comprobar = page.getByRole("button", { name: "Comprobar" });
+	await expect(comprobar).toBeDisabled();
+	await page.getByRole("radio", { name: /A, B, C, D/ }).click();
+	await page.getByRole("radio", { name: "Seguro" }).click();
+	await comprobar.click();
+	await expect(page.getByText("Fallo con confianza alta", { exact: true })).toBeVisible();
+	await expect(page.getByText("Por qué era tentadora:")).toBeVisible();
+
+	await page.getByRole("button", { name: "Ejecutar el código" }).click();
+	await expect(page.getByText(/^A\s*D\s*C\s*B$|A[\s\S]{0,40}D[\s\S]{0,40}C[\s\S]{0,40}B/).last()).toBeVisible();
+
+	await page.getByRole("button", { name: /crea tu cuenta gratis/i }).click();
+	await expect(page.getByRole("dialog")).toBeVisible();
+});
+
+test("las categorías del quiz llevan al selector de nivel", async ({ page }) => {
+	await guest(page);
+	await page.getByRole("link", { name: "Hacer un quiz sin registrarme" }).click();
+	await page.getByRole("button", { name: /Frontend/ }).click();
+	await expect(page).toHaveURL(/quizCategory=frontend/);
+	await expect(page.getByRole("heading", { name: "Selecciona tu nivel" })).toBeVisible();
+});
+
+test("«Crear cuenta gratis» abre el acceso", async ({ page }) => {
+	await guest(page);
+	await page.getByRole("button", { name: "Crear cuenta gratis" }).first().click();
+	await expect(page.getByRole("dialog", { name: /.+/ })).toBeVisible();
 });

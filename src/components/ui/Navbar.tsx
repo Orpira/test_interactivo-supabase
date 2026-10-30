@@ -8,6 +8,7 @@ import ThemeToggle from "./ThemeToggle";
 import UserMenu, { Avatar } from "../nav/UserMenu";
 import QuizMenu, { ActivePill } from "../nav/QuizMenu";
 import { NAV_PAGES, QUIZ_CATEGORIES } from "../nav/navData";
+import { OPEN_LOGIN_EVENT } from "@/services/loginEvents";
 import { getCategoryVariants } from "@/utils/categoryVariants";
 import {
 	getStoredExperienceLevel,
@@ -175,6 +176,13 @@ export default function Navbar() {
 			if (!isAuthenticated) void loadLoginModal();
 		});
 	}, [isAuthenticated]);
+
+	// La portada (y otras pantallas) pueden pedir abrir la ventana de acceso
+	useEffect(() => {
+		const open = () => setShowLoginModal(true);
+		window.addEventListener(OPEN_LOGIN_EVENT, open);
+		return () => window.removeEventListener(OPEN_LOGIN_EVENT, open);
+	}, []);
 
 	// Ctrl/⌘ + K abre la paleta de comandos desde cualquier pantalla
 	useEffect(() => {
