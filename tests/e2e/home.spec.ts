@@ -51,3 +51,14 @@ test("«Crear cuenta gratis» abre el acceso", async ({ page }) => {
 	await page.getByRole("button", { name: "Crear cuenta gratis" }).first().click();
 	await expect(page.getByRole("dialog", { name: /.+/ })).toBeVisible();
 });
+
+test("«Volver arriba» aparece al hacer scroll y sube al inicio", async ({ page }) => {
+	await guest(page);
+	const btn = page.getByRole("button", { name: "Volver arriba" });
+	await expect(btn).toBeHidden();
+	await page.mouse.wheel(0, 3000);
+	await expect(btn).toBeVisible();
+	await btn.click();
+	await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+	await expect(btn).toBeHidden();
+});
