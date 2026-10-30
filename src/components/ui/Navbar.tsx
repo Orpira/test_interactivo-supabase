@@ -259,7 +259,8 @@ export default function Navbar() {
 
 					{/* Escritorio: enlaces en una cápsula con indicador deslizante */}
 					<div className="ml-6 hidden items-center rounded-full border border-line bg-surface/70 p-1 lg:flex">
-						{visiblePages.slice(0, 1).map((p) => (
+						{/* "Hoy" va delante de Quizzes; el resto, detrás */}
+						{visiblePages.filter((p) => p.to === "/hoy").map((p) => (
 							<NavPill
 								key={p.to}
 								to={p.to}
@@ -268,7 +269,7 @@ export default function Navbar() {
 							/>
 						))}
 						<QuizMenu active={quizActive} onSelect={requestCategory} />
-						{visiblePages.slice(1).map((p) => (
+						{visiblePages.filter((p) => p.to !== "/hoy").map((p) => (
 							<NavPill
 								key={p.to}
 								to={p.to}

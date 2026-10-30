@@ -19,8 +19,7 @@ const QuizRunner = lazy(() => import("@/features/quiz/QuizRunner"));
 const Result = lazy(() => import("@/features/quiz/Result"));
 const Ranking = lazy(() => import("@/features/ranking/Ranking"));
 const Historial = lazy(() => import("@/pages/Historial"));
-const ContactForm = lazy(() => import("@/components/ui/ContactForm"));
-const Gracias = lazy(() => import("@/pages/Gracias"));
+const Contacto = lazy(() => import("@/pages/Contacto"));
 const Summary = lazy(() => import("@/features/quiz/pages/Summary"));
 const Dashboard = lazy(() => import("@/features/dashboard/Dashboard"));
 const ChallengeCategories = lazy(
@@ -298,8 +297,9 @@ export default function AppRouter() {
 							}
 						/>
 						<Route path="/restablecer" element={<ResetPassword />} />
-						<Route path="/contacto" element={<ContactForm />} />
-						<Route path="/gracias" element={<Gracias />} />
+						<Route path="/contacto" element={<Contacto />} />
+						{/* El formulario se sustituyó por canales directos */}
+						<Route path="/gracias" element={<Navigate to="/contacto" replace />} />
 						<Route
 							path="/dashboard"
 							element={
