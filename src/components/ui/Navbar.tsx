@@ -42,7 +42,7 @@ const MAIN_CATEGORIES = QUIZ_CATEGORIES.map(({ key, label }) => ({
 }));
 
 export default function Navbar() {
-	const { isAuthenticated, user, logout } = useAuth();
+	const { isAuthenticated, isLoading, user, logout } = useAuth();
 	const location = useLocation();
 	const navigate = useNavigate();
 	const autoOpenedCategoryRef = useRef("");
@@ -213,7 +213,8 @@ export default function Navbar() {
 		(p) =>
 			(!p.private || isAuthenticated) &&
 			!(p.publicOnly && isAuthenticated) &&
-			!["/dashboard", "/historial", "/mapa", "/practicar", "/revisiones", "/explica", "/sql", "/git", "/crear"].includes(p.to)
+			// "Inicio" sobra: el logo ya lleva a la portada (sigue en el buscador Ctrl+K)
+			!["/", "/dashboard", "/historial", "/mapa", "/practicar", "/revisiones", "/explica", "/sql", "/git", "/crear"].includes(p.to)
 	);
 	const isActive = (to: string) =>
 		to === "/" ? location.pathname === "/" : location.pathname.startsWith(to);
@@ -297,7 +298,10 @@ export default function Navbar() {
 							</kbd>
 						</button>
 						<ThemeToggle className="hidden rounded-full sm:inline-flex" />
-						{isAuthenticated ? (
+						{isLoading ? (
+							// Mientras se comprueba la sesión (p. ej. al volver del login) no se ofrece "Iniciar sesión"
+							<span className="hidden h-11 w-40 animate-pulse rounded-full bg-surface2 lg:block" aria-hidden="true" />
+						) : isAuthenticated ? (
 							<div className="hidden lg:block">
 								<UserMenu
 									name={userDisplayName}
@@ -361,7 +365,7 @@ export default function Navbar() {
 								</div>
 							)}
 							<ul className="grid gap-1">
-								{NAV_PAGES.filter((p) => (!p.private || isAuthenticated) && !(p.publicOnly && isAuthenticated)).map(
+								{NAV_PAGES.filter((p) => p.to !== "/" && (!p.private || isAuthenticated) && !(p.publicOnly && isAuthenticated)).map(
 									({ to, label, icon: Icon }) => (
 										<li key={to}>
 											<NavLink

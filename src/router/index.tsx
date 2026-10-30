@@ -77,11 +77,26 @@ function AuthCallback() {
 	return <Navigate to={isAuthenticated ? "/hoy" : "/"} replace />;
 }
 
-/** Portada pública; con sesión, el inicio es /hoy (salvo enlaces con parámetros). */
+/** ¿La URL trae la vuelta de un login (?code=, errores o tokens en el hash)? */
+function isAuthReturn(search: string, hash: string) {
+	const q = new URLSearchParams(search);
+	const h = new URLSearchParams(hash.slice(1));
+	return q.has("code") || q.has("error_description") || h.has("access_token") || h.has("error_description");
+}
+
+/**
+ * Portada pública; con sesión, el inicio es /hoy. Si Supabase devuelve el login
+ * a la raíz (su "Site URL") en lugar de a /auth/callback, se trata igual que
+ * el callback: se espera a canjear el código y se entra en /hoy.
+ */
 function HomeGate() {
 	const { isAuthenticated, isLoading } = useAuth();
-	const { search } = useLocation();
-	if (!isLoading && isAuthenticated && !search) return <Navigate to="/hoy" replace />;
+	const { search, hash } = useLocation();
+	if (isAuthReturn(search, hash)) return <AuthCallback />;
+	if (!isLoading && isAuthenticated) {
+		// Conserva enlaces de la portada con parámetros propios (?quizCategory=…)
+		if (!search) return <Navigate to="/hoy" replace />;
+	}
 	return <Hero />;
 }
 

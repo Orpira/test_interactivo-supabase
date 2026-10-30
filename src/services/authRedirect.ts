@@ -5,24 +5,21 @@ export const MOBILE_AUTH_REDIRECT_URL =
 
 const trimTrailingSlash = (value: string) => value.replace(/\/+$/, "");
 
-function isLocalDevOrigin(origin: string) {
-	return (
-		origin.includes("localhost") ||
-		origin.includes("127.0.0.1") ||
-		origin.includes("0.0.0.0")
-	);
-}
-
+/**
+ * En la web, la vuelta del login es SIEMPRE al mismo dominio desde el que se
+ * inició (webwiz.orpira.es, la URL de Vercel o una vista previa). El flujo
+ * PKCE guarda su verificador en el localStorage de ese dominio: si Supabase
+ * devolviera al usuario a otro dominio, el código no se podría canjear y la
+ * sesión no se iniciaría. VITE_AUTH_REDIRECT_URL solo se usa fuera del
+ * navegador. Cada dominio debe estar en Supabase → Authentication → URL
+ * Configuration → Redirect URLs (https://<dominio>/auth/callback).
+ */
 export function getWebAuthRedirectUrl() {
-	const configuredUrl = import.meta.env.VITE_AUTH_REDIRECT_URL;
 	const origin =
-		typeof window !== "undefined" ? window.location.origin : "https://orpira.es";
-	const shouldUseCurrentOrigin =
-		import.meta.env.DEV || isLocalDevOrigin(origin) || !configuredUrl;
-
-	return `${trimTrailingSlash(
-		shouldUseCurrentOrigin ? origin : configuredUrl,
-	)}/auth/callback`;
+		typeof window !== "undefined" && window.location?.origin && window.location.origin !== "null"
+			? window.location.origin
+			: (import.meta.env.VITE_AUTH_REDIRECT_URL ?? "https://webwiz.orpira.es");
+	return `${trimTrailingSlash(origin)}/auth/callback`;
 }
 
 export function getAuthRedirectUrl() {
