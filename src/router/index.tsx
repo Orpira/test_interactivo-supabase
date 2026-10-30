@@ -12,6 +12,7 @@ import { useAuth } from "@/services/auth";
 import Hero from "@/features/hero/Hero";
 import PrivateRoute from "@/features/auth/PrivateRoute";
 import Footer from "@/components/ui/Footer";
+import BackToTop from "@/components/ui/BackToTop";
 import Navbar from "@/components/ui/Navbar";
 
 // Rutas con carga diferida: la portada no descarga recharts, prism, etc.
@@ -112,11 +113,18 @@ function PasswordRecoveryRedirect() {
 	return null;
 }
 
-/** Sin footer en pantallas de trabajo a pantalla completa (quiz y retos). */
+const isWorkScreen = (p: string) => /^\/(quiz\/|repaso|diagnostico)/.test(p) || /^\/editor\/[^/]+\/[^/]+/.test(p) || /^\/incidencias\/[^/]+/.test(p);
+
+/** Sin footer ni «volver arriba» en pantallas de trabajo a pantalla completa (quiz y retos). */
 function FooterGate() {
 	const { pathname } = useLocation();
-	if (/^\/(quiz\/|repaso|diagnostico)/.test(pathname) || /^\/editor\/[^/]+\/[^/]+/.test(pathname) || /^\/incidencias\/[^/]+/.test(pathname)) return null;
-	return <Footer />;
+	if (isWorkScreen(pathname)) return null;
+	return (
+		<>
+			<Footer />
+			<BackToTop />
+		</>
+	);
 }
 
 function NotFound() {
