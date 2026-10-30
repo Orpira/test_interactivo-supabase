@@ -76,7 +76,7 @@ pagar.addEventListener("click", async () => {
 			{ name: "Se confirma el pago a la usuaria", type: "dom", code: "await wait(100); return text('#estado') === 'Pago completado' || ('Estado: «' + text('#estado') + '»');" },
 		],
 		regressionTests: [
-			{ name: "El menú se abre y se cierra", type: "dom", code: "click('#menu-toggle'); await wait(260); const abierto = $('#menu-toggle').getAttribute('aria-expanded') === 'true' && style('#menu', 'opacity') === '1' && hits('#menu a'); click('#menu-toggle'); await wait(260); return abierto && $('#menu-toggle').getAttribute('aria-expanded') === 'false';" },
+			{ name: "El menú se abre y se cierra", type: "dom", code: "const hasta = async (ok) => { for (let i = 0; i < 30 && !ok(); i++) await wait(50); return ok(); }; click('#menu-toggle'); const abierto = $('#menu-toggle').getAttribute('aria-expanded') === 'true' && (await hasta(() => style('#menu', 'opacity') === '1')) && hits('#menu a'); click('#menu-toggle'); return abierto && $('#menu-toggle').getAttribute('aria-expanded') === 'false';" },
 			{ name: "El menú conserva sus tres enlaces", type: "dom", code: "return $$('#menu a').length === 3;" },
 			{ name: "La cabecera y el formulario siguen en su sitio", type: "dom", code: "return !!$('.topbar .logo') && !!$('#tarjeta') && rect('#payBtn').width > 300;" },
 		],
