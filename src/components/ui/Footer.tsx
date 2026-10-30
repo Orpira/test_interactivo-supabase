@@ -17,7 +17,7 @@ export default function Footer() {
 					</span>
 				</p>
 				<nav aria-label="Contacto y redes" className="flex items-center gap-1">
-					<Link to="/contacto" className={LINK} aria-label="Formulario de contacto">
+					<Link to="/contacto" className={LINK} aria-label="Contacto">
 						<Mail className="h-5 w-5" aria-hidden="true" />
 					</Link>
 					<a
